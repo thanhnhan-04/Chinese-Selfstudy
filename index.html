@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giáo viên Tiếng Trung – Kèm cặp mỗi ngày</title>
+<style>
+  :root{
+    --bg:#0e1320; --panel:#161d2e; --panel2:#1d2539; --panel3:#232c44; --line:#2c3654;
+    --txt:#e9eef8; --muted:#8f9dbb; --accent:#e23b3b; --gold:#f5b731;
+    --green:#26c281; --blue:#4a8cff; --purple:#9b6bff; --cyan:#33c9dc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%,#182136,#0e1320);color:var(--txt);line-height:1.55;padding-bottom:70px}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 18px}
+  a{color:var(--blue)}
+
+  header{padding:26px 0 8px;text-align:center}
+  header .cn{font-size:13px;color:var(--gold);letter-spacing:6px}
+  header h1{font-size:25px;font-weight:800;margin-top:5px}
+  header p{color:var(--muted);font-size:14px;margin-top:5px}
+
+  /* teacher banner */
+  .teacher{display:flex;gap:14px;align-items:center;background:linear-gradient(120deg,rgba(74,140,255,.14),rgba(155,107,255,.10));
+    border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:16px 0}
+  .teacher .ava{flex:none;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));
+    display:flex;align-items:center;justify-content:center;font-size:26px}
+  .teacher .msg{flex:1}
+  .teacher .msg b{color:var(--txt)}
+  .teacher .msg .sub{color:var(--muted);font-size:13.5px;margin-top:3px}
+  .teacher .streak{flex:none;text-align:center;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 12px;min-width:74px}
+  .teacher .streak b{display:block;font-size:22px;color:var(--gold)}
+  .teacher .streak span{font-size:10.5px;color:var(--muted)}
+
+  /* nav tabs */
+  .nav{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:5px;margin:6px 0 18px;position:sticky;top:8px;z-index:20}
+  .nav button{flex:1;background:none;border:none;color:var(--muted);padding:10px 6px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:600;transition:.15s}
+  .nav button.active{background:var(--panel3);color:var(--txt)}
+  .nav button:hover{color:var(--txt)}
+
+  .page{display:none;animation:fade .25s ease}
+  .page.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:16px}
+  .card h3{font-size:16px;margin-bottom:4px}
+  .card .cap{color:var(--muted);font-size:13px}
+  h4.sec{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--gold);margin:2px 0 10px;display:flex;align-items:center;gap:8px}
+
+  /* week picker */
+  .wpick{display:flex;gap:7px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px}
+  .wpick button{flex:none;background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:10px;
+    padding:8px 12px;cursor:pointer;font-size:12.5px;transition:.15s;text-align:center;min-width:62px}
+  .wpick button.active{border-color:var(--blue);color:var(--txt);box-shadow:0 0 0 1px var(--blue)}
+  .wpick button.done{color:var(--green);border-color:rgba(38,194,129,.4)}
+  .wpick button b{display:block;font-size:14px}
+
+  /* quota chips */
+  .quota{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:6px 0 4px}
+  .qcell{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:11px 8px;text-align:center}
+  .qcell .ic{font-size:17px}
+  .qcell b{display:block;font-size:17px;margin-top:3px}
+  .qcell span{font-size:11px;color:var(--muted)}
+  .qcell.hit{border-color:rgba(38,194,129,.5);background:rgba(38,194,129,.08)}
+  .qcell.hit b{color:var(--green)}
+
+  /* session list */
+  .sess{border:1px solid var(--line);border-radius:14px;margin-bottom:11px;overflow:hidden;background:var(--panel2)}
+  .sess .shead{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer}
+  .sess .shead .no{flex:none;width:30px;height:30px;border-radius:9px;background:var(--panel3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--blue)}
+  .sess .shead .ti{flex:1}
+  .sess .shead .ti b{font-size:14.5px}
+  .sess .shead .ti .mt{font-size:12px;color:var(--muted)}
+  .sess .shead .pill{flex:none;font-size:11px;padding:3px 9px;border-radius:20px;background:var(--panel3);color:var(--muted)}
+  .sess.done .shead .no{background:var(--green);color:#04140c}
+  .sess.done .pill{background:rgba(38,194,129,.15);color:var(--green)}
+  .sess.today{box-shadow:0 0 0 1px var(--gold)}
+  .sess.today .pill{background:rgba(245,183,49,.15);color:var(--gold)}
+  .sess .sbody{display:none;padding:2px 15px 14px;border-top:1px solid var(--line)}
+  .sess.open .sbody{display:block}
+  .subt{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+  .subt:last-of-type{border-bottom:none}
+  .subt .cb{flex:none;width:19px;height:19px;border-radius:6px;border:2px solid var(--line);margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:.12s}
+  .subt.on .cb{background:var(--green);border-color:var(--green);color:#04140c}
+  .subt.on .tx{opacity:.55;text-decoration:line-through}
+  .subt .tx{font-size:13.7px}
+  .subt .tx small{color:var(--muted);display:block;font-size:12px}
+  .finbtn{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;color:#fff;
+    font-weight:700;font-size:14px;padding:12px;border-radius:11px;cursor:pointer;transition:.15s}
+  .finbtn:hover{filter:brightness(1.08)}
+  .finbtn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+
+  /* mini word chips inside session */
+  .wchips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+  .wchip{background:var(--panel3);border:1px solid var(--line);border-radius:9px;padding:5px 9px;cursor:pointer;font-size:13px;transition:.12s}
+  .wchip:hover{border-color:var(--gold)}
+  .wchip b{font-size:15px}
+  .wchip span{color:var(--muted);font-size:11px;margin-left:3px}
+
+  /* grammar block */
+  .gram{background:var(--panel2);border-left:3px solid var(--cyan);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+  .gram .gp{font-weight:700;font-size:14.5px}
+  .gram .gn{color:var(--muted);font-size:13px;margin:4px 0 8px}
+  .gram .ex{background:var(--panel3);border-radius:8px;padding:8px 10px;margin-top:6px;font-size:13.5px}
+  .gram .ex .zh{font-size:15px}
+  .gram .ex .py{color:var(--gold);font-size:12px}
+  .gram .ex .vi{color:var(--muted);font-size:12.5px}
+
+  /* vocab bank */
+  .vfilter{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+  .vfilter select,.vfilter input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 10px;font-size:13px}
+  .vstat{margin-left:auto;color:var(--muted);font-size:13px}
+  .vstat b{color:var(--green)}
+  .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+  .vc{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;transition:.15s;position:relative}
+  .vc:hover{border-color:var(--gold)}
+  .vc .top{display:flex;align-items:baseline;gap:9px}
+  .vc .hz{font-size:30px;font-weight:800;line-height:1}
+  .vc .meta .py{color:var(--gold);font-size:13px}
+  .vc .meta .vn{font-size:13.5px}
+  .vc .pos{position:absolute;top:12px;right:12px;font-size:10px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:2px 8px}
+  .vc .tip{margin-top:10px;font-size:12.8px;color:#cfd8ee;background:var(--panel2);border-radius:9px;padding:9px 11px;line-height:1.5}
+  .vc .tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;margin-bottom:6px;letter-spacing:.3px}
+  .tag.ct{background:rgba(51,201,220,.16);color:var(--cyan)}
+  .tag.mo{background:rgba(245,183,49,.16);color:var(--gold)}
+  .vc .act{display:flex;gap:7px;margin-top:11px}
+  .vc .act button{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:7px;cursor:pointer;font-size:12px;transition:.12s}
+  .vc.known{border-color:rgba(38,194,129,.45)}
+  .vc.known .b-k{background:var(--green);color:#04140c;border-color:var(--green)}
+  .vc.review .b-r{background:var(--gold);color:#160e00;border-color:var(--gold)}
+
+  /* roadmap overview */
+  .rmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .rm{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px;border-top:3px solid var(--tc)}
+  .rm .wk{font-size:11px;color:var(--muted);letter-spacing:1px}
+  .rm h5{font-size:14.5px;margin:3px 0 6px}
+  .rm .th{font-size:12.5px;color:var(--muted);min-height:34px}
+  .rm .qs{display:flex;gap:8px;margin-top:9px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+  .rm .qs span{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:3px 7px}
+
+  /* progress page */
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:8px}
+  .pstat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+  .pstat b{display:block;font-size:30px;color:var(--blue)}
+  .pstat span{font-size:12px;color:var(--muted)}
+  .bar{height:11px;background:#0b1020;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:8px}
+  .bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));width:0;transition:.4s}
+  .wkrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .wkrow .nm{width:120px;font-size:13px;flex:none}
+  .wkrow .bar{flex:1;margin:0}
+  .wkrow .pc{width:44px;text-align:right;font-size:12px;color:var(--muted);flex:none}
+  .reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:8px 14px;cursor:pointer;font-size:12.5px;margin-top:12px}
+  .reset:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* word modal */
+  .modal{position:fixed;inset:0;background:rgba(6,9,16,.7);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .modal.show{display:flex}
+  .modal .box{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;max-width:420px;width:100%;text-align:center;position:relative}
+  .modal .box .x{position:absolute;top:12px;right:16px;color:var(--muted);cursor:pointer;font-size:20px}
+  .modal .hz{font-size:64px;font-weight:800;line-height:1}
+  .modal .py{color:var(--gold);font-size:18px;margin-top:6px}
+  .modal .vn{font-size:16px;margin-top:2px}
+  .modal .tip{text-align:left;margin-top:14px;background:var(--panel2);border-radius:11px;padding:13px 15px;font-size:13.6px;line-height:1.6}
+  .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:20px;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="cn">中文私教 · KÈM CẶP</div>
+    <h1>Giáo viên Tiếng Trung của bạn</h1>
+    <p>Lộ trình 8 tuần đầu · học có định mức mỗi tuần · nhớ chữ bằng chiết tự &amp; mẹo đời thường</p>
+  </header>
+
+  <div class="teacher">
+    <div class="ava">🧑‍🏫</div>
+    <div class="msg"><b id="tmsg">Chào bạn! Bắt đầu buổi học đầu tiên nhé.</b>
+      <div class="sub" id="tsub">Mỗi tuần: 10 từ mới · 2 điểm ngữ pháp · 1 bài viết · 2 buổi nghe.</div></div>
+    <div class="streak"><b id="streak">0</b><span>ngày streak 🔥</span></div>
+  </div>
+
+  <div class="nav">
+    <button class="active" onclick="tab('today',this)">📅 Hôm nay</button>
+    <button onclick="tab('vocab',this)">🀄 Từ vựng</button>
+    <button onclick="tab('road',this)">🗺️ Lộ trình</button>
+    <button onclick="tab('prog',this)">📊 Tiến độ</button>
+  </div>
+
+  <!-- TODAY -->
+  <div class="page show" id="today">
+    <div class="wpick" id="wpick"></div>
+    <div class="card" id="weekhead"></div>
+    <div id="sessions"></div>
+  </div>
+
+  <!-- VOCAB -->
+  <div class="page" id="vocab">
+    <div class="vfilter">
+      <select id="vweek" onchange="renderVocab()"></select>
+      <select id="vtype" onchange="renderVocab()">
+        <option value="all">Tất cả kiểu mẹo</option>
+        <option value="ct">Chiết tự (gốc chữ)</option>
+        <option value="mo">Mẹo đời thường</option>
+      </select>
+      <select id="vsta" onchange="renderVocab()">
+        <option value="all">Mọi trạng thái</option>
+        <option value="known">Đã thuộc</option>
+        <option value="review">Cần ôn</option>
+        <option value="new">Chưa học</option>
+      </select>
+      <div class="vstat" id="vstat"></div>
+    </div>
+    <div class="vgrid" id="vgrid"></div>
+  </div>
+
+  <!-- ROADMAP -->
+  <div class="page" id="road">
+    <div class="card">
+      <h3>Toàn cảnh 8 tuần đầu</h3>
+      <div class="cap">Đây là "giai đoạn khởi động" giáo viên thiết kế cho bạn (từ trình độ cơ bản). Học tuần tự, mỗi tuần ~3–5 giờ chia thành 5 buổi. Xong tuần 8, mình sẽ soạn tiếp block hướng thẳng HSK 4 &amp; tài chính chuyên sâu.</div>
+    </div>
+    <div class="rmap" id="rmap"></div>
+    <div class="card" style="margin-top:16px">
+      <h4 class="sec">🎯 Đích đến cuối lộ trình đầy đủ</h4>
+      <div class="cap">HSK 1→2→3 (nền) → <b style="color:var(--txt)">HSK 4 (~1200 từ, mục tiêu ≥240/300)</b> → Tiếng Trung công việc ngành tài chính – đầu tư (email, họp, thuật ngữ, đàm phán). 8 tuần này phủ nền HSK 2 và gieo sẵn ~30 thuật ngữ tài chính lõi.</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="page" id="prog">
+    <div class="pgrid">
+      <div class="pstat"><b id="pDays">0</b><span>ngày đã học</span></div>
+      <div class="pstat"><b id="pSess">0</b><span>buổi hoàn thành</span></div>
+      <div class="pstat"><b id="pWords">0</b><span>từ đã thuộc</span></div>
+      <div class="pstat"><b id="pWeeks">0</b><span>tuần hoàn tất</span></div>
+    </div>
+    <div class="card">
+      <h4 class="sec">📈 Tiến độ từng tuần</h4>
+      <div id="weekbars"></div>
+    </div>
+    <div class="card">
+      <h4 class="sec">🀄 Vốn từ</h4>
+      <div class="bar"><span id="vocbar"></span></div>
+      <div class="cap" id="voctext" style="margin-top:7px"></div>
+      <button class="reset" onclick="resetAll()">↺ Đặt lại toàn bộ tiến độ</button>
+    </div>
+  </div>
+
+  <div class="foot">
+    Tiến độ lưu tự động trên trình duyệt này (localStorage). Nguồn chiết tự: "Bí Quyết Chiết Tự Chữ Hán" (thuphapdungpham.com / fb.com/NhoHanTu) — mẹo đời thường do giáo viên AI biên soạn.
+  </div>
+</div>
+
+<!-- word modal -->
+<div class="modal" id="modal" onclick="if(event.target.id==='modal')closeModal()">
+  <div class="box">
+    <span class="x" onclick="closeModal()">✕</span>
+    <div class="hz" id="mHz"></div>
+    <div class="py" id="mPy"></div>
+    <div class="vn" id="mVn"></div>
+    <div class="tip" id="mTip"></div>
+  </div>
+</div>
+
+<script>
+/* ============ VOCAB DATA ============ */
+/* [hz, pinyin, nghĩa, loại từ, tipType(ct|mo), tip] */
+const V = [
+/* --- Tuần 1: Người & Gia đình (0-9) --- */
+["我","wǒ","tôi","đại từ","ct","Hình cánh tay cầm vũ khí chống xuống đất — tư thế con người sẵn sàng khẳng định mình. Nhớ: 我 = 'cái tôi' đứng vững, tay lăm lăm vũ khí."],
+["你","nǐ","bạn","đại từ","mo","Bộ 亻(người) đứng cạnh 尔. Người (亻) mà mình quay sang chào 'nị hảo' chính là 'bạn'. Cứ thấy 亻bên trái là chuyện của con người."],
+["好","hǎo","tốt / khỏe","tính từ","mo","女 (phụ nữ) + 子 (đứa con). Có mẹ bồng con là cảnh 'tốt đẹp' nhất đời. Mẹ + con = 好."],
+["家","jiā","nhà / gia đình","danh từ","ct","Mái nhà 宀 che con lợn 豕 bên dưới. Nhà nông xưa nuôi lợn ngay trong nhà — có mái + có 'của cải' (lợn) mới thành cái nhà."],
+["男","nán","đàn ông","danh từ","mo","田 (ruộng) + 力 (sức). Người bỏ 'sức' ra cày 'ruộng' = đàn ông. Nhớ hình: gồng sức trên đồng ruộng."],
+["女","nǚ","phụ nữ","danh từ","mo","Tượng hình một người phụ nữ đang quỳ, khoanh tay dịu dàng. Nét cong mềm mại chính là dáng 女."],
+["爱","ài","yêu","động từ","ct","Bản phồn thể 愛 có bộ 心 (trái tim) ở giữa. Bản giản thể 爱 lược mất chữ tâm → 'yêu mà thiếu trái tim'. Nhớ chữ bằng chính cái nó đánh rơi: con tim."],
+["朋友","péngyou","bạn bè","danh từ","ct","朋 xưa vẽ hai xâu tiền/hai cánh cân song song, cân bằng như hai người ngang hàng. Bạn bè là hai người 'cùng một vạch', không ai hơn ai."],
+["名字","míngzi","tên","danh từ","ct","名 = 夕 (chiều tối) + 口 (miệng). Trời tối không nhìn rõ mặt, phải 'gọi miệng' tên nhau để nhận ra → 名 = tên gọi."],
+["妈妈","māma","mẹ","danh từ","mo","女 (nữ) cho nghĩa + 马 (mã, đọc 'mà') cho âm. Người nữ + âm 'ma-ma' = mẹ. Rất nhiều chữ chỉ người nữ đều mượn 女 làm gốc."],
+/* --- Tuần 2: Thời gian (10-19) --- */
+["天","tiān","trời / ngày","danh từ","ct","大 (người dang tay) đội thêm một nét ngang trên đầu = bầu trời phía trên con người. Cái ở cao nhất, trên cả người = 天."],
+["明天","míngtiān","ngày mai","danh từ","ct","明 = 日 (mặt trời) + 月 (mặt trăng) → hai nguồn sáng gộp lại = 'sáng'. 明天 = 'ngày sáng sắp tới' = ngày mai."],
+["今天","jīntiān","hôm nay","danh từ","mo","今 trông như một mái che úp xuống 'ngay lúc này'. 今天 = cái trời của lúc này = hôm nay. Cặp với 明天 cho dễ nhớ."],
+["年","nián","năm","danh từ","mo","Chữ xưa vẽ người gánh bó lúa về. Một mùa gặt trọn vẹn = một 'năm'. Nhớ: một vụ lúa = một năm."],
+["月","yuè","tháng / trăng","danh từ","mo","Tượng hình vầng trăng khuyết. Trăng tròn rồi lại khuyết trọn một vòng = một 'tháng'. Cứ thấy 月 hãy nghĩ tới mặt trăng."],
+["星期","xīngqī","tuần","danh từ","ct","星 = 日 (mặt trời) + 生 (sinh) → 'ngôi sao mọc ra'. 期 = kỳ hạn. Vòng sao trời xoay hết một kỳ ngắn = một tuần."],
+["现在","xiànzài","bây giờ","danh từ","mo","现 (hiện: viên ngọc 王 lộ ra cho 见 thấy) + 在 (đang ở). 'Cái đang thấy, đang có mặt' = ngay bây giờ."],
+["早上","zǎoshang","buổi sáng","danh từ","ct","早: 日 (mặt trời) nằm trên nét 十 → mặt trời vừa nhô lên khỏi mặt đất, đầu ngày = sớm/sáng."],
+["晚上","wǎnshang","buổi tối","danh từ","mo","晚 = 日 (mặt trời) + 免 (miễn: được tha). Mặt trời 'được cho nghỉ', lặn đi ngủ = buổi tối. Đối lập trực tiếp với 早上."],
+["时候","shíhou","lúc / thời điểm","danh từ","mo","时 (thời) có bộ 日 (mặt trời) — mọi thứ về thời gian đều dính mặt trời. Hễ hỏi 'lúc nào' là có bộ 日 xuất hiện."],
+/* --- Tuần 3: Hành động hằng ngày (20-29) --- */
+["学习","xuéxí","học tập","động từ","mo","学: đứa trẻ 子 dưới mái trường, hai tay quơ đón kiến thức. 习 (phồn 習): lông cánh chim non tập vỗ đi vỗ lại. Học = tiếp nhận + tập lại nhiều lần."],
+["工作","gōngzuò","làm việc","động từ","ct","工 vốn là cái thước/công cụ của người thợ. Cầm 'công cụ' (工) mà 作 (làm ra) = công việc. Nhớ: 工 = dụng cụ lao động."],
+["吃","chī","ăn","động từ","mo","Bộ 口 (miệng) + 乞 (xin). Đưa vào 'miệng' thứ mình cần = ăn. Quy tắc vàng: 口 bên trái = chuyện của cái miệng."],
+["喝","hē","uống","động từ","mo","Cũng bộ 口 (miệng) bên trái, vì uống cũng qua miệng. Phân biệt với 吃 (ăn) nhờ phần bên phải khác nhau. Thấy 口 → miệng làm việc."],
+["看","kàn","xem / nhìn","động từ","ct","手 (bàn tay) đặt trên 目 (con mắt): đưa tay lên che nắng trên mắt để nhìn ra xa. Đúng động tác ta vẫn làm khi nhìn về phía chân trời."],
+["说","shuō","nói","động từ","mo","Bộ 讠(ngôn: lời nói) bên trái + 兑. Hễ chữ nào dính tới lời nói đều mang bộ 讠. Coi 讠như 'cái loa' gắn bên chữ."],
+["听","tīng","nghe","động từ","mo","Giản thể ghép 口 (miệng) + 斤. Mẹo ngược cho dễ nhớ: hình dung 'há miệng ra mà lắng nghe' cho hết ý người nói."],
+["写","xiě","viết","động từ","mo","Bộ 冖 (mái che) trên chữ 与. Như ngồi dưới mái nhà, đặt bút xuống mà viết. Nhớ: có mái ở trên, có tay viết ở dưới."],
+["读","dú","đọc","động từ","mo","Bộ 讠(lời nói) + 卖 (bán). Đọc to là 'rao' con chữ thành lời phát ra ngoài → 讠+ 卖. Lại một chữ có bộ 讠= liên quan miệng lưỡi."],
+["休息","xiūxi","nghỉ ngơi","động từ","ct","休 = 亻(người) tựa vào 木 (cây). Người làm đồng mệt, tìm gốc cây tựa lưng nghỉ mát = nghỉ ngơi. Hình ảnh rất đời."],
+/* --- Tuần 4: Nơi chốn & đi lại (30-39) --- */
+["去","qù","đi (đến)","động từ","ct","Hình một người 大 rời khỏi cái vòng/chỗ ở (厶) sau lưng → dứt áo mà đi = 去."],
+["来","lái","đến","động từ","mo","Phồn thể 來 vẽ bông lúa chín trĩu. Mùa lúa 'về', khách 'tới' = đến. Cặp đôi luôn nhớ chung: 去 (đi) ⇄ 来 (đến)."],
+["走","zǒu","đi bộ / rời đi","động từ","ct","Phần trên là người vung tay sải bước, phần dưới là 止 (bàn chân). Người + chân chuyển động = đi/chạy."],
+["坐","zuò","ngồi","động từ","ct","Hai người 人人 ngồi hai bên, ở giữa là 土 (gò đất): cảnh hai người cùng ngồi nghỉ trên gò đất = ngồi."],
+["车","chē","xe","danh từ","mo","Giản thể của 車 — vốn là hình nhìn từ trên xuống: nét sổ dọc là trục, các nét ngang là bánh và thùng xe. Vẽ lại chiếc xe bò cổ."],
+["路","lù","đường","danh từ","mo","Bộ 足 (chân) + 各 (mỗi). Bàn chân đi tới 'mỗi' nơi, dẫm mãi thành đường. Có bộ 足 = chuyện của bàn chân."],
+["到","dào","đến / tới nơi","động từ","mo","至 (tới nơi) + 刂(con dao). Như mũi dao cắm đúng 'tới đích'. Nhớ: 到 = cắm phập tới nơi."],
+["学校","xuéxiào","trường học","danh từ","mo","校 = 木 (gỗ) + 交 (giao lưu). Ngôi nhà gỗ nơi mọi người 'giao lưu' và học = trường học."],
+["公司","gōngsī","công ty","danh từ","ct","公 = 八 (bẻ đôi, chia ra) + 厶 (cái riêng tư): bẻ gãy cái 'riêng' để thành 'của chung' = công. 司 = trông coi. Tổ chức chung có người quản = công ty."],
+["商店","shāngdiàn","cửa hàng","danh từ","mo","店 = 广 (mái hiên) + 占 (chiếm chỗ). Cái sạp 'chiếm chỗ' dưới mái hiên để bán hàng = cửa hàng."],
+/* --- Tuần 5: Văn phòng (40-49) --- */
+["会议","huìyì","cuộc họp","danh từ","mo","会 (tụ họp) + 议 (bàn bạc, có bộ 讠lời). Mọi người 'tụ' lại để 'bàn lời' = họp. Có bộ 讠= dùng lời."],
+["电脑","diànnǎo","máy tính","danh từ","mo","电 (điện) + 脑 (não). 'Bộ não chạy bằng điện' = máy tính. Ghép nghĩa cực dễ nhớ."],
+["邮件","yóujiàn","email / thư","danh từ","mo","邮 (bưu) + 件 (món, kiện). 'Món gửi qua đường bưu điện' = thư/email. 电子邮件 = thư điện tử."],
+["经理","jīnglǐ","quản lý / trưởng phòng","danh từ","ct","理 gốc là mài ngọc theo đúng đường vân (玉 + 里) → xử lý việc theo cái 'lẽ/thớ' của nó. 经理 là người 'xử mọi việc cho hợp lẽ' = quản lý."],
+["同事","tóngshì","đồng nghiệp","danh từ","ct","同 = cùng chung (cái thùng chung một miệng 口). 事 = việc. Cùng chung một công việc = đồng nghiệp."],
+["报告","bàogào","báo cáo","danh từ","ct","告 = 牛 (con trâu) + 口 (miệng): xưa dắt trâu ra tế rồi 'khấn báo' thần linh. 报 = đưa tin đáp lại. Đưa tin + trình bày = báo cáo."],
+["计划","jìhuà","kế hoạch","danh từ","mo","计 (tính toán, có bộ 讠lời + 十 đủ) + 划 (vạch ra). 'Vạch sẵn đường đã tính đủ' = kế hoạch."],
+["完成","wánchéng","hoàn thành","động từ","ct","成 vẽ người cầm giáo giữ vững thành trì → nghĩa 'làm nên, thành tựu'. 完 = trọn vẹn. Làm trọn nên việc = hoàn thành."],
+["忙","máng","bận","tính từ","mo","忄(trái tim) + 亡 (mất). Bận đến mức 'cái tâm như đánh mất', quay cuồng = 忙. Nhớ: bận quá mất cả hồn."],
+["帮助","bāngzhù","giúp đỡ","động từ","mo","助 = 力 (sức) + 且. Bỏ thêm 'sức' của mình cho người khác = giúp. Có 力 = liên quan tới ra sức."],
+/* --- Tuần 6: Tiền & mua bán (50-59) --- */
+["钱","qián","tiền","danh từ","mo","Bộ 钅(kim loại) + 戋 (âm 'tiễn'). Tiền xưa đúc bằng kim loại nên mang bộ 钅. Quy tắc: vật bằng kim loại quý thường có bộ 钅."],
+["买","mǎi","mua","động từ","ct","Giản thể 买: bộ 冖 (che, chộp) trên 头 (cái đầu). Sách ví như 'chộp lấy, ôm về' — bỏ tiền chộp đồ về nhà = mua. Đối lập với 卖 (bán)."],
+["卖","mài","bán","động từ","mo","卖 chính là 买 (mua) đội thêm 十 (thập) lên đầu. Người bán luôn 'cộng thêm' để lấy lời → thêm nét trên đầu = bán. Mẹo phân biệt cực nhanh."],
+["贵","guì","đắt","tính từ","mo","Phần dưới là 贝 (vỏ sò = tiền cổ). Cái gì 'ngốn nhiều 贝' = đắt. Hễ thấy 贝 là dính tới tiền của."],
+["便宜","piányi","rẻ","tính từ","mo","便 (tiện) + 宜 (hợp). 'Vừa tiện vừa hợp túi tiền' = rẻ. Nhớ theo cụm: rẻ nên mua rất 'tiện'."],
+["银行","yínháng","ngân hàng","danh từ","ct","银 = 钅(kim) + 艮 → kim loại trắng = bạc. 行 vốn nghĩa 'dãy phố buôn bán' (đọc háng). Nơi cất giữ bạc tiền thành dãy = ngân hàng."],
+["工资","gōngzī","lương","danh từ","mo","工 (công sức) + 资 (của cải, có 贝 tiền). 'Của trả cho công sức bỏ ra' = lương."],
+["花","huā","tiêu (tiền) / hoa","động từ","mo","Gốc nghĩa là 'hoa' (bộ 艹 cỏ ở trên). Tiêu tiền ví như tiền 'nở bung rồi bay đi như cánh hoa'. Một chữ hai nghĩa: hoa & tiêu tiền."],
+["存","cún","gửi / để dành","động từ","mo","Gần giống 在 (tại) nhưng có thêm 子 (con). 'Để đó dành cho con' = để dành, gửi. 存钱 = để dành tiền."],
+["价格","jiàgé","giá cả","danh từ","mo","价 có bộ 亻(người) — giá do con người định ra. 格 = ô/khung. 'Con số người đặt vào khung' = giá cả."],
+/* --- Tuần 7: Tài chính 1 (60-69) --- */
+["经济","jīngjì","kinh tế","danh từ","mo","经 (sợi dọc/vận hành, bộ 纟tơ) + 济 (cứu giúp qua sông, bộ 氵nước). Gốc thành ngữ 'kinh bang tế thế' = trị nước cứu đời → kinh tế."],
+["市场","shìchǎng","thị trường","danh từ","mo","市 (chợ) + 场 (bãi/sân, có bộ 土 đất). 'Cái sân để họp chợ' = thị trường. Rất trực quan."],
+["投资","tóuzī","đầu tư","động từ","mo","投 có bộ 扌(tay) — nghĩa 'ném/bỏ vào'. 资 = vốn (có 贝 tiền). 'Ra tay ném vốn vào' một cơ hội = đầu tư."],
+["股票","gǔpiào","cổ phiếu","danh từ","mo","股 (cổ: phần được chia) + 票 (tờ phiếu). 'Tờ phiếu ghi phần sở hữu' trong công ty = cổ phiếu."],
+["风险","fēngxiǎn","rủi ro","danh từ","mo","风 (gió) + 险 (hiểm, có bộ 阝= gò dốc). 'Gió lớn nơi vách dốc hiểm trở' = rủi ro. Hình ảnh đứng chênh vênh trước gió."],
+["利润","lìrùn","lợi nhuận","danh từ","ct","利 = 禾 (cây lúa) + 刂(con dao): cầm dao gặt lúa chín — cái 'lợi' thu về sau vụ mùa. 润 = thấm ướt. Cái lợi 'thấm về túi' = lợi nhuận."],
+["成本","chéngběn","chi phí / giá vốn","danh từ","ct","本 vẽ gốc rễ cây (nét ngang dưới thân 木 đánh dấu bộ rễ) → nghĩa 'gốc, vốn'. 成本 = cái 'vốn gốc' bỏ ra để làm nên sản phẩm = giá vốn."],
+["增长","zēngzhǎng","tăng trưởng","động từ","mo","增 có bộ 土 (đất) → đắp đất cho cao thêm = tăng. 长 = dài/lớn lên. 'Bồi đắp + kéo dài ra' = tăng trưởng."],
+["发展","fāzhǎn","phát triển","động từ","mo","发 (bung ra, phát) + 展 (trải rộng, triển khai). 'Bung ra rồi trải rộng' = phát triển."],
+["收入","shōurù","thu nhập","danh từ","ct","收 = cái móc (丩) + tay cầm gậy (攵) kéo đồ về → 'thu về'. 入 = vào. Kéo của cải vào túi = thu nhập."],
+/* --- Tuần 8: Tài chính 2 (70-79) --- */
+["支出","zhīchū","chi tiêu","danh từ","ct","支 = tay (十, biến thể của 手) cầm cành 又 → nghĩa 'chi ra, tách nhánh'. 出 = ra. Tiền 'rẽ nhánh đi ra' = chi tiêu. Cặp với 收入 (thu nhập)."],
+["利率","lìlǜ","lãi suất","danh từ","mo","利 (lãi/lợi) + 率 (tỷ lệ, suất). 'Tỷ lệ sinh lãi' = lãi suất. Ghép thẳng nghĩa hai chữ."],
+["债券","zhàiquàn","trái phiếu","danh từ","mo","债 = 亻(người) + 责 (trách nhiệm): 'món người ta có trách nhiệm phải trả'. 券 = tờ chứng. Tờ ghi khoản nợ phải trả = trái phiếu."],
+["基金","jījīn","quỹ","danh từ","ct","基 (nền móng, có bộ 土 đất) + 金 (tiền/vàng). 金 vốn tả cảnh rèn kim loại, chỉ vàng bạc tiền. 'Cái nền tiền gom lại' = quỹ."],
+["财务","cáiwù","tài chính (nghiệp vụ)","danh từ","mo","财 = 贝 (tiền) + 才 (tài). 务 = việc. 'Công việc coi sóc tiền của' = tài chính doanh nghiệp."],
+["报表","bàobiǎo","báo cáo (bảng biểu)","danh từ","mo","报 (báo tin) + 表 (bảng biểu). 'Bảng dùng để báo số liệu' = báo biểu tài chính (financial statement)."],
+["分析","fēnxī","phân tích","động từ","ct","分 = 八 (chia) trên 刀 (dao): lấy dao cắt tách ra. 析 = 木 (gỗ) + 斤 (rìu): bổ củi. Cả hai đều là 'chẻ nhỏ ra để xem kỹ' = phân tích."],
+["决定","juédìng","quyết định","động từ","ct","决 có bộ 冫(nước/băng) — khơi dòng dứt khoát. 定 = 宀(nhà) + 正 (ngay ngắn): nhà cửa đã yên, mọi thứ 'đã định'. Chốt lại dứt khoát = quyết định."],
+["资金","zījīn","vốn / nguồn tiền","danh từ","mo","资 (vốn, có 贝 tiền) + 金 (tiền vàng). Hai chữ đều mang nghĩa tiền chồng lên nhau = nguồn vốn dồi dào. Nhớ: gấp đôi tiền = 资金."],
+["增值","zēngzhí","tăng giá trị","động từ","mo","增 (tăng, đắp đất cao thêm) + 值 (giá trị, có bộ 亻). 'Giá trị được bồi cao thêm' = tăng giá trị. Ví dụ: 增值税 = thuế giá trị gia tăng (VAT)."]
+];
+
+/* ============ WEEK CURRICULUM ============ */
+/* mỗi tuần: tên, chủ đề, dải index từ vựng [start,end], 2 điểm ngữ pháp, tasks */
+const W = [
+ {n:1,tc:"var(--blue)",name:"Người & Gia đình",theme:"Tự giới thiệu, gọi tên người thân, xưng hô cơ bản.",
+  v:[0,9],
+  gram:[
+   {gp:"Câu 是: A 是 B","gn":"Dùng 是 để nói 'A là B'. Phủ định thêm 不: 不是.",ex:[["我是学生。","Wǒ shì xuéshēng.","Tôi là học sinh."],["他不是老师。","Tā bú shì lǎoshī.","Anh ấy không phải giáo viên."]]},
+   {gp:"Sở hữu với 的","gn":"Danh từ/đại từ + 的 + vật = 'của ai'. 我的家 = nhà của tôi.",ex:[["这是我的名字。","Zhè shì wǒ de míngzi.","Đây là tên của tôi."]]}
+  ],
+  tasks:[["✍️ Viết","Viết đoạn 4–5 câu tự giới thiệu: tên, tuổi, gia đình có mấy người."],["🎧 Nghe","Nghe 1 hội thoại chào hỏi HSK1–2, chép lại 5 câu."],["🗣️ Nói","Thu âm tự giới thiệu 30 giây, nghe lại chỉnh thanh điệu."]]},
+ {n:2,tc:"var(--cyan)",name:"Thời gian",theme:"Nói ngày–giờ–thứ, hôm nay/ngày mai, hẹn thời điểm.",
+  v:[10,19],
+  gram:[
+   {gp:"Hỏi giờ: 几点","gn":"几点 = mấy giờ; 什么时候 = khi nào.",ex:[["现在几点?","Xiànzài jǐ diǎn?","Bây giờ mấy giờ?"],["你什么时候来?","Nǐ shénme shíhou lái?","Khi nào bạn đến?"]]},
+   {gp:"Trạng ngữ thời gian đứng trước động từ","gn":"Thời gian thường đặt đầu câu hoặc sau chủ ngữ, trước động từ.",ex:[["明天我去公司。","Míngtiān wǒ qù gōngsī.","Ngày mai tôi đi công ty."]]}
+  ],
+  tasks:[["✍️ Viết","Viết lịch 1 ngày của bạn bằng tiếng Trung (sáng/trưa/tối làm gì)."],["🎧 Nghe","Nghe đoạn nói về thời khóa biểu, ghi lại các mốc giờ."],["🗣️ Nói","Kể bằng miệng kế hoạch 'ngày mai' của bạn, 4 câu."]]},
+ {n:3,tc:"var(--green)",name:"Hành động hằng ngày",theme:"Ăn, uống, học, làm, nghe, nói, đọc, viết, nghỉ.",
+  v:[20,29],
+  gram:[
+   {gp:"了 – hành động đã hoàn thành","gn":"Động từ + 了 = việc đã xong/đã xảy ra.",ex:[["我吃了饭。","Wǒ chī le fàn.","Tôi ăn cơm rồi."]]},
+   {gp:"正在 – đang làm","gn":"正在 + động từ = đang… (tiếp diễn).",ex:[["他正在学习。","Tā zhèngzài xuéxí.","Anh ấy đang học."]]}
+  ],
+  tasks:[["✍️ Viết","Viết nhật ký 5 câu về hôm nay, dùng ít nhất 2 lần 了."],["🎧 Nghe","Nghe đoạn kể việc thường ngày, gạch chân các động từ."],["🗣️ Nói","Mô tả bạn đang làm gì lúc này (dùng 正在), 3 câu."]]},
+ {n:4,tc:"var(--gold)",name:"Nơi chốn & đi lại",theme:"Đi–đến, phương tiện, trường/công ty/cửa hàng.",
+  v:[30,39],
+  gram:[
+   {gp:"去/来 + nơi chốn","gn":"去 + địa điểm = đi đến đâu; 来 = đến.",ex:[["我去学校。","Wǒ qù xuéxiào.","Tôi đến trường."]]},
+   {gp:"怎么去 + phương tiện","gn":"坐 + xe + 去: dùng phương tiện gì để đi.",ex:[["我坐车去公司。","Wǒ zuò chē qù gōngsī.","Tôi đi xe đến công ty."]]}
+  ],
+  tasks:[["✍️ Viết","Viết đường đi từ nhà tới nơi làm, 4–5 câu (dùng 坐…去, 到)."],["🎧 Nghe","Nghe đoạn hỏi đường, ghi lại phương tiện & điểm đến."],["🗣️ Nói","Hỏi–đáp 'bạn đi làm bằng gì' (tự đóng 2 vai)."]]},
+ {n:5,tc:"var(--purple)",name:"Văn phòng",theme:"Họp, email, đồng nghiệp, báo cáo, kế hoạch, bận rộn.",
+  v:[40,49],
+  gram:[
+   {gp:"在 + nơi + động từ","gn":"在 + địa điểm + V = làm gì ở đâu.",ex:[["我在公司工作。","Wǒ zài gōngsī gōngzuò.","Tôi làm việc ở công ty."]]},
+   {gp:"要/想 – kế hoạch, ý muốn","gn":"要 = sẽ/cần; 想 = muốn.",ex:[["我要开会。","Wǒ yào kāihuì.","Tôi phải họp."],["我想完成报告。","Wǒ xiǎng wánchéng bàogào.","Tôi muốn hoàn thành báo cáo."]]}
+  ],
+  tasks:[["✍️ Viết","Viết 1 email ngắn tiếng Trung: xin hẹn một cuộc họp (3–4 câu)."],["🎧 Nghe","Nghe hội thoại công sở, ghi 5 từ mới bạn nghe được."],["🗣️ Nói","Nói 3 câu về công việc của bạn hôm nay (dùng 在, 要)."]]},
+ {n:6,tc:"var(--accent)",name:"Tiền & mua bán",theme:"Hỏi giá, mua/bán, đắt/rẻ, ngân hàng, lương, để dành.",
+  v:[50,59],
+  gram:[
+   {gp:"多少钱 – hỏi giá","gn":"…多少钱? = …bao nhiêu tiền? Đơn vị: 块/元, 毛.",ex:[["这个多少钱?","Zhège duōshao qián?","Cái này bao nhiêu tiền?"]]},
+   {gp:"比 – so sánh","gn":"A 比 B + tính từ = A hơn B (về…).",ex:[["这个比那个贵。","Zhège bǐ nàge guì.","Cái này đắt hơn cái kia."]]}
+  ],
+  tasks:[["✍️ Viết","Viết hội thoại mua hàng 6 câu (hỏi giá, mặc cả, trả tiền)."],["🎧 Nghe","Nghe đoạn mua sắm, ghi lại các con số & giá tiền."],["🗣️ Nói","Đóng vai mua đồ ở chợ, dùng 多少钱 và 比."]]},
+ {n:7,tc:"var(--cyan)",name:"Tài chính – Nền tảng",theme:"Kinh tế, thị trường, đầu tư, cổ phiếu, rủi ro, lợi nhuận.",
+  v:[60,69],
+  gram:[
+   {gp:"因为…所以… – nêu lý do","gn":"因为 (bởi vì) … 所以 (nên) …",ex:[["因为风险大,所以我不投资。","Yīnwèi fēngxiǎn dà, suǒyǐ wǒ bù tóuzī.","Vì rủi ro lớn nên tôi không đầu tư."]]},
+   {gp:"会/可能 – phỏng đoán","gn":"会/可能 + V = có khả năng sẽ…",ex:[["市场可能增长。","Shìchǎng kěnéng zēngzhǎng.","Thị trường có thể tăng trưởng."]]}
+  ],
+  tasks:[["✍️ Viết","Viết 4 câu nêu quan điểm về một khoản đầu tư (dùng 因为…所以)."],["🎧 Nghe","Nghe/đọc 1 bản tin kinh tế ngắn TQ, ghi 5 thuật ngữ."],["🗣️ Nói","Trình bày 3 câu: vì sao thị trường có thể tăng/giảm."]]},
+ {n:8,tc:"var(--blue)",name:"Tài chính – Doanh nghiệp",theme:"Thu–chi, lãi suất, trái phiếu, quỹ, báo cáo, phân tích, quyết định.",
+  v:[70,79],
+  gram:[
+   {gp:"把 – câu chữ 把","gn":"把 + tân ngữ + động từ + kết quả: nhấn mạnh xử lý đối tượng.",ex:[["我把钱存到银行。","Wǒ bǎ qián cún dào yínháng.","Tôi gửi tiền vào ngân hàng."]]},
+   {gp:"虽然…但是… – tương phản","gn":"虽然 (tuy) … 但是 (nhưng) …",ex:[["虽然成本高,但是利润也高。","Suīrán chéngběn gāo, dànshì lìrùn yě gāo.","Tuy chi phí cao nhưng lợi nhuận cũng cao."]]}
+  ],
+  tasks:[["✍️ Viết","Viết 5 câu tóm tắt tình hình thu–chi/lợi nhuận (dùng 把, 虽然…但是)."],["🎧 Nghe","Nghe đoạn nói về báo cáo tài chính, ghi thuật ngữ mới."],["🗣️ Nói","Thuyết trình 1 phút: một quyết định tài chính & lý do."],["🚀 Mini-project","Lập sổ tay 30 thuật ngữ tài chính (chữ – pinyin – nghĩa – 1 câu ví dụ) từ tuần 7–8."]]}
+];
+</script>
+<script id="engine">
+/* ============ ENGINE ============ */
+const KEY="zh_teacher_v1";
+let S = load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||seed();}catch(e){return seed();}}
+function seed(){return {done:{}, log:[], vocab:{}};}   // done: sessionKey->true ; log: [yyyy-mm-dd] ; vocab: id->'known'|'review'
+function save(){localStorage.setItem(KEY,JSON.stringify(S));}
+function today(){const d=new Date();return d.toISOString().slice(0,10);}
+
+/* ---- build sessions for a week (5 buổi) ---- */
+function sessionsFor(wi){
+  const w=W[wi]; const [a,b]=w.v; const ids=[];for(let i=a;i<=b;i++)ids.push(i);
+  const half=Math.ceil(ids.length/2);
+  const g=w.gram;
+  return [
+    {t:"Học 5 từ mới (đợt 1)",m:"Đọc mẹo nhớ + viết mỗi từ 3 lần",words:ids.slice(0,half),
+      subs:[["Đọc mẹo nhớ / chiết tự của 5 từ",""],["Viết tay mỗi từ 3 lần",""],["Đọc to 5 từ + đặt 1 câu mỗi từ",""]]},
+    {t:"Học 5 từ mới (đợt 2) + ôn đợt 1",m:"Thêm 5 từ, ôn nhanh 5 từ cũ",words:ids.slice(half),
+      subs:[["Đọc mẹo nhớ 5 từ mới",""],["Ôn nhanh 5 từ đợt 1 (che nghĩa, tự đọc)",""],["Đánh dấu 'Đã thuộc' cho từ đã nhớ ở tab Từ vựng",""]]},
+    {t:"Ngữ pháp điểm 1 + đặt câu",m:g[0].gp,words:ids,
+      subs:[["Học mẫu: "+g[0].gp,g[0].gn],["Chép 2 câu ví dụ mẫu",""],["Tự đặt 5 câu dùng mẫu này + từ tuần này",""]]},
+    {t:"Ngữ pháp điểm 2 + luyện nghe",m:g[1].gp,words:ids,
+      subs:[["Học mẫu: "+g[1].gp,g[1].gn],[w.tasks[1][0]+": "+w.tasks[1][1],""],["Đặt 3 câu dùng mẫu điểm 2",""]]},
+    {t:"Bài viết + ôn cả tuần + tự kiểm tra",m:"Nghiệm thu tuần",words:ids,
+      subs:[[w.tasks[0][0]+": "+w.tasks[0][1],""],["Ôn lại toàn bộ 10 từ (che chữ Hán, nhìn nghĩa viết lại)",""],[(w.tasks[2]?w.tasks[2][0]+": "+w.tasks[2][1]:"Tự kiểm tra: đọc lại 10 từ không vấp"),""]].concat(w.tasks[3]?[[w.tasks[3][0]+": "+w.tasks[3][1],""]]:[])}
+  ];
+}
+function sKey(wi,si){return "w"+wi+"s"+si;}
+function subKey(wi,si,k){return "w"+wi+"s"+si+"t"+k;}
+
+function sessDone(wi,si){
+  const subs=sessionsFor(wi)[si].subs;
+  return subs.every((_,k)=>S.done[subKey(wi,si,k)]);
+}
+function weekSessDone(wi){let c=0;for(let s=0;s<5;s++)if(S.done[sKey(wi,s)])c++;return c;}
+function weekComplete(wi){return weekSessDone(wi)===5;}
+function activeWeek(){for(let i=0;i<W.length;i++)if(!weekComplete(i))return i;return W.length-1;}
+
+/* ---- streak ---- */
+function streak(){
+  if(!S.log.length)return 0;
+  const set=new Set(S.log);
+  let d=new Date(), c=0;
+  // if today not studied, start counting from yesterday
+  const t=today();
+  if(!set.has(t))d.setDate(d.getDate()-1);
+  for(;;){const k=d.toISOString().slice(0,10);if(set.has(k)){c++;d.setDate(d.getDate()-1);}else break;}
+  return c;
+}
+function studiedToday(){return S.log.includes(today());}
+
+/* ============ RENDER TODAY ============ */
+let curWeek = activeWeek();
+function renderToday(){
+  // week picker
+  const wp=document.getElementById("wpick");
+  wp.innerHTML=W.map((w,i)=>`<button class="${i===curWeek?'active':''} ${weekComplete(i)?'done':''}" onclick="pickWeek(${i})">
+     Tuần<b>${w.n}</b>${weekComplete(i)?'✅':weekSessDone(i)+'/5'}</button>`).join("");
+  const w=W[curWeek];
+  const [a,b]=w.v; const nv=b-a+1;
+  // week head + quota
+  const gd=weekSessDone(curWeek);
+  document.getElementById("weekhead").innerHTML=`
+    <h3>Tuần ${w.n}: ${w.name}</h3>
+    <div class="cap">${w.theme}</div>
+    <h4 class="sec" style="margin-top:14px">📋 Định mức tuần này</h4>
+    <div class="quota">
+      <div class="qcell ${gd>=2?'hit':''}"><div class="ic">🀄</div><b>${nv}</b><span>từ mới</span></div>
+      <div class="qcell ${gd>=4?'hit':''}"><div class="ic">📐</div><b>2</b><span>ngữ pháp</span></div>
+      <div class="qcell ${gd>=5?'hit':''}"><div class="ic">✍️</div><b>1</b><span>bài viết</span></div>
+      <div class="qcell ${gd>=5?'hit':''}"><div class="ic">🎯</div><b>${gd}/5</b><span>buổi xong</span></div>
+    </div>`;
+  // sessions
+  const sess=sessionsFor(curWeek);
+  const nextIdx=sess.findIndex((_,i)=>!S.done[sKey(curWeek,i)]);
+  document.getElementById("sessions").innerHTML=sess.map((se,i)=>{
+    const done=S.done[sKey(curWeek,i)];
+    const isToday=(i===nextIdx && curWeek===activeWeek());
+    const wchips=se.words&&se.words.length&&i<2 ? `<div class="wchips">${se.words.map(id=>`<span class="wchip" onclick="event.stopPropagation();openWord(${id})"><b>${V[id][0]}</b><span>${V[id][2]}</span></span>`).join("")}</div>`:"";
+    const gramBlk=(i===2||i===3)?gramHTML(curWeek,i===2?0:1):"";
+    const subs=se.subs.map((st,k)=>{
+      const on=S.done[subKey(curWeek,i,k)];
+      return `<div class="subt ${on?'on':''}" onclick="toggleSub(${curWeek},${i},${k})"><div class="cb">✓</div>
+        <div class="tx">${st[0]}${st[1]?`<small>${st[1]}</small>`:""}</div></div>`;
+    }).join("");
+    const canFinish=se.subs.every((_,k)=>S.done[subKey(curWeek,i,k)]);
+    return `<div class="sess ${done?'done':''} ${isToday?'today':''} ${isToday||(!done&&i===nextIdx)?'open':''}" id="sess${i}">
+      <div class="shead" onclick="toggleOpen(${i})">
+        <div class="no">${done?'✓':i+1}</div>
+        <div class="ti"><b>Buổi ${i+1}: ${se.t}</b><div class="mt">${se.m}</div></div>
+        <div class="pill">${done?'Hoàn thành':isToday?'HÔM NAY':'Buổi '+(i+1)}</div>
+      </div>
+      <div class="sbody">
+        ${wchips}${gramBlk}
+        ${subs}
+        <button class="finbtn" ${(done||!canFinish)?'disabled':''} onclick="finishSession(${curWeek},${i})">
+          ${done?'✓ Đã hoàn thành buổi này':'Hoàn thành buổi học ✅'}</button>
+      </div>
+    </div>`;
+  }).join("");
+  renderTeacher();
+}
+function gramHTML(wi,gi){
+  const g=W[wi].gram[gi];
+  return `<div class="gram"><div class="gp">📐 ${g.gp}</div><div class="gn">${g.gn}</div>
+    ${g.ex.map(e=>`<div class="ex"><div class="zh">${e[0]}</div><div class="py">${e[1]}</div><div class="vi">${e[2]}</div></div>`).join("")}</div>`;
+}
+function toggleOpen(i){document.getElementById("sess"+i).classList.toggle("open");}
+function pickWeek(i){curWeek=i;renderToday();}
+function toggleSub(wi,si,k){
+  const key=subKey(wi,si,k);
+  S.done[key]=!S.done[key];
+  // sync session-level done flag if all subs
+  save();renderToday();
+}
+function finishSession(wi,si){
+  S.done[sKey(wi,si)]=true;
+  const t=today(); if(!S.log.includes(t))S.log.push(t);
+  save();
+  // advance view if week done
+  if(weekComplete(wi)&&wi<W.length-1){curWeek=wi+1;}
+  renderToday();renderProgress();
+}
+
+/* ============ TEACHER MESSAGE ============ */
+function renderTeacher(){
+  const st=streak();document.getElementById("streak").textContent=st;
+  const aw=activeWeek();const gd=weekSessDone(aw);
+  let msg,sub;
+  const allDone=W.every((_,i)=>weekComplete(i));
+  if(allDone){msg="Tuyệt vời! Bạn đã hoàn tất 8 tuần đầu 🎉";sub="Sẵn sàng cho block hướng thẳng HSK 4 – nói mình soạn tiếp nhé.";}
+  else if(!studiedToday()){
+    msg=st>0?`Hôm nay chưa học kìa — giữ chuỗi ${st} ngày nào! 🔥`:"Bắt đầu buổi học hôm nay thôi 💪";
+    sub=`Đang ở Tuần ${W[aw].n} · ${W[aw].name} — bạn đã xong ${gd}/5 buổi.`;
+  } else {
+    msg=`Làm tốt lắm! Hôm nay bạn đã học ✅`;
+    sub=gd<5?`Tuần ${W[aw].n}: còn ${5-gd} buổi nữa là đạt định mức.`:`Tuần ${W[aw].n} đã đủ định mức — có thể sang tuần mới.`;
+  }
+  document.getElementById("tmsg").textContent=msg;
+  document.getElementById("tsub").textContent=sub;
+}
+
+/* ============ VOCAB BANK ============ */
+function initVocabFilters(){
+  const sel=document.getElementById("vweek");
+  sel.innerHTML=`<option value="all">Tất cả các tuần</option>`+W.map((w,i)=>`<option value="${i}">Tuần ${w.n} · ${w.name}</option>`).join("");
+}
+function renderVocab(){
+  const wv=document.getElementById("vweek").value;
+  const tv=document.getElementById("vtype").value;
+  const sv=document.getElementById("vsta").value;
+  let idx=V.map((_,i)=>i);
+  if(wv!=="all"){const[a,b]=W[+wv].v;idx=idx.filter(i=>i>=a&&i<=b);}
+  if(tv!=="all")idx=idx.filter(i=>V[i][4]===tv);
+  if(sv!=="all")idx=idx.filter(i=>{const s=S.vocab[i]||"new";return s===sv;});
+  const known=V.filter((_,i)=>S.vocab[i]==="known").length;
+  document.getElementById("vstat").innerHTML=`Đã thuộc <b>${known}</b>/${V.length} từ`;
+  document.getElementById("vgrid").innerHTML=idx.map(i=>{
+    const w=V[i];const state=S.vocab[i]||"new";
+    return `<div class="vc ${state}" id="vc${i}">
+      <div class="pos">${w[3]}</div>
+      <div class="top"><div class="hz">${w[0]}</div><div class="meta"><div class="py">${w[1]}</div><div class="vn">${w[2]}</div></div></div>
+      <div class="tip"><span class="tag ${w[4]}">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}</div>
+      <div class="act">
+        <button class="b-k" onclick="mark(${i},'known')">✓ Đã thuộc</button>
+        <button class="b-r" onclick="mark(${i},'review')">↻ Cần ôn</button>
+      </div></div>`;
+  }).join("");
+}
+function mark(i,st){S.vocab[i]=(S.vocab[i]===st)?undefined:st;if(!S.vocab[i])delete S.vocab[i];save();renderVocab();renderProgress();}
+
+/* ============ ROADMAP ============ */
+function renderRoad(){
+  document.getElementById("rmap").innerHTML=W.map(w=>{
+    const [a,b]=w.v;
+    return `<div class="rm" style="--tc:${w.tc}">
+      <div class="wk">TUẦN ${w.n}</div><h5>${w.name}</h5>
+      <div class="th">${w.theme}</div>
+      <div class="qs"><span>🀄 ${b-a+1} từ</span><span>📐 2 NP</span><span>✍️ viết</span></div>
+    </div>`;
+  }).join("");
+}
+
+/* ============ PROGRESS ============ */
+function renderProgress(){
+  const days=new Set(S.log).size;
+  let sess=0;W.forEach((_,i)=>sess+=weekSessDone(i));
+  const known=V.filter((_,i)=>S.vocab[i]==="known").length;
+  const weeksDone=W.filter((_,i)=>weekComplete(i)).length;
+  document.getElementById("pDays").textContent=days;
+  document.getElementById("pSess").textContent=sess;
+  document.getElementById("pWords").textContent=known;
+  document.getElementById("pWeeks").textContent=weeksDone;
+  document.getElementById("weekbars").innerHTML=W.map((w,i)=>{
+    const p=Math.round(weekSessDone(i)/5*100);
+    return `<div class="wkrow"><div class="nm">Tuần ${w.n} · ${w.name}</div>
+      <div class="bar"><span style="width:${p}%"></span></div><div class="pc">${p}%</div></div>`;
+  }).join("");
+  const vp=Math.round(known/V.length*100);
+  document.getElementById("vocbar").style.width=vp+"%";
+  document.getElementById("voctext").innerHTML=`Đã thuộc <b style="color:var(--green)">${known}</b>/${V.length} từ · Cần ôn ${V.filter((_,i)=>S.vocab[i]==="review").length} từ`;
+}
+
+/* ============ WORD MODAL ============ */
+function openWord(i){const w=V[i];
+  document.getElementById("mHz").textContent=w[0];
+  document.getElementById("mPy").textContent=w[1];
+  document.getElementById("mVn").textContent=w[2]+" · "+w[3];
+  document.getElementById("mTip").innerHTML=`<span class="tag ${w[4]}" style="display:inline-block;margin-bottom:7px">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}`;
+  document.getElementById("modal").classList.add("show");
+}
+function closeModal(){document.getElementById("modal").classList.remove("show");}
+
+/* ============ NAV ============ */
+function tab(id,btn){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
+  document.getElementById(id).classList.add("show");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  if(id==="vocab")renderVocab();
+  if(id==="prog")renderProgress();
+  if(id==="road")renderRoad();
+}
+function resetAll(){if(confirm("Đặt lại toàn bộ tiến độ (buổi học, từ vựng, streak)?")){S=seed();save();curWeek=0;renderToday();renderVocab();renderProgress();}}
+
+/* init */
+initVocabFilters();renderRoad();renderToday();renderProgress();
+</script>
+</body>
+</html>
