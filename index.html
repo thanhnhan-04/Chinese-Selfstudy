@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Giáo viên Tiếng Trung – Kèm cặp mỗi ngày</title>
+<title>Lộ trình HSK 5 – Giáo viên Tiếng Trung kèm cặp</title>
 <style>
   :root{
     --bg:#0e1320; --panel:#161d2e; --panel2:#1d2539; --panel3:#232c44; --line:#2c3654;
@@ -34,8 +34,8 @@
   .teacher .streak span{font-size:10.5px;color:var(--muted)}
 
   /* nav tabs */
-  .nav{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:5px;margin:6px 0 18px;position:sticky;top:8px;z-index:20}
-  .nav button{flex:1;background:none;border:none;color:var(--muted);padding:10px 6px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:600;transition:.15s}
+  .nav{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:5px;margin:6px 0 18px;position:sticky;top:8px;z-index:20;flex-wrap:wrap}
+  .nav button{flex:1;background:none;border:none;color:var(--muted);padding:10px 6px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:600;transition:.15s;min-width:90px}
   .nav button.active{background:var(--panel3);color:var(--txt)}
   .nav button:hover{color:var(--txt)}
 
@@ -55,6 +55,7 @@
   .wpick button.active{border-color:var(--blue);color:var(--txt);box-shadow:0 0 0 1px var(--blue)}
   .wpick button.done{color:var(--green);border-color:rgba(38,194,129,.4)}
   .wpick button b{display:block;font-size:14px}
+  .wpick .pdiv{flex:none;align-self:center;font-size:10px;color:var(--gold);letter-spacing:1px;padding:0 2px;writing-mode:vertical-rl;opacity:.7}
 
   /* quota chips */
   .quota{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:6px 0 4px}
@@ -64,6 +65,8 @@
   .qcell span{font-size:11px;color:var(--muted)}
   .qcell.hit{border-color:rgba(38,194,129,.5);background:rgba(38,194,129,.08)}
   .qcell.hit b{color:var(--green)}
+
+  .phbadge{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.5px;padding:3px 9px;border-radius:20px;margin-bottom:6px}
 
   /* session list */
   .sess{border:1px solid var(--line);border-radius:14px;margin-bottom:11px;overflow:hidden;background:var(--panel2)}
@@ -86,6 +89,11 @@
   .subt.on .tx{opacity:.55;text-decoration:line-through}
   .subt .tx{font-size:13.7px}
   .subt .tx small{color:var(--muted);display:block;font-size:12px}
+  .notebox{margin-top:10px}
+  .notebox label{font-size:11.5px;color:var(--gold);letter-spacing:.5px;text-transform:uppercase}
+  .notebox textarea{width:100%;margin-top:5px;background:#0b1020;border:1px solid var(--line);color:var(--txt);border-radius:10px;
+    padding:10px 12px;font-size:13.5px;font-family:inherit;resize:vertical;min-height:64px;line-height:1.6}
+  .notebox textarea:focus{outline:none;border-color:var(--blue)}
   .finbtn{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;color:#fff;
     font-weight:700;font-size:14px;padding:12px;border-radius:11px;cursor:pointer;transition:.15s}
   .finbtn:hover{filter:brightness(1.08)}
@@ -130,7 +138,37 @@
   .vc.known .b-k{background:var(--green);color:#04140c;border-color:var(--green)}
   .vc.review .b-r{background:var(--gold);color:#160e00;border-color:var(--gold)}
 
+  /* flashcard */
+  .fcbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .fcbar select{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 10px;font-size:13px}
+  .fcbar .btn{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:8px 12px;font-size:13px;cursor:pointer}
+  .fcbar .btn:hover{border-color:var(--gold)}
+  .fcstat{margin-left:auto;color:var(--muted);font-size:13px}
+  .flash{perspective:1200px;max-width:440px;margin:0 auto}
+  .flash .fcard{position:relative;min-height:260px;cursor:pointer;transition:transform .5s;transform-style:preserve-3d}
+  .flash .fcard.flip{transform:rotateY(180deg)}
+  .flash .face{position:absolute;inset:0;backface-visibility:hidden;background:var(--panel);border:1px solid var(--line);
+    border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px}
+  .flash .back{transform:rotateY(180deg)}
+  .flash .face .big{font-size:70px;font-weight:800;line-height:1}
+  .flash .face .med{font-size:26px;font-weight:700}
+  .flash .face .py{color:var(--gold);font-size:20px;margin-top:8px}
+  .flash .face .vn{font-size:17px;margin-top:3px}
+  .flash .face .tip{font-size:12.6px;color:#cfd8ee;background:var(--panel2);border-radius:9px;padding:9px 11px;margin-top:12px;line-height:1.5;text-align:left}
+  .flash .hint{color:var(--muted);font-size:11.5px;margin-top:14px}
+  .fcact{display:flex;gap:10px;max-width:440px;margin:14px auto 0}
+  .fcact button{flex:1;border:none;border-radius:11px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;transition:.15s}
+  .fcact .no{background:rgba(226,59,59,.15);color:#ff8f8f;border:1px solid rgba(226,59,59,.4)}
+  .fcact .skip{background:var(--panel2);color:var(--muted);border:1px solid var(--line)}
+  .fcact .yes{background:rgba(38,194,129,.15);color:var(--green);border:1px solid rgba(38,194,129,.4)}
+  .fcact button:hover{filter:brightness(1.15)}
+  .fcdone{text-align:center;padding:30px;color:var(--muted)}
+  .fcdone b{color:var(--green);font-size:20px}
+
   /* roadmap overview */
+  .phase-h{margin:20px 0 10px}
+  .phase-h .nm{font-size:16px;font-weight:800}
+  .phase-h .sb{font-size:12.5px;color:var(--muted);margin-top:2px}
   .rmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
   .rm{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px;border-top:3px solid var(--tc)}
   .rm .wk{font-size:11px;color:var(--muted);letter-spacing:1px}
@@ -147,7 +185,7 @@
   .bar{height:11px;background:#0b1020;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:8px}
   .bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));width:0;transition:.4s}
   .wkrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line)}
-  .wkrow .nm{width:120px;font-size:13px;flex:none}
+  .wkrow .nm{width:150px;font-size:13px;flex:none}
   .wkrow .bar{flex:1;margin:0}
   .wkrow .pc{width:44px;text-align:right;font-size:12px;color:var(--muted);flex:none}
   .reset{background:none;border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:8px 14px;cursor:pointer;font-size:12.5px;margin-top:12px}
@@ -168,20 +206,21 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="cn">中文私教 · KÈM CẶP</div>
-    <h1>Giáo viên Tiếng Trung của bạn</h1>
-    <p>Lộ trình 8 tuần đầu · học có định mức mỗi tuần · nhớ chữ bằng chiết tự &amp; mẹo đời thường</p>
+    <div class="cn">中文私教 · 冲刺 HSK 5</div>
+    <h1>Lộ trình chinh phục HSK 5</h1>
+    <p>18 tuần · 3 buổi/tuần · mỗi buổi 1–1.5 giờ · đủ 6 kỹ năng: từ vựng · đặt câu · viết · nghe · nói · đọc</p>
   </header>
 
   <div class="teacher">
     <div class="ava">🧑‍🏫</div>
-    <div class="msg"><b id="tmsg">Chào bạn! Bắt đầu buổi học đầu tiên nhé.</b>
-      <div class="sub" id="tsub">Mỗi tuần: 10 từ mới · 2 điểm ngữ pháp · 1 bài viết · 2 buổi nghe.</div></div>
+    <div class="msg"><b id="tmsg">Chào bạn! Sẵn sàng cho hành trình HSK 5 chưa?</b>
+      <div class="sub" id="tsub">Mỗi tuần: 10 từ mới · 2 điểm ngữ pháp · 1 bài viết · luyện nghe–nói–đọc.</div></div>
     <div class="streak"><b id="streak">0</b><span>ngày streak 🔥</span></div>
   </div>
 
   <div class="nav">
     <button class="active" onclick="tab('today',this)">📅 Hôm nay</button>
+    <button onclick="tab('flash',this)">⚡ Flashcard</button>
     <button onclick="tab('vocab',this)">🀄 Từ vựng</button>
     <button onclick="tab('road',this)">🗺️ Lộ trình</button>
     <button onclick="tab('prog',this)">📊 Tiến độ</button>
@@ -194,6 +233,25 @@
     <div id="sessions"></div>
   </div>
 
+  <!-- FLASHCARD -->
+  <div class="page" id="flash">
+    <div class="fcbar">
+      <select id="fcweek" onchange="buildDeck()"></select>
+      <select id="fcdir" onchange="buildDeck()">
+        <option value="zh">Chữ Hán → Nghĩa</option>
+        <option value="vn">Nghĩa → Chữ Hán</option>
+      </select>
+      <select id="fcscope" onchange="buildDeck()">
+        <option value="all">Tất cả từ</option>
+        <option value="review">Chỉ từ cần ôn</option>
+        <option value="new">Chỉ từ chưa học</option>
+      </select>
+      <button class="btn" onclick="buildDeck()">🔀 Trộn lại</button>
+      <div class="fcstat" id="fcstat"></div>
+    </div>
+    <div id="fcarea"></div>
+  </div>
+
   <!-- VOCAB -->
   <div class="page" id="vocab">
     <div class="vfilter">
@@ -201,7 +259,7 @@
       <select id="vtype" onchange="renderVocab()">
         <option value="all">Tất cả kiểu mẹo</option>
         <option value="ct">Chiết tự (gốc chữ)</option>
-        <option value="mo">Mẹo đời thường</option>
+        <option value="mo">Mẹo nhớ / ghép nghĩa</option>
       </select>
       <select id="vsta" onchange="renderVocab()">
         <option value="all">Mọi trạng thái</option>
@@ -217,13 +275,17 @@
   <!-- ROADMAP -->
   <div class="page" id="road">
     <div class="card">
-      <h3>Toàn cảnh 8 tuần đầu</h3>
-      <div class="cap">Đây là "giai đoạn khởi động" giáo viên thiết kế cho bạn (từ trình độ cơ bản). Học tuần tự, mỗi tuần ~3–5 giờ chia thành 5 buổi. Xong tuần 8, mình sẽ soạn tiếp block hướng thẳng HSK 4 &amp; tài chính chuyên sâu.</div>
+      <h3>Toàn cảnh lộ trình 18 tuần → HSK 5</h3>
+      <div class="cap">Chia 3 giai đoạn: củng cố nền HSK 3 → mở rộng HSK 4 → nâng cao HSK 5. Mỗi tuần 3 buổi (60–90 phút),
+      phủ đủ 6 kỹ năng. Đây là <b style="color:var(--txt)">bộ khung ~180 từ lõi tần suất cao + các mẫu ngữ pháp trọng tâm</b>;
+      hãy bổ sung thêm từ trong danh sách HSK đầy đủ khi luyện đề.</div>
     </div>
-    <div class="rmap" id="rmap"></div>
+    <div id="rmap"></div>
     <div class="card" style="margin-top:16px">
-      <h4 class="sec">🎯 Đích đến cuối lộ trình đầy đủ</h4>
-      <div class="cap">HSK 1→2→3 (nền) → <b style="color:var(--txt)">HSK 4 (~1200 từ, mục tiêu ≥240/300)</b> → Tiếng Trung công việc ngành tài chính – đầu tư (email, họp, thuật ngữ, đàm phán). 8 tuần này phủ nền HSK 2 và gieo sẵn ~30 thuật ngữ tài chính lõi.</div>
+      <h4 class="sec">🎯 Đích đến</h4>
+      <div class="cap"><b style="color:var(--txt)">HSK 5</b> (~2500 từ, mục tiêu ≥180/300 mỗi phần). Sau 18 tuần bạn nắm vững
+      bộ từ lõi + toàn bộ mẫu ngữ pháp then chốt, viết được đoạn 100–200 chữ, nghe–đọc bài trung cấp và diễn đạt quan điểm.
+      Giai đoạn cuối tập trung thành ngữ &amp; văn viết học thuật để bứt phá phần Viết.</div>
     </div>
   </div>
 
@@ -240,7 +302,7 @@
       <div id="weekbars"></div>
     </div>
     <div class="card">
-      <h4 class="sec">🀄 Vốn từ</h4>
+      <h4 class="sec">🀄 Vốn từ HSK 5</h4>
       <div class="bar"><span id="vocbar"></span></div>
       <div class="cap" id="voctext" style="margin-top:7px"></div>
       <button class="reset" onclick="resetAll()">↺ Đặt lại toàn bộ tiến độ</button>
@@ -248,7 +310,8 @@
   </div>
 
   <div class="foot">
-    Tiến độ lưu tự động trên trình duyệt này (localStorage). Nguồn chiết tự: "Bí Quyết Chiết Tự Chữ Hán" (thuphapdungpham.com / fb.com/NhoHanTu) — mẹo đời thường do giáo viên AI biên soạn.
+    Tiến độ, ghi chú &amp; flashcard lưu tự động trên trình duyệt này (localStorage). Nội dung do giáo viên AI biên soạn theo
+    khung HSK. Nguồn cảm hứng chiết tự: "Bí Quyết Chiết Tự Chữ Hán".
   </div>
 </div>
 
@@ -267,193 +330,426 @@
 /* ============ VOCAB DATA ============ */
 /* [hz, pinyin, nghĩa, loại từ, tipType(ct|mo), tip] */
 const V = [
-/* --- Tuần 1: Người & Gia đình (0-9) --- */
-["我","wǒ","tôi","đại từ","ct","Hình cánh tay cầm vũ khí chống xuống đất — tư thế con người sẵn sàng khẳng định mình. Nhớ: 我 = 'cái tôi' đứng vững, tay lăm lăm vũ khí."],
-["你","nǐ","bạn","đại từ","mo","Bộ 亻(người) đứng cạnh 尔. Người (亻) mà mình quay sang chào 'nị hảo' chính là 'bạn'. Cứ thấy 亻bên trái là chuyện của con người."],
-["好","hǎo","tốt / khỏe","tính từ","mo","女 (phụ nữ) + 子 (đứa con). Có mẹ bồng con là cảnh 'tốt đẹp' nhất đời. Mẹ + con = 好."],
-["家","jiā","nhà / gia đình","danh từ","ct","Mái nhà 宀 che con lợn 豕 bên dưới. Nhà nông xưa nuôi lợn ngay trong nhà — có mái + có 'của cải' (lợn) mới thành cái nhà."],
-["男","nán","đàn ông","danh từ","mo","田 (ruộng) + 力 (sức). Người bỏ 'sức' ra cày 'ruộng' = đàn ông. Nhớ hình: gồng sức trên đồng ruộng."],
-["女","nǚ","phụ nữ","danh từ","mo","Tượng hình một người phụ nữ đang quỳ, khoanh tay dịu dàng. Nét cong mềm mại chính là dáng 女."],
-["爱","ài","yêu","động từ","ct","Bản phồn thể 愛 có bộ 心 (trái tim) ở giữa. Bản giản thể 爱 lược mất chữ tâm → 'yêu mà thiếu trái tim'. Nhớ chữ bằng chính cái nó đánh rơi: con tim."],
-["朋友","péngyou","bạn bè","danh từ","ct","朋 xưa vẽ hai xâu tiền/hai cánh cân song song, cân bằng như hai người ngang hàng. Bạn bè là hai người 'cùng một vạch', không ai hơn ai."],
-["名字","míngzi","tên","danh từ","ct","名 = 夕 (chiều tối) + 口 (miệng). Trời tối không nhìn rõ mặt, phải 'gọi miệng' tên nhau để nhận ra → 名 = tên gọi."],
-["妈妈","māma","mẹ","danh từ","mo","女 (nữ) cho nghĩa + 马 (mã, đọc 'mà') cho âm. Người nữ + âm 'ma-ma' = mẹ. Rất nhiều chữ chỉ người nữ đều mượn 女 làm gốc."],
-/* --- Tuần 2: Thời gian (10-19) --- */
-["天","tiān","trời / ngày","danh từ","ct","大 (người dang tay) đội thêm một nét ngang trên đầu = bầu trời phía trên con người. Cái ở cao nhất, trên cả người = 天."],
-["明天","míngtiān","ngày mai","danh từ","ct","明 = 日 (mặt trời) + 月 (mặt trăng) → hai nguồn sáng gộp lại = 'sáng'. 明天 = 'ngày sáng sắp tới' = ngày mai."],
-["今天","jīntiān","hôm nay","danh từ","mo","今 trông như một mái che úp xuống 'ngay lúc này'. 今天 = cái trời của lúc này = hôm nay. Cặp với 明天 cho dễ nhớ."],
-["年","nián","năm","danh từ","mo","Chữ xưa vẽ người gánh bó lúa về. Một mùa gặt trọn vẹn = một 'năm'. Nhớ: một vụ lúa = một năm."],
-["月","yuè","tháng / trăng","danh từ","mo","Tượng hình vầng trăng khuyết. Trăng tròn rồi lại khuyết trọn một vòng = một 'tháng'. Cứ thấy 月 hãy nghĩ tới mặt trăng."],
-["星期","xīngqī","tuần","danh từ","ct","星 = 日 (mặt trời) + 生 (sinh) → 'ngôi sao mọc ra'. 期 = kỳ hạn. Vòng sao trời xoay hết một kỳ ngắn = một tuần."],
-["现在","xiànzài","bây giờ","danh từ","mo","现 (hiện: viên ngọc 王 lộ ra cho 见 thấy) + 在 (đang ở). 'Cái đang thấy, đang có mặt' = ngay bây giờ."],
-["早上","zǎoshang","buổi sáng","danh từ","ct","早: 日 (mặt trời) nằm trên nét 十 → mặt trời vừa nhô lên khỏi mặt đất, đầu ngày = sớm/sáng."],
-["晚上","wǎnshang","buổi tối","danh từ","mo","晚 = 日 (mặt trời) + 免 (miễn: được tha). Mặt trời 'được cho nghỉ', lặn đi ngủ = buổi tối. Đối lập trực tiếp với 早上."],
-["时候","shíhou","lúc / thời điểm","danh từ","mo","时 (thời) có bộ 日 (mặt trời) — mọi thứ về thời gian đều dính mặt trời. Hễ hỏi 'lúc nào' là có bộ 日 xuất hiện."],
-/* --- Tuần 3: Hành động hằng ngày (20-29) --- */
-["学习","xuéxí","học tập","động từ","mo","学: đứa trẻ 子 dưới mái trường, hai tay quơ đón kiến thức. 习 (phồn 習): lông cánh chim non tập vỗ đi vỗ lại. Học = tiếp nhận + tập lại nhiều lần."],
-["工作","gōngzuò","làm việc","động từ","ct","工 vốn là cái thước/công cụ của người thợ. Cầm 'công cụ' (工) mà 作 (làm ra) = công việc. Nhớ: 工 = dụng cụ lao động."],
-["吃","chī","ăn","động từ","mo","Bộ 口 (miệng) + 乞 (xin). Đưa vào 'miệng' thứ mình cần = ăn. Quy tắc vàng: 口 bên trái = chuyện của cái miệng."],
-["喝","hē","uống","động từ","mo","Cũng bộ 口 (miệng) bên trái, vì uống cũng qua miệng. Phân biệt với 吃 (ăn) nhờ phần bên phải khác nhau. Thấy 口 → miệng làm việc."],
-["看","kàn","xem / nhìn","động từ","ct","手 (bàn tay) đặt trên 目 (con mắt): đưa tay lên che nắng trên mắt để nhìn ra xa. Đúng động tác ta vẫn làm khi nhìn về phía chân trời."],
-["说","shuō","nói","động từ","mo","Bộ 讠(ngôn: lời nói) bên trái + 兑. Hễ chữ nào dính tới lời nói đều mang bộ 讠. Coi 讠như 'cái loa' gắn bên chữ."],
-["听","tīng","nghe","động từ","mo","Giản thể ghép 口 (miệng) + 斤. Mẹo ngược cho dễ nhớ: hình dung 'há miệng ra mà lắng nghe' cho hết ý người nói."],
-["写","xiě","viết","động từ","mo","Bộ 冖 (mái che) trên chữ 与. Như ngồi dưới mái nhà, đặt bút xuống mà viết. Nhớ: có mái ở trên, có tay viết ở dưới."],
-["读","dú","đọc","động từ","mo","Bộ 讠(lời nói) + 卖 (bán). Đọc to là 'rao' con chữ thành lời phát ra ngoài → 讠+ 卖. Lại một chữ có bộ 讠= liên quan miệng lưỡi."],
-["休息","xiūxi","nghỉ ngơi","động từ","ct","休 = 亻(người) tựa vào 木 (cây). Người làm đồng mệt, tìm gốc cây tựa lưng nghỉ mát = nghỉ ngơi. Hình ảnh rất đời."],
-/* --- Tuần 4: Nơi chốn & đi lại (30-39) --- */
-["去","qù","đi (đến)","động từ","ct","Hình một người 大 rời khỏi cái vòng/chỗ ở (厶) sau lưng → dứt áo mà đi = 去."],
-["来","lái","đến","động từ","mo","Phồn thể 來 vẽ bông lúa chín trĩu. Mùa lúa 'về', khách 'tới' = đến. Cặp đôi luôn nhớ chung: 去 (đi) ⇄ 来 (đến)."],
-["走","zǒu","đi bộ / rời đi","động từ","ct","Phần trên là người vung tay sải bước, phần dưới là 止 (bàn chân). Người + chân chuyển động = đi/chạy."],
-["坐","zuò","ngồi","động từ","ct","Hai người 人人 ngồi hai bên, ở giữa là 土 (gò đất): cảnh hai người cùng ngồi nghỉ trên gò đất = ngồi."],
-["车","chē","xe","danh từ","mo","Giản thể của 車 — vốn là hình nhìn từ trên xuống: nét sổ dọc là trục, các nét ngang là bánh và thùng xe. Vẽ lại chiếc xe bò cổ."],
-["路","lù","đường","danh từ","mo","Bộ 足 (chân) + 各 (mỗi). Bàn chân đi tới 'mỗi' nơi, dẫm mãi thành đường. Có bộ 足 = chuyện của bàn chân."],
-["到","dào","đến / tới nơi","động từ","mo","至 (tới nơi) + 刂(con dao). Như mũi dao cắm đúng 'tới đích'. Nhớ: 到 = cắm phập tới nơi."],
-["学校","xuéxiào","trường học","danh từ","mo","校 = 木 (gỗ) + 交 (giao lưu). Ngôi nhà gỗ nơi mọi người 'giao lưu' và học = trường học."],
-["公司","gōngsī","công ty","danh từ","ct","公 = 八 (bẻ đôi, chia ra) + 厶 (cái riêng tư): bẻ gãy cái 'riêng' để thành 'của chung' = công. 司 = trông coi. Tổ chức chung có người quản = công ty."],
-["商店","shāngdiàn","cửa hàng","danh từ","mo","店 = 广 (mái hiên) + 占 (chiếm chỗ). Cái sạp 'chiếm chỗ' dưới mái hiên để bán hàng = cửa hàng."],
-/* --- Tuần 5: Văn phòng (40-49) --- */
-["会议","huìyì","cuộc họp","danh từ","mo","会 (tụ họp) + 议 (bàn bạc, có bộ 讠lời). Mọi người 'tụ' lại để 'bàn lời' = họp. Có bộ 讠= dùng lời."],
-["电脑","diànnǎo","máy tính","danh từ","mo","电 (điện) + 脑 (não). 'Bộ não chạy bằng điện' = máy tính. Ghép nghĩa cực dễ nhớ."],
-["邮件","yóujiàn","email / thư","danh từ","mo","邮 (bưu) + 件 (món, kiện). 'Món gửi qua đường bưu điện' = thư/email. 电子邮件 = thư điện tử."],
-["经理","jīnglǐ","quản lý / trưởng phòng","danh từ","ct","理 gốc là mài ngọc theo đúng đường vân (玉 + 里) → xử lý việc theo cái 'lẽ/thớ' của nó. 经理 là người 'xử mọi việc cho hợp lẽ' = quản lý."],
-["同事","tóngshì","đồng nghiệp","danh từ","ct","同 = cùng chung (cái thùng chung một miệng 口). 事 = việc. Cùng chung một công việc = đồng nghiệp."],
-["报告","bàogào","báo cáo","danh từ","ct","告 = 牛 (con trâu) + 口 (miệng): xưa dắt trâu ra tế rồi 'khấn báo' thần linh. 报 = đưa tin đáp lại. Đưa tin + trình bày = báo cáo."],
-["计划","jìhuà","kế hoạch","danh từ","mo","计 (tính toán, có bộ 讠lời + 十 đủ) + 划 (vạch ra). 'Vạch sẵn đường đã tính đủ' = kế hoạch."],
-["完成","wánchéng","hoàn thành","động từ","ct","成 vẽ người cầm giáo giữ vững thành trì → nghĩa 'làm nên, thành tựu'. 完 = trọn vẹn. Làm trọn nên việc = hoàn thành."],
-["忙","máng","bận","tính từ","mo","忄(trái tim) + 亡 (mất). Bận đến mức 'cái tâm như đánh mất', quay cuồng = 忙. Nhớ: bận quá mất cả hồn."],
-["帮助","bāngzhù","giúp đỡ","động từ","mo","助 = 力 (sức) + 且. Bỏ thêm 'sức' của mình cho người khác = giúp. Có 力 = liên quan tới ra sức."],
-/* --- Tuần 6: Tiền & mua bán (50-59) --- */
-["钱","qián","tiền","danh từ","mo","Bộ 钅(kim loại) + 戋 (âm 'tiễn'). Tiền xưa đúc bằng kim loại nên mang bộ 钅. Quy tắc: vật bằng kim loại quý thường có bộ 钅."],
-["买","mǎi","mua","động từ","ct","Giản thể 买: bộ 冖 (che, chộp) trên 头 (cái đầu). Sách ví như 'chộp lấy, ôm về' — bỏ tiền chộp đồ về nhà = mua. Đối lập với 卖 (bán)."],
-["卖","mài","bán","động từ","mo","卖 chính là 买 (mua) đội thêm 十 (thập) lên đầu. Người bán luôn 'cộng thêm' để lấy lời → thêm nét trên đầu = bán. Mẹo phân biệt cực nhanh."],
-["贵","guì","đắt","tính từ","mo","Phần dưới là 贝 (vỏ sò = tiền cổ). Cái gì 'ngốn nhiều 贝' = đắt. Hễ thấy 贝 là dính tới tiền của."],
-["便宜","piányi","rẻ","tính từ","mo","便 (tiện) + 宜 (hợp). 'Vừa tiện vừa hợp túi tiền' = rẻ. Nhớ theo cụm: rẻ nên mua rất 'tiện'."],
-["银行","yínháng","ngân hàng","danh từ","ct","银 = 钅(kim) + 艮 → kim loại trắng = bạc. 行 vốn nghĩa 'dãy phố buôn bán' (đọc háng). Nơi cất giữ bạc tiền thành dãy = ngân hàng."],
-["工资","gōngzī","lương","danh từ","mo","工 (công sức) + 资 (của cải, có 贝 tiền). 'Của trả cho công sức bỏ ra' = lương."],
-["花","huā","tiêu (tiền) / hoa","động từ","mo","Gốc nghĩa là 'hoa' (bộ 艹 cỏ ở trên). Tiêu tiền ví như tiền 'nở bung rồi bay đi như cánh hoa'. Một chữ hai nghĩa: hoa & tiêu tiền."],
-["存","cún","gửi / để dành","động từ","mo","Gần giống 在 (tại) nhưng có thêm 子 (con). 'Để đó dành cho con' = để dành, gửi. 存钱 = để dành tiền."],
-["价格","jiàgé","giá cả","danh từ","mo","价 có bộ 亻(người) — giá do con người định ra. 格 = ô/khung. 'Con số người đặt vào khung' = giá cả."],
-/* --- Tuần 7: Tài chính 1 (60-69) --- */
-["经济","jīngjì","kinh tế","danh từ","mo","经 (sợi dọc/vận hành, bộ 纟tơ) + 济 (cứu giúp qua sông, bộ 氵nước). Gốc thành ngữ 'kinh bang tế thế' = trị nước cứu đời → kinh tế."],
-["市场","shìchǎng","thị trường","danh từ","mo","市 (chợ) + 场 (bãi/sân, có bộ 土 đất). 'Cái sân để họp chợ' = thị trường. Rất trực quan."],
-["投资","tóuzī","đầu tư","động từ","mo","投 có bộ 扌(tay) — nghĩa 'ném/bỏ vào'. 资 = vốn (có 贝 tiền). 'Ra tay ném vốn vào' một cơ hội = đầu tư."],
-["股票","gǔpiào","cổ phiếu","danh từ","mo","股 (cổ: phần được chia) + 票 (tờ phiếu). 'Tờ phiếu ghi phần sở hữu' trong công ty = cổ phiếu."],
-["风险","fēngxiǎn","rủi ro","danh từ","mo","风 (gió) + 险 (hiểm, có bộ 阝= gò dốc). 'Gió lớn nơi vách dốc hiểm trở' = rủi ro. Hình ảnh đứng chênh vênh trước gió."],
-["利润","lìrùn","lợi nhuận","danh từ","ct","利 = 禾 (cây lúa) + 刂(con dao): cầm dao gặt lúa chín — cái 'lợi' thu về sau vụ mùa. 润 = thấm ướt. Cái lợi 'thấm về túi' = lợi nhuận."],
-["成本","chéngběn","chi phí / giá vốn","danh từ","ct","本 vẽ gốc rễ cây (nét ngang dưới thân 木 đánh dấu bộ rễ) → nghĩa 'gốc, vốn'. 成本 = cái 'vốn gốc' bỏ ra để làm nên sản phẩm = giá vốn."],
-["增长","zēngzhǎng","tăng trưởng","động từ","mo","增 có bộ 土 (đất) → đắp đất cho cao thêm = tăng. 长 = dài/lớn lên. 'Bồi đắp + kéo dài ra' = tăng trưởng."],
-["发展","fāzhǎn","phát triển","động từ","mo","发 (bung ra, phát) + 展 (trải rộng, triển khai). 'Bung ra rồi trải rộng' = phát triển."],
-["收入","shōurù","thu nhập","danh từ","ct","收 = cái móc (丩) + tay cầm gậy (攵) kéo đồ về → 'thu về'. 入 = vào. Kéo của cải vào túi = thu nhập."],
-/* --- Tuần 8: Tài chính 2 (70-79) --- */
-["支出","zhīchū","chi tiêu","danh từ","ct","支 = tay (十, biến thể của 手) cầm cành 又 → nghĩa 'chi ra, tách nhánh'. 出 = ra. Tiền 'rẽ nhánh đi ra' = chi tiêu. Cặp với 收入 (thu nhập)."],
-["利率","lìlǜ","lãi suất","danh từ","mo","利 (lãi/lợi) + 率 (tỷ lệ, suất). 'Tỷ lệ sinh lãi' = lãi suất. Ghép thẳng nghĩa hai chữ."],
-["债券","zhàiquàn","trái phiếu","danh từ","mo","债 = 亻(người) + 责 (trách nhiệm): 'món người ta có trách nhiệm phải trả'. 券 = tờ chứng. Tờ ghi khoản nợ phải trả = trái phiếu."],
-["基金","jījīn","quỹ","danh từ","ct","基 (nền móng, có bộ 土 đất) + 金 (tiền/vàng). 金 vốn tả cảnh rèn kim loại, chỉ vàng bạc tiền. 'Cái nền tiền gom lại' = quỹ."],
-["财务","cáiwù","tài chính (nghiệp vụ)","danh từ","mo","财 = 贝 (tiền) + 才 (tài). 务 = việc. 'Công việc coi sóc tiền của' = tài chính doanh nghiệp."],
-["报表","bàobiǎo","báo cáo (bảng biểu)","danh từ","mo","报 (báo tin) + 表 (bảng biểu). 'Bảng dùng để báo số liệu' = báo biểu tài chính (financial statement)."],
-["分析","fēnxī","phân tích","động từ","ct","分 = 八 (chia) trên 刀 (dao): lấy dao cắt tách ra. 析 = 木 (gỗ) + 斤 (rìu): bổ củi. Cả hai đều là 'chẻ nhỏ ra để xem kỹ' = phân tích."],
-["决定","juédìng","quyết định","động từ","ct","决 có bộ 冫(nước/băng) — khơi dòng dứt khoát. 定 = 宀(nhà) + 正 (ngay ngắn): nhà cửa đã yên, mọi thứ 'đã định'. Chốt lại dứt khoát = quyết định."],
-["资金","zījīn","vốn / nguồn tiền","danh từ","mo","资 (vốn, có 贝 tiền) + 金 (tiền vàng). Hai chữ đều mang nghĩa tiền chồng lên nhau = nguồn vốn dồi dào. Nhớ: gấp đôi tiền = 资金."],
-["增值","zēngzhí","tăng giá trị","động từ","mo","增 (tăng, đắp đất cao thêm) + 值 (giá trị, có bộ 亻). 'Giá trị được bồi cao thêm' = tăng giá trị. Ví dụ: 增值税 = thuế giá trị gia tăng (VAT)."]
+/* ===== GIAI ĐOẠN 1 · NỀN TẢNG (HSK3) ===== */
+/* -- Tuần 1: Giao tiếp & Cảm xúc (0-9) -- */
+["高兴","gāoxìng","vui / vui mừng","tính từ","mo","高 (cao) + 兴 (hứng khởi). Tâm trạng 'dâng cao hứng khởi' = vui. Nhớ: hứng lên cao thì vui."],
+["难过","nánguò","buồn / khó chịu","tính từ","mo","难 (khó) + 过 (vượt qua). Trong lòng 'khó mà vượt qua' = buồn bã."],
+["担心","dānxīn","lo lắng","động từ","ct","担 (gánh) + 心 (trái tim). 'Gánh nặng đè lên tim' = lo lắng, bận tâm."],
+["希望","xīwàng","hy vọng / mong","động từ","mo","希 (mong) + 望 (ngóng nhìn). Ngóng trông điều mình mong = hy vọng."],
+["感谢","gǎnxiè","cảm ơn / cảm tạ","động từ","mo","感 (cảm) + 谢 (tạ ơn). Trang trọng hơn 谢谢, dùng khi biết ơn sâu sắc."],
+["关心","guānxīn","quan tâm","động từ","ct","关 (liên hệ, đóng lại) + 心 (tim). 'Để tim mình vào' chuyện của ai = quan tâm."],
+["表示","biǎoshì","biểu thị / bày tỏ","động từ","mo","表 (bày ra ngoài) + 示 (chỉ cho thấy). Đưa thái độ/ý ra ngoài cho thấy = bày tỏ."],
+["相信","xiāngxìn","tin tưởng","động từ","mo","相 (lẫn nhau) + 信 (tin, chữ tín). Đặt niềm tin vào = tin tưởng."],
+["需要","xūyào","cần / cần đến","động từ","mo","需 (cần dùng) + 要 (muốn có). Vừa cần vừa muốn = cần đến."],
+["觉得","juéde","cảm thấy / thấy rằng","động từ","mo","觉 (cảm giác) + 得. Mở đầu khi nêu ý kiến: 我觉得… = 'tôi thấy rằng…'."],
+/* -- Tuần 2: Sức khỏe & Cơ thể (10-19) -- */
+["身体","shēntǐ","cơ thể / sức khỏe","danh từ","ct","身 (thân mình) + 体 (thể xác). Cả hai đều chỉ tấm thân → cơ thể, sức khỏe."],
+["头","tóu","đầu","danh từ","mo","Bộ 页 (trang/đầu mặt) gợi phần đầu người. Nhớ: 头 nằm trên cùng cơ thể = cái đầu."],
+["眼睛","yǎnjing","mắt","danh từ","mo","Cả hai chữ đều có bộ 目 (con mắt) bên trái. Thấy 目 = chuyện của đôi mắt."],
+["耳朵","ěrduo","tai","danh từ","ct","耳 là hình tượng vành tai. 朵 (đóa) như 'đóa tai' xòe ra hai bên đầu."],
+["鼻子","bízi","mũi","danh từ","mo","鼻 có bộ 自 (vốn vẽ cái mũi) ở trên + 田 + 廾. Người xưa chỉ vào mũi để nói 'tôi' (自) → 鼻 = mũi."],
+["医院","yīyuàn","bệnh viện","danh từ","mo","医 (y, chữa bệnh) + 院 (viện, khu nhà lớn). Khu nhà để chữa bệnh = bệnh viện."],
+["医生","yīshēng","bác sĩ","danh từ","mo","医 (chữa bệnh) + 生 (người, tiên sinh). Người hành nghề chữa bệnh = bác sĩ."],
+["生病","shēngbìng","bị bệnh / ốm","động từ","mo","生 (sinh ra) + 病 (bệnh, có bộ 疒 giường bệnh). 'Sinh ra bệnh' trong người = bị ốm."],
+["药","yào","thuốc","danh từ","ct","艹 (cỏ cây) + 约. Thuốc xưa bào chế từ cây cỏ → chữ 药 mang bộ thảo 艹 trên đầu."],
+["健康","jiànkāng","khỏe mạnh / sức khỏe","tính từ","mo","健 (khỏe, có bộ 亻người) + 康 (an khang). Người vững vàng, an khang = khỏe mạnh."],
+/* -- Tuần 3: Học tập & Nhà trường (20-29) -- */
+["考试","kǎoshì","thi / kỳ thi","danh từ","mo","考 (khảo, kiểm) + 试 (thử, có bộ 讠lời). 'Kiểm tra bằng lời/bài' = thi cử."],
+["成绩","chéngjì","thành tích / điểm số","danh từ","ct","成 (làm nên) + 绩 (thành quả, bộ 纟tơ = công dệt). Kết quả dệt nên sau nỗ lực = thành tích."],
+["努力","nǔlì","nỗ lực / chăm chỉ","động từ","ct","努 = 奴 (nô) + 力 (sức) → dồn hết sức như đang gồng. Bỏ nhiều 'sức' (力) ra = nỗ lực."],
+["练习","liànxí","luyện tập / bài tập","động từ","mo","练 (rèn, bộ 纟tơ = kéo sợi nhiều lần) + 习 (tập). Làm đi làm lại cho thành thạo = luyện tập."],
+["复习","fùxí","ôn tập","động từ","mo","复 (lặp lại, trở lại) + 习 (tập). 'Tập lại lần nữa' = ôn bài đã học."],
+["预习","yùxí","chuẩn bị bài trước","động từ","mo","预 (trước, dự) + 习 (tập). 'Tập trước' khi chưa lên lớp = xem bài trước. Cặp với 复习."],
+["提高","tígāo","nâng cao","động từ","ct","提 (nhấc lên, bộ 扌tay) + 高 (cao). 'Nhấc tay đưa lên cao' = nâng cao (trình độ)."],
+["成功","chénggōng","thành công","động từ","mo","成 (làm nên) + 功 (công lao). Làm nên công trạng = thành công."],
+["习惯","xíguàn","thói quen / quen","danh từ","mo","习 (tập, lặp lại) + 惯 (quen, có bộ 忄tim). Điều tập mãi tới mức 'quen tim' = thói quen."],
+["教育","jiàoyù","giáo dục","danh từ","mo","教 (dạy) + 育 (nuôi dưỡng, có bộ 月 nhục thể). Vừa dạy chữ vừa nuôi người = giáo dục."],
+/* -- Tuần 4: Sở thích & Giải trí (30-39) -- */
+["爱好","àihào","sở thích","danh từ","mo","爱 (yêu) + 好 (thích/tốt). Điều mình 'yêu thích' làm lúc rảnh = sở thích."],
+["音乐","yīnyuè","âm nhạc","danh từ","mo","音 (âm thanh) + 乐 (nhạc/vui). Âm thanh mang lại niềm vui = âm nhạc. (乐 đọc 'lè' = vui)."],
+["电影","diànyǐng","phim / điện ảnh","danh từ","mo","电 (điện) + 影 (bóng, hình). 'Hình bóng chạy bằng điện' chiếu lên màn = phim."],
+["运动","yùndòng","thể thao / vận động","động từ","mo","运 (chuyển vận) + 动 (động, cử động). Cho cơ thể chuyển động = vận động, thể thao."],
+["旅游","lǚyóu","du lịch","động từ","mo","旅 (lữ hành) + 游 (rong chơi, có bộ 氵nước = trôi nổi khắp nơi). Đi chơi đây đó = du lịch."],
+["唱歌","chànggē","hát","động từ","mo","唱 (xướng, có bộ 口 miệng) + 歌 (ca khúc). Dùng miệng cất lời ca = hát. Thấy 口 = việc của miệng."],
+["跳舞","tiàowǔ","nhảy múa","động từ","mo","跳 (nhảy, có bộ 足 chân) + 舞 (vũ điệu). Chân nhún nhảy theo điệu = nhảy múa. 足 = chuyện của chân."],
+["照相","zhàoxiàng","chụp ảnh","động từ","mo","照 (chiếu sáng) + 相 (hình dạng). Ánh sáng in lại hình dạng = chụp ảnh. (照片 = tấm ảnh)."],
+["参加","cānjiā","tham gia","động từ","mo","参 (tham dự) + 加 (thêm vào). 'Thêm mình vào' một hoạt động = tham gia."],
+["兴趣","xìngqù","hứng thú / sự yêu thích","danh từ","mo","兴 (hứng khởi) + 趣 (thú vị). Cảm giác hứng khởi thú vị = hứng thú. Mẫu: 对…感兴趣."],
+/* -- Tuần 5: Du lịch & Giao thông (40-49) -- */
+["出发","chūfā","xuất phát / khởi hành","động từ","mo","出 (ra) + 发 (phát, đi). 'Đi ra khởi hành' lên đường = xuất phát."],
+["到达","dàodá","đến nơi","động từ","mo","到 (tới) + 达 (đạt, có bộ 辶 bước đi). Đi tới đích cần đạt = đến nơi."],
+["机场","jīchǎng","sân bay","danh từ","mo","机 (máy = 飞机 máy bay) + 场 (bãi, sân). Bãi cho máy bay = sân bay."],
+["飞机","fēijī","máy bay","danh từ","mo","飞 (bay) + 机 (cỗ máy). Cỗ máy biết bay = máy bay."],
+["火车","huǒchē","tàu hỏa","danh từ","ct","火 (lửa) + 车 (xe). Xe chạy bằng lửa (đầu máy hơi nước) = tàu hỏa."],
+["地铁","dìtiě","tàu điện ngầm","danh từ","ct","地 (đất) + 铁 (sắt, bộ 钅kim loại). Đường ray 'sắt dưới lòng đất' = tàu điện ngầm."],
+["护照","hùzhào","hộ chiếu","danh từ","mo","护 (bảo hộ, bộ 扌tay che chở) + 照 (chiếu, giấy chứng). Giấy 'bảo hộ' khi ra nước ngoài = hộ chiếu."],
+["行李","xíngli","hành lý","danh từ","mo","行 (đi đường) + 李 (đồ đạc mang theo). Đồ mang khi 'đi đường' = hành lý."],
+["风景","fēngjǐng","phong cảnh","danh từ","mo","风 (gió) + 景 (cảnh, có bộ 日 mặt trời). Gió mây nắng đẹp bày ra = phong cảnh."],
+["地图","dìtú","bản đồ","danh từ","mo","地 (đất) + 图 (hình vẽ). Hình vẽ mặt đất = bản đồ."],
+/* -- Tuần 6: Mua sắm & Dịch vụ (50-59) -- */
+["商场","shāngchǎng","trung tâm mua sắm","danh từ","mo","商 (buôn bán) + 场 (khu, sân). Khu lớn để mua bán = trung tâm thương mại."],
+["超市","chāoshì","siêu thị","danh từ","mo","超 (siêu, vượt) + 市 (chợ). 'Cái chợ cỡ siêu' tự chọn hàng = siêu thị."],
+["顾客","gùkè","khách hàng","danh từ","mo","顾 (chiếu cố, ghé) + 客 (khách). Vị khách ghé mua = khách hàng."],
+["服务","fúwù","phục vụ / dịch vụ","danh từ","mo","服 (phụng sự) + 务 (công việc). Công việc phụng sự người khác = dịch vụ."],
+["质量","zhìliàng","chất lượng","danh từ","mo","质 (bản chất) + 量 (mức độ). Mức độ tốt của bản chất món hàng = chất lượng."],
+["价格","jiàgé","giá cả","danh từ","mo","价 (giá, bộ 亻người định ra) + 格 (ô, khung). Con số người đặt vào khung = giá cả."],
+["打折","dǎzhé","giảm giá","động từ","mo","打 (đánh, làm) + 折 (bẻ gãy, chiết khấu). 'Bẻ bớt' giá đi = giảm giá. 打八折 = còn 80%."],
+["付款","fùkuǎn","thanh toán / trả tiền","động từ","mo","付 (đưa cho, bộ 亻người) + 款 (khoản tiền). Đưa khoản tiền ra = thanh toán."],
+["退","tuì","trả lại / lùi","động từ","ct","Bộ 辶 (bước đi) + 艮 → nghĩa 'đi lui'. Đưa hàng 'lui về' người bán = trả lại. 退货 = trả hàng."],
+["选择","xuǎnzé","lựa chọn","động từ","mo","选 (chọn, có bộ 辶 đi tới) + 择 (kén, bộ 扌tay nhặt). Đi tới nhặt lấy cái ưng = lựa chọn."],
+/* ===== GIAI ĐOẠN 2 · MỞ RỘNG (HSK4) ===== */
+/* -- Tuần 7: Công việc & Sự nghiệp (60-69) -- */
+["职业","zhíyè","nghề nghiệp","danh từ","mo","职 (chức phận, có bộ 耳 tai = nghe lệnh) + 业 (nghiệp). Chức phận mưu sinh = nghề nghiệp."],
+["收入","shōurù","thu nhập","danh từ","ct","收 (thu về, tay cầm gậy kéo đồ về) + 入 (vào). Kéo tiền vào túi = thu nhập."],
+["面试","miànshì","phỏng vấn","danh từ","mo","面 (mặt, đối mặt) + 试 (thử). 'Gặp mặt để thử tài' = phỏng vấn."],
+["简历","jiǎnlì","sơ yếu lý lịch / CV","danh từ","mo","简 (gọn, giản lược) + 历 (quá trình, lý lịch). Bản tóm gọn quá trình = CV."],
+["经验","jīngyàn","kinh nghiệm","danh từ","mo","经 (trải qua, bộ 纟tơ = sợi dọc xuyên suốt) + 验 (kiểm chứng). Điều đã trải qua và kiểm chứng = kinh nghiệm."],
+["能力","nénglì","năng lực","danh từ","ct","能 (có thể) + 力 (sức). Sức mạnh 'có thể làm được' việc = năng lực."],
+["机会","jīhuì","cơ hội","danh từ","mo","机 (then chốt, thời cơ) + 会 (gặp, dịp). Dịp then chốt gặp được = cơ hội."],
+["压力","yālì","áp lực","danh từ","ct","压 (đè nén, có bộ 土 đất đè xuống) + 力 (lực). Lực đè nén lên mình = áp lực."],
+["加班","jiābān","tăng ca","động từ","mo","加 (thêm) + 班 (ca làm). 'Thêm ca' ngoài giờ = tăng ca."],
+["合作","hézuò","hợp tác","động từ","mo","合 (hợp lại) + 作 (làm). Cùng hợp lại mà làm = hợp tác."],
+/* -- Tuần 8: Tính cách & Quan hệ (70-79) -- */
+["性格","xìnggé","tính cách","danh từ","mo","性 (bản tính, có bộ 忄tim) + 格 (khuôn). Khuôn nết bên trong con người = tính cách."],
+["诚实","chéngshí","trung thực / thật thà","tính từ","mo","诚 (thành, bộ 讠lời = lời giữ đúng) + 实 (thực). Lời nói đúng sự thực = trung thực."],
+["热情","rèqíng","nhiệt tình","tính từ","ct","热 (nóng, có 4 chấm 灬 = lửa) + 情 (tình cảm). Tình cảm 'nóng ấm' dành cho người = nhiệt tình."],
+["耐心","nàixīn","kiên nhẫn","danh từ","ct","耐 (chịu đựng) + 心 (tim). Trái tim biết 'chịu đựng chờ đợi' = kiên nhẫn."],
+["骄傲","jiāo'ào","kiêu ngạo / tự hào","tính từ","mo","骄 có bộ 马 (ngựa) — ngựa vênh cổ hí vang. Vênh mặt như ngựa = kiêu; cũng dùng nghĩa 'tự hào'."],
+["幽默","yōumò","hài hước","tính từ","mo","Phiên âm từ 'humour'. Nhớ theo âm: yōu-mò ≈ 'diu-mợ' → tính cách gây cười = hài hước."],
+["友好","yǒuhǎo","thân thiện","tính từ","mo","友 (bạn bè) + 好 (tốt). Đối xử tốt như bạn = thân thiện."],
+["理解","lǐjiě","thấu hiểu","động từ","ct","理 (lẽ, thớ) + 解 (mở ra, bộ 角刀牛 = mổ tách con vật). Tách bạch thấy rõ cái lẽ = thấu hiểu."],
+["支持","zhīchí","ủng hộ","động từ","ct","支 (chống đỡ, tay cầm cành) + 持 (nắm giữ, bộ 扌tay). Đưa tay chống đỡ, giữ vững cho ai = ủng hộ."],
+["信任","xìnrèn","tin cậy","động từ","mo","信 (tin) + 任 (giao phó, bộ 亻người). Tin đến mức dám giao phó = tin cậy."],
+/* -- Tuần 9: Khoa học & Công nghệ (80-89) -- */
+["科技","kējì","khoa học công nghệ","danh từ","mo","科 (ngành khoa) + 技 (kỹ thuật, bộ 扌tay khéo). Khoa học + tay nghề = công nghệ."],
+["互联网","hùliánwǎng","Internet","danh từ","mo","互 (lẫn nhau) + 联 (liên kết) + 网 (mạng lưới). Mạng lưới nối nhau khắp nơi = Internet."],
+["网络","wǎngluò","mạng (network)","danh từ","mo","网 (lưới, chữ tượng hình cái lưới) + 络 (dây nối, bộ 纟tơ). Lưới dây đan nhau = mạng."],
+["软件","ruǎnjiàn","phần mềm","danh từ","ct","软 (mềm, có bộ 车 xe + 欠) + 件 (món, kiện). 'Món mềm' không cầm được = phần mềm. Đối với 硬件 (phần cứng)."],
+["数据","shùjù","dữ liệu","danh từ","mo","数 (số) + 据 (căn cứ, bộ 扌tay nắm chứng cứ). Số liệu làm căn cứ = dữ liệu."],
+["发明","fāmíng","phát minh","động từ","mo","发 (bung ra, tạo ra) + 明 (sáng tỏ). 'Làm bừng sáng' cái mới chưa từng có = phát minh."],
+["研究","yánjiū","nghiên cứu","động từ","ct","研 (mài, bộ 石 đá = mài đá cho nhuyễn) + 究 (tìm tận cùng, bộ 穴 hang). Mài giũa, đào tới cùng = nghiên cứu."],
+["技术","jìshù","kỹ thuật","danh từ","mo","技 (tay nghề, bộ 扌tay) + 术 (thuật, cách). Tay nghề + phương pháp = kỹ thuật."],
+["应用","yìngyòng","ứng dụng","động từ","mo","应 (đáp ứng) + 用 (dùng). Đem ra dùng cho hợp việc = ứng dụng (cũng chỉ 'app')."],
+["智能","zhìnéng","thông minh / trí tuệ (AI)","tính từ","mo","智 (trí, có 日 mặt trời soi tỏ) + 能 (khả năng). Trí sáng + khả năng = thông minh. 人工智能 = AI."],
+/* -- Tuần 10: Xã hội & Tin tức (90-99) -- */
+["社会","shèhuì","xã hội","danh từ","mo","社 (đoàn thể, bộ 礻= tế lễ chung) + 会 (tụ họp). Cộng đồng người tụ họp = xã hội."],
+["新闻","xīnwén","tin tức","danh từ","ct","新 (mới) + 闻 (nghe, có 耳 tai trong 门 cửa). 'Điều mới nghe được' = tin tức."],
+["消息","xiāoxi","tin / thông tin","danh từ","mo","消 (tan đi, bộ 氵nước) + 息 (hơi thở, tin). Tin truyền đi như hơi thở = tin tức, tin nhắn."],
+["政府","zhèngfǔ","chính phủ","danh từ","mo","政 (chính sự) + 府 (phủ, dinh). Cơ quan lo việc nước = chính phủ."],
+["法律","fǎlǜ","pháp luật","danh từ","ct","法 (phép, bộ 氵nước = công bằng như mặt nước) + 律 (quy tắc). Quy tắc công bằng buộc mọi người = pháp luật."],
+["现象","xiànxiàng","hiện tượng","danh từ","mo","现 (hiện ra) + 象 (hình tượng, con voi). Hình tượng lộ ra trước mắt = hiện tượng."],
+["影响","yǐngxiǎng","ảnh hưởng","động từ","mo","影 (bóng) + 响 (âm vang). Như 'bóng theo hình, tiếng vang theo động' = tác động lan tới = ảnh hưởng."],
+["变化","biànhuà","biến đổi","động từ","mo","变 (biến) + 化 (hóa, bộ 亻người thay đổi tư thế). Đổi khác đi = biến hóa, thay đổi."],
+["人口","rénkǒu","dân số","danh từ","ct","人 (người) + 口 (miệng). Đếm 'số miệng ăn' của một vùng = dân số."],
+["文化","wénhuà","văn hóa","danh từ","mo","文 (văn, chữ nghĩa) + 化 (hóa, cảm hóa). Chữ nghĩa cảm hóa con người → nếp sống chung = văn hóa."],
+/* -- Tuần 11: Cảm xúc & Quan điểm (100-109) -- */
+["态度","tàidù","thái độ","danh từ","mo","态 (dáng vẻ, có 心 tim ở dưới) + 度 (mức). Dáng vẻ của lòng thể hiện ra = thái độ."],
+["观点","guāndiǎn","quan điểm","danh từ","mo","观 (nhìn nhận) + 点 (điểm). 'Điểm nhìn' của mỗi người = quan điểm."],
+["意见","yìjiàn","ý kiến","danh từ","ct","意 (ý, có 心 tim ở dưới = điều trong lòng) + 见 (thấy). Điều trong lòng mình thấy = ý kiến."],
+["同意","tóngyì","đồng ý","động từ","mo","同 (cùng) + 意 (ý). 'Cùng chung một ý' = đồng ý."],
+["反对","fǎnduì","phản đối","động từ","ct","反 (ngược lại, bàn tay lật ngược) + 对 (đúng/đối). Đứng ở phía 'đối ngược' = phản đối."],
+["怀疑","huáiyí","nghi ngờ","động từ","mo","怀 (ôm trong lòng, bộ 忄tim) + 疑 (ngờ vực). Ôm mối ngờ trong lòng = nghi ngờ."],
+["后悔","hòuhuǐ","hối hận","động từ","ct","后 (sau) + 悔 (hối, bộ 忄tim). 'Về sau lòng đau tiếc' = hối hận."],
+["羡慕","xiànmù","ngưỡng mộ / thèm muốn","động từ","mo","羡 (thèm, có bộ 羊 dê + 氵 = chảy nước miếng) + 慕 (mến mộ). Thèm tới chảy nước miếng = ngưỡng mộ, ganh tị nhẹ."],
+["满意","mǎnyì","hài lòng","tính từ","mo","满 (đầy, bộ 氵nước tràn) + 意 (ý). Lòng dạ 'tràn đầy như ý' = hài lòng."],
+["失望","shīwàng","thất vọng","động từ","mo","失 (mất) + 望 (hy vọng, trông ngóng). 'Mất hết điều trông ngóng' = thất vọng."],
+/* -- Tuần 12: Môi trường & Thiên nhiên (110-119) -- */
+["环境","huánjìng","môi trường","danh từ","mo","环 (vòng quanh, bộ 王 ngọc = vòng ngọc) + 境 (cảnh, ranh giới). Cảnh vật bao quanh ta = môi trường."],
+["污染","wūrǎn","ô nhiễm","động từ","ct","污 (bẩn, bộ 氵nước dơ) + 染 (nhuộm, 氵+木+九). Nước bẩn 'nhuộm' lan ra = ô nhiễm."],
+["保护","bǎohù","bảo vệ","động từ","ct","保 (giữ, 亻người ôm 呆 con) + 护 (che chở, bộ 扌tay). Ôm giữ và dang tay che chở = bảo vệ."],
+["资源","zīyuán","tài nguyên","danh từ","mo","资 (của cải, có 贝 tiền) + 源 (nguồn, bộ 氵nước = đầu nguồn). Nguồn của cải tự nhiên = tài nguyên."],
+["能源","néngyuán","năng lượng","danh từ","mo","能 (năng lực) + 源 (nguồn). Nguồn sinh ra năng lực = năng lượng."],
+["气候","qìhòu","khí hậu","danh từ","mo","气 (khí, hơi) + 候 (thời tiết theo mùa). Trạng thái khí trời lâu dài = khí hậu."],
+["自然","zìrán","tự nhiên / thiên nhiên","danh từ","mo","自 (tự) + 然 (như thế, có 灬 lửa). 'Tự nó vốn như thế' = tự nhiên, thiên nhiên."],
+["垃圾","lājī","rác","danh từ","mo","Cả hai chữ đều có bộ 土 (đất) — thứ đồ bỏ đi vùi xuống đất = rác. Nhớ cặp âm 'la-ji'."],
+["节约","jiéyuē","tiết kiệm","động từ","mo","节 (tiết chế, bộ 竹 tre có đốt = biết chừng mực) + 约 (ước thúc). Dùng có chừng mực = tiết kiệm."],
+["破坏","pòhuài","phá hoại / phá hủy","động từ","ct","破 (vỡ, bộ 石 đá bị bổ) + 坏 (hỏng, bộ 土 đất lở). Đập vỡ làm hỏng = phá hoại."],
+/* ===== GIAI ĐOẠN 3 · NÂNG CAO (HSK5) ===== */
+/* -- Tuần 13: Kinh tế & Tài chính (120-129) -- */
+["经济","jīngjì","kinh tế","danh từ","mo","经 (vận hành, sợi dọc) + 济 (cứu giúp qua sông, bộ 氵nước). Gốc 'kinh bang tế thế' = trị nước cứu đời → kinh tế."],
+["金融","jīnróng","tài chính (tiền tệ)","danh từ","ct","金 (vàng, tiền) + 融 (lưu thông, tan chảy, có 虫). Dòng tiền lưu thông = tài chính, ngân hàng."],
+["投资","tóuzī","đầu tư","động từ","mo","投 (ném vào, bộ 扌tay) + 资 (vốn, có 贝 tiền). 'Ra tay ném vốn vào' cơ hội = đầu tư."],
+["消费","xiāofèi","tiêu dùng","động từ","mo","消 (hao đi) + 费 (phí, có 贝 tiền). Tiền hao đi khi mua sắm = tiêu dùng."],
+["利润","lìrùn","lợi nhuận","danh từ","ct","利 (lợi, 禾 lúa + 刂 dao gặt) + 润 (thấm ướt). Cái lợi 'thấm về túi' sau vụ = lợi nhuận."],
+["成本","chéngběn","chi phí / giá vốn","danh từ","ct","成 (làm nên) + 本 (gốc vốn, nét ngang dưới thân cây = rễ). Vốn gốc bỏ ra làm nên sản phẩm = giá vốn."],
+["贷款","dàikuǎn","vay vốn / khoản vay","danh từ","mo","贷 (cho vay, có 贝 tiền) + 款 (khoản tiền). Khoản tiền vay mượn = khoản vay."],
+["预算","yùsuàn","ngân sách / dự toán","danh từ","mo","预 (trước) + 算 (tính, bộ 竹 tre = que tính). 'Tính trước' số tiền sẽ dùng = ngân sách."],
+["效率","xiàolǜ","hiệu suất","danh từ","mo","效 (hiệu quả) + 率 (tỉ lệ, suất). Tỉ lệ kết quả trên công sức = hiệu suất."],
+["财富","cáifù","của cải / tài sản","danh từ","ct","财 (tài, có 贝 tiền) + 富 (giàu, 宀 nhà chứa đầy 田 ruộng). Tiền của chất đầy nhà = của cải."],
+/* -- Tuần 14: Văn hóa & Truyền thống (130-139) -- */
+["传统","chuántǒng","truyền thống","danh từ","mo","传 (truyền lại, bộ 亻người trao tay) + 统 (nối dòng, bộ 纟tơ). Điều đời trước trao nối cho đời sau = truyền thống."],
+["风俗","fēngsú","phong tục","danh từ","mo","风 (nếp, phong khí) + 俗 (thói, bộ 亻người). Nếp thói của người một vùng = phong tục."],
+["节日","jiérì","ngày lễ / lễ tết","danh từ","mo","节 (dịp, đốt tre = mốc thời gian) + 日 (ngày). Ngày được đánh mốc để mừng = lễ tết."],
+["历史","lìshǐ","lịch sử","danh từ","mo","历 (trải qua) + 史 (sử, tay cầm bút chép việc). Ghi chép những gì đã trải qua = lịch sử."],
+["艺术","yìshù","nghệ thuật","danh từ","mo","艺 (tài khéo, bộ 艹 = trồng tỉa khéo) + 术 (thuật). Tài khéo + kỹ thuật = nghệ thuật."],
+["文明","wénmíng","văn minh","danh từ","mo","文 (văn hóa, chữ) + 明 (sáng: 日+月). 'Chữ nghĩa làm bừng sáng' xã hội = văn minh."],
+["民族","mínzú","dân tộc","danh từ","mo","民 (dân) + 族 (tộc, có bộ 方 cờ hiệu = tụ dưới một lá cờ). Nhóm dân chung cội nguồn = dân tộc."],
+["遗产","yíchǎn","di sản","danh từ","mo","遗 (để lại, bộ 辶 đi qua rồi để lại) + 产 (sản, của cải). Của cải đời trước để lại = di sản."],
+["宗教","zōngjiào","tôn giáo","danh từ","mo","宗 (tổ tông, 宀 nhà thờ 示 tế lễ) + 教 (dạy). Giáo lý thờ phụng được truyền dạy = tôn giáo."],
+["价值","jiàzhí","giá trị","danh từ","mo","价 (giá) + 值 (đáng giá, bộ 亻người + 直 thẳng thật). Mức 'đáng' thật sự của một thứ = giá trị."],
+/* -- Tuần 15: Giáo dục & Phát triển bản thân (140-149) -- */
+["知识","zhīshi","kiến thức","danh từ","mo","知 (biết, 矢 mũi tên + 口 miệng = nói trúng đích) + 识 (nhận biết, bộ 讠lời). Điều mình biết và nhận ra = kiến thức."],
+["素质","sùzhì","tố chất / phẩm chất","danh từ","mo","素 (vốn có, mộc mạc, bộ 纟tơ trắng) + 质 (bản chất). Chất vốn có bên trong con người = tố chất."],
+["培养","péiyǎng","bồi dưỡng / nuôi dưỡng","động từ","ct","培 (vun đất, bộ 土 vun gốc cây) + 养 (nuôi, có 羊 dê cho ăn). Vun trồng + nuôi lớn = bồi dưỡng."],
+["独立","dúlì","độc lập / tự lập","động từ","mo","独 (một mình, bộ 犭= con thú đơn độc) + 立 (đứng). 'Tự đứng một mình' = độc lập."],
+["自信","zìxìn","tự tin","tính từ","mo","自 (bản thân) + 信 (tin). Tin vào chính mình = tự tin."],
+["坚持","jiānchí","kiên trì","động từ","ct","坚 (cứng, bền, có 土 đất chắc) + 持 (nắm giữ, bộ 扌tay). Nắm giữ thật chắc không buông = kiên trì."],
+["目标","mùbiāo","mục tiêu","danh từ","mo","目 (mắt) + 标 (mốc, bộ 木 cây cắm mốc). Cái mốc mắt hướng tới = mục tiêu."],
+["挑战","tiǎozhàn","thách thức / thử thách","danh từ","mo","挑 (khơi lên, bộ 扌tay) + 战 (chiến đấu). Khơi ra một 'trận chiến' cần vượt = thách thức."],
+["克服","kèfú","khắc phục / vượt qua","động từ","mo","克 (thắng, chế ngự) + 服 (khuất phục). Chế ngự và bắt khó khăn khuất phục = vượt qua."],
+["优秀","yōuxiù","xuất sắc / ưu tú","tính từ","mo","优 (ưu, bộ 亻người hơn hẳn) + 秀 (đẹp nổi bật, 禾 lúa trổ bông). Con người nổi bật như bông lúa trổ = ưu tú."],
+/* -- Tuần 16: Nghề nghiệp chuyên sâu & Đàm phán (150-159) -- */
+["项目","xiàngmù","dự án / hạng mục","danh từ","mo","项 (khoản, mục, có bộ 页 đầu trang) + 目 (mục, con mắt). Từng đầu mục công việc = dự án."],
+["方案","fāng'àn","phương án","danh từ","mo","方 (phương cách) + 案 (bản, hồ sơ, bộ 木 bàn án). Bản kế hoạch về cách làm = phương án."],
+["效果","xiàoguǒ","hiệu quả / kết quả","danh từ","mo","效 (công hiệu) + 果 (quả, trái trên cây). Trái ngọt thu được từ việc làm = hiệu quả."],
+["负责","fùzé","chịu trách nhiệm / phụ trách","động từ","mo","负 (gánh vác, có 贝 = vác của trên lưng) + 责 (trách nhiệm). Gánh lấy trách nhiệm = phụ trách."],
+["安排","ānpái","sắp xếp / bố trí","động từ","mo","安 (yên, 宀 nhà + 女) + 排 (xếp hàng, bộ 扌tay). Xếp mọi việc vào chỗ cho yên = sắp xếp."],
+["沟通","gōutōng","giao tiếp / trao đổi","động từ","ct","沟 (mương, bộ 氵nước) + 通 (thông suốt, bộ 辶 đi qua). Khơi 'mương' cho ý thông suốt hai bên = giao tiếp."],
+["谈判","tánpàn","đàm phán","động từ","mo","谈 (bàn luận, bộ 讠lời) + 判 (phân xử, bộ 刂dao cắt rạch ròi). Bàn bạc để phân định rạch ròi = đàm phán."],
+["建议","jiànyì","đề nghị / kiến nghị","động từ","mo","建 (dựng lên) + 议 (bàn, bộ 讠lời). 'Nêu lời dựng ra' một ý cho người khác cân nhắc = đề nghị."],
+["承担","chéngdān","gánh vác / đảm nhận","động từ","ct","承 (đỡ lấy, hai tay nâng) + 担 (gánh, bộ 扌tay). Đưa tay đỡ lấy và gánh lên = đảm nhận."],
+["完善","wánshàn","hoàn thiện","động từ","mo","完 (trọn vẹn) + 善 (tốt lành). Làm cho trọn vẹn và tốt hơn = hoàn thiện."],
+/* -- Tuần 17: Vấn đề xã hội & Tranh luận (160-169) -- */
+["现代","xiàndài","hiện đại","danh từ","mo","现 (hiện nay) + 代 (thời đại, bộ 亻người). Thời đại đang sống = hiện đại."],
+["竞争","jìngzhēng","cạnh tranh","động từ","ct","竞 (đua, hai người 立 đứng ganh) + 争 (giành, hai tay giằng một vật). Đua nhau giành lấy = cạnh tranh."],
+["矛盾","máodùn","mâu thuẫn","danh từ","ct","矛 (cây giáo) + 盾 (cái khiên). Điển tích bán giáo đâm thủng mọi khiên & khiên đỡ mọi giáo → tự chọi nhau = mâu thuẫn."],
+["公平","gōngpíng","công bằng","tính từ","mo","公 (chung, bẻ đôi cái riêng) + 平 (bằng phẳng). Chia đều bằng phẳng cho mọi người = công bằng."],
+["责任","zérèn","trách nhiệm","danh từ","mo","责 (bổn phận phải làm) + 任 (đảm đương, bộ 亻người). Phần việc mình phải đảm đương = trách nhiệm."],
+["权利","quánlì","quyền lợi","danh từ","mo","权 (quyền, bộ 木 = cán cân quyền lực) + 利 (lợi ích). Quyền hạn kèm lợi ích chính đáng = quyền lợi. (Phân biệt 权力 = quyền lực)."],
+["道德","dàodé","đạo đức","danh từ","mo","道 (đạo, đường lối, bộ 辶) + 德 (đức, có 心 tim ngay thẳng). Đường lối sống ngay thẳng trong lòng = đạo đức."],
+["制度","zhìdù","chế độ / thể chế","danh từ","mo","制 (chế định, bộ 刂dao cắt định khuôn) + 度 (mức, quy). Khuôn phép quy định chung = chế độ."],
+["改革","gǎigé","cải cách","động từ","ct","改 (sửa đổi, tay cầm roi 攵 uốn nắn) + 革 (da thuộc = thay đổi tận gốc như lột da). Sửa đổi tận gốc = cải cách."],
+["解决","jiějué","giải quyết","động từ","mo","解 (mở, tháo, mổ tách 角刀牛) + 决 (quyết, bộ 冫khơi dòng dứt khoát). Tháo gỡ dứt điểm = giải quyết."],
+/* -- Tuần 18: Thành ngữ & Viết học thuật (170-179) -- */
+["一举两得","yījǔliǎngdé","một công đôi việc","thành ngữ","mo","一举 (một hành động) 两得 (được hai). Làm một việc mà lợi cả đôi đường = nhất cử lưỡng tiện."],
+["入乡随俗","rùxiāngsuísú","nhập gia tùy tục","thành ngữ","mo","入乡 (vào làng) 随俗 (theo tục). Đến vùng nào thì theo phong tục vùng đó."],
+["熟能生巧","shúnéngshēngqiǎo","quen tay hay việc","thành ngữ","mo","熟 (thành thạo) 能生 (sinh ra) 巧 (khéo). Làm nhiều thành thạo thì tự khắc khéo léo."],
+["半途而废","bàntú'érfèi","bỏ dở giữa chừng","thành ngữ","mo","半途 (nửa đường) 而废 (mà bỏ). Làm được nửa đường rồi bỏ cuộc — điều nên tránh khi học."],
+["名副其实","míngfùqíshí","danh xứng với thực","thành ngữ","mo","名 (tên) 副 (khớp với) 其实 (thực chất). Tiếng tăm đúng như thực chất, danh xứng với thực."],
+["理所当然","lǐsuǒdāngrán","lẽ đương nhiên","thành ngữ","mo","理所 (theo lẽ) 当然 (tất nhiên). Theo lý lẽ thì hiển nhiên phải thế = đương nhiên."],
+["不可思议","bùkěsīyì","không thể tưởng tượng","thành ngữ","mo","不可 (không thể) 思议 (nghĩ bàn). Kỳ lạ tới mức không thể lý giải nổi."],
+["实事求是","shíshìqiúshì","thực sự cầu thị","thành ngữ","mo","实事 (việc thực) 求是 (tìm cái đúng). Nhìn thẳng sự thật để tìm ra chân lý, không tô vẽ."],
+["总而言之","zǒng'éryánzhī","tóm lại","thành ngữ","mo","总 (gộp lại) 而言之 (mà nói). Cụm mở đầu câu kết trong văn viết = tóm lại, nói chung."],
+["换句话说","huànjùhuàshuō","nói cách khác","thành ngữ","mo","换 (đổi) 句话 (câu nói) 说 (nói lại). Cụm chuyển ý để diễn giải lại cho rõ = nói cách khác."]
+];
+
+/* ============ PHASES ============ */
+const P = [
+ {name:"Giai đoạn 1 · Nền tảng vững (HSK 3)", sub:"Củng cố đời sống: cảm xúc, sức khỏe, học tập, sở thích, đi lại, mua sắm.", tc:"var(--blue)", clr:"rgba(74,140,255,.16)", txt:"var(--blue)"},
+ {name:"Giai đoạn 2 · Mở rộng (HSK 4)", sub:"Chủ đề trừu tượng: công việc, tính cách, công nghệ, xã hội, quan điểm, môi trường.", tc:"var(--purple)", clr:"rgba(155,107,255,.16)", txt:"var(--purple)"},
+ {name:"Giai đoạn 3 · Nâng cao (HSK 5)", sub:"Kinh tế, văn hóa, phát triển bản thân, đàm phán, tranh luận xã hội, thành ngữ & văn viết.", tc:"var(--gold)", clr:"rgba(245,183,49,.16)", txt:"var(--gold)"}
 ];
 
 /* ============ WEEK CURRICULUM ============ */
-/* mỗi tuần: tên, chủ đề, dải index từ vựng [start,end], 2 điểm ngữ pháp, tasks */
+/* mỗi tuần: n, ph(giai đoạn), tc, name, theme, v[a,b], 2 điểm ngữ pháp, và task viết/nghe/nói/đọc */
 const W = [
- {n:1,tc:"var(--blue)",name:"Người & Gia đình",theme:"Tự giới thiệu, gọi tên người thân, xưng hô cơ bản.",
-  v:[0,9],
+ {n:1,ph:0,tc:"var(--blue)",name:"Giao tiếp & Cảm xúc",theme:"Nêu ý kiến, bày tỏ cảm xúc, cảm ơn – quan tâm – hy vọng.",v:[0,9],
   gram:[
-   {gp:"Câu 是: A 是 B","gn":"Dùng 是 để nói 'A là B'. Phủ định thêm 不: 不是.",ex:[["我是学生。","Wǒ shì xuéshēng.","Tôi là học sinh."],["他不是老师。","Tā bú shì lǎoshī.","Anh ấy không phải giáo viên."]]},
-   {gp:"Sở hữu với 的","gn":"Danh từ/đại từ + 的 + vật = 'của ai'. 我的家 = nhà của tôi.",ex:[["这是我的名字。","Zhè shì wǒ de míngzi.","Đây là tên của tôi."]]}
+   {gp:"我觉得 / 我希望 + mệnh đề",gn:"Nêu ý kiến, mong muốn. 觉得 = thấy rằng; 希望 = mong.",ex:[["我觉得这个办法很好。","Wǒ juéde zhège bànfǎ hěn hǎo.","Tôi thấy cách này rất hay."],["我希望你早点儿来。","Wǒ xīwàng nǐ zǎo diǎnr lái.","Mình mong bạn đến sớm hơn."]]},
+   {gp:"越来越 + tính từ",gn:"Diễn tả 'ngày càng…'.",ex:[["天气越来越冷了。","Tiānqì yuèláiyuè lěng le.","Trời ngày càng lạnh."]]}
   ],
-  tasks:[["✍️ Viết","Viết đoạn 4–5 câu tự giới thiệu: tên, tuổi, gia đình có mấy người."],["🎧 Nghe","Nghe 1 hội thoại chào hỏi HSK1–2, chép lại 5 câu."],["🗣️ Nói","Thu âm tự giới thiệu 30 giây, nghe lại chỉnh thanh điệu."]]},
- {n:2,tc:"var(--cyan)",name:"Thời gian",theme:"Nói ngày–giờ–thứ, hôm nay/ngày mai, hẹn thời điểm.",
-  v:[10,19],
+  wr:"Viết đoạn 5–6 câu kể một chuyện khiến bạn 高兴 hoặc 难过 gần đây (dùng 觉得, 希望).",
+  li:"Nghe 1 hội thoại cảm xúc HSK3, chép lại 5 câu (chính tả).",
+  sp:"Thu âm 40 giây: 3 điều bạn 希望 trong năm nay, nghe lại chỉnh thanh điệu.",
+  rd:"Đọc 1 đoạn ngắn về tâm trạng, gạch chân từ mới và trả lời: ai? cảm thấy thế nào? vì sao?"},
+ {n:2,ph:0,tc:"var(--blue)",name:"Sức khỏe & Cơ thể",theme:"Bộ phận cơ thể, ốm đau, đi khám, giữ sức khỏe.",v:[10,19],
   gram:[
-   {gp:"Hỏi giờ: 几点","gn":"几点 = mấy giờ; 什么时候 = khi nào.",ex:[["现在几点?","Xiànzài jǐ diǎn?","Bây giờ mấy giờ?"],["你什么时候来?","Nǐ shénme shíhou lái?","Khi nào bạn đến?"]]},
-   {gp:"Trạng ngữ thời gian đứng trước động từ","gn":"Thời gian thường đặt đầu câu hoặc sau chủ ngữ, trước động từ.",ex:[["明天我去公司。","Míngtiān wǒ qù gōngsī.","Ngày mai tôi đi công ty."]]}
+   {gp:"V + 得 + bổ ngữ trạng thái",gn:"Đánh giá cách/mức độ của hành động. 说得很好 = nói rất tốt.",ex:[["他跑得很快。","Tā pǎo de hěn kuài.","Anh ấy chạy rất nhanh."],["我睡得不好。","Wǒ shuì de bù hǎo.","Tôi ngủ không ngon."]]},
+   {gp:"有点儿 / 一点儿",gn:"有点儿 + adj (than phiền: hơi…); adj + 一点儿 (so sánh: … hơn một chút).",ex:[["我有点儿不舒服。","Wǒ yǒudiǎnr bù shūfu.","Tôi hơi khó chịu trong người."]]}
   ],
-  tasks:[["✍️ Viết","Viết lịch 1 ngày của bạn bằng tiếng Trung (sáng/trưa/tối làm gì)."],["🎧 Nghe","Nghe đoạn nói về thời khóa biểu, ghi lại các mốc giờ."],["🗣️ Nói","Kể bằng miệng kế hoạch 'ngày mai' của bạn, 4 câu."]]},
- {n:3,tc:"var(--green)",name:"Hành động hằng ngày",theme:"Ăn, uống, học, làm, nghe, nói, đọc, viết, nghỉ.",
-  v:[20,29],
+  wr:"Viết đoạn hội thoại 6 câu ở phòng khám (bác sĩ – bệnh nhân), dùng 有点儿, 得.",
+  li:"Nghe đoạn hỏi–đáp về triệu chứng ở bệnh viện, ghi lại bệnh & lời khuyên.",
+  sp:"Đóng vai bệnh nhân, nói 4 câu mô tả bạn 哪儿不舒服.",
+  rd:"Đọc mẩu tin về thói quen sống khỏe, liệt kê 3 lời khuyên tác giả đưa ra."},
+ {n:3,ph:0,tc:"var(--blue)",name:"Học tập & Nhà trường",theme:"Thi cử, điểm số, ôn tập, thói quen học, tiến bộ.",v:[20,29],
   gram:[
-   {gp:"了 – hành động đã hoàn thành","gn":"Động từ + 了 = việc đã xong/đã xảy ra.",ex:[["我吃了饭。","Wǒ chī le fàn.","Tôi ăn cơm rồi."]]},
-   {gp:"正在 – đang làm","gn":"正在 + động từ = đang… (tiếp diễn).",ex:[["他正在学习。","Tā zhèngzài xuéxí.","Anh ấy đang học."]]}
+   {gp:"越…越…",gn:"'Càng… (thì) càng…'. 越学越有意思.",ex:[["这本书越看越有意思。","Zhè běn shū yuè kàn yuè yǒuyìsi.","Cuốn sách này càng đọc càng hay."]]},
+   {gp:"把 (câu chữ 把 cơ bản)",gn:"把 + tân ngữ + V + kết quả: nhấn mạnh xử lý đối tượng.",ex:[["我把作业做完了。","Wǒ bǎ zuòyè zuò wán le.","Tôi làm xong bài tập rồi."]]}
   ],
-  tasks:[["✍️ Viết","Viết nhật ký 5 câu về hôm nay, dùng ít nhất 2 lần 了."],["🎧 Nghe","Nghe đoạn kể việc thường ngày, gạch chân các động từ."],["🗣️ Nói","Mô tả bạn đang làm gì lúc này (dùng 正在), 3 câu."]]},
- {n:4,tc:"var(--gold)",name:"Nơi chốn & đi lại",theme:"Đi–đến, phương tiện, trường/công ty/cửa hàng.",
-  v:[30,39],
+  wr:"Viết 6 câu về phương pháp học của bạn: 复习/预习 thế nào, làm sao 提高 (dùng 越…越, 把).",
+  li:"Nghe đoạn hai bạn bàn về kỳ 考试, ghi lại lời khuyên ôn thi.",
+  sp:"Nói 1 phút: một 习惯 học tập tốt bạn muốn xây dựng.",
+  rd:"Đọc đoạn về một học sinh tiến bộ, tìm 2 việc bạn ấy đã làm để 提高 thành tích."},
+ {n:4,ph:0,tc:"var(--blue)",name:"Sở thích & Giải trí",theme:"Nói về sở thích, âm nhạc – phim – thể thao, rủ nhau tham gia.",v:[30,39],
   gram:[
-   {gp:"去/来 + nơi chốn","gn":"去 + địa điểm = đi đến đâu; 来 = đến.",ex:[["我去学校。","Wǒ qù xuéxiào.","Tôi đến trường."]]},
-   {gp:"怎么去 + phương tiện","gn":"坐 + xe + 去: dùng phương tiện gì để đi.",ex:[["我坐车去公司。","Wǒ zuò chē qù gōngsī.","Tôi đi xe đến công ty."]]}
+   {gp:"一边…一边…",gn:"Làm hai việc cùng lúc: vừa… vừa…",ex:[["我喜欢一边听音乐一边看书。","Wǒ xǐhuan yìbiān tīng yīnyuè yìbiān kàn shū.","Tôi thích vừa nghe nhạc vừa đọc sách."]]},
+   {gp:"对…感兴趣",gn:"Hứng thú với cái gì. 对 + đối tượng + 感兴趣.",ex:[["我对中国电影很感兴趣。","Wǒ duì Zhōngguó diànyǐng hěn gǎn xìngqù.","Tôi rất hứng thú với phim Trung Quốc."]]}
   ],
-  tasks:[["✍️ Viết","Viết đường đi từ nhà tới nơi làm, 4–5 câu (dùng 坐…去, 到)."],["🎧 Nghe","Nghe đoạn hỏi đường, ghi lại phương tiện & điểm đến."],["🗣️ Nói","Hỏi–đáp 'bạn đi làm bằng gì' (tự đóng 2 vai)."]]},
- {n:5,tc:"var(--purple)",name:"Văn phòng",theme:"Họp, email, đồng nghiệp, báo cáo, kế hoạch, bận rộn.",
-  v:[40,49],
+  wr:"Giới thiệu 2 爱好 của bạn (8 câu): làm từ bao giờ, vì sao thích (dùng 对…感兴趣).",
+  li:"Nghe đoạn rủ nhau đi 运动/看电影, ghi lại thời gian & địa điểm hẹn.",
+  sp:"Rủ một người bạn cùng tham gia sở thích của bạn (đóng 2 vai, 6 câu).",
+  rd:"Đọc bài giới thiệu một sở thích, tìm lợi ích mà tác giả nói tới."},
+ {n:5,ph:0,tc:"var(--blue)",name:"Du lịch & Giao thông",theme:"Lên kế hoạch đi lại, sân bay – tàu xe, chuẩn bị hành lý, phong cảnh.",v:[40,49],
   gram:[
-   {gp:"在 + nơi + động từ","gn":"在 + địa điểm + V = làm gì ở đâu.",ex:[["我在公司工作。","Wǒ zài gōngsī gōngzuò.","Tôi làm việc ở công ty."]]},
-   {gp:"要/想 – kế hoạch, ý muốn","gn":"要 = sẽ/cần; 想 = muốn.",ex:[["我要开会。","Wǒ yào kāihuì.","Tôi phải họp."],["我想完成报告。","Wǒ xiǎng wánchéng bàogào.","Tôi muốn hoàn thành báo cáo."]]}
+   {gp:"先…再/然后…",gn:"Trình tự: trước… rồi (sau đó)…",ex:[["我们先买票,然后上车。","Wǒmen xiān mǎi piào, ránhòu shàng chē.","Chúng ta mua vé trước rồi lên xe."]]},
+   {gp:"是…的 (nhấn mạnh)",gn:"Nhấn thời gian/nơi/cách thức của việc đã xảy ra.",ex:[["我是坐飞机来的。","Wǒ shì zuò fēijī lái de.","Tôi đến bằng máy bay đấy."]]}
   ],
-  tasks:[["✍️ Viết","Viết 1 email ngắn tiếng Trung: xin hẹn một cuộc họp (3–4 câu)."],["🎧 Nghe","Nghe hội thoại công sở, ghi 5 từ mới bạn nghe được."],["🗣️ Nói","Nói 3 câu về công việc của bạn hôm nay (dùng 在, 要)."]]},
- {n:6,tc:"var(--accent)",name:"Tiền & mua bán",theme:"Hỏi giá, mua/bán, đắt/rẻ, ngân hàng, lương, để dành.",
-  v:[50,59],
+  wr:"Viết lịch trình 1 chuyến đi 2 ngày (8 câu): 出发, 到达, đi bằng gì, xem 风景 gì (dùng 先…再).",
+  li:"Nghe thông báo ở 机场/nhà ga, ghi lại giờ & cửa/sân ga.",
+  sp:"Kể lại một chuyến đi đáng nhớ (dùng 是…的 để nói đi khi nào, bằng gì).",
+  rd:"Đọc đoạn giới thiệu điểm du lịch, ghi 3 điều nên chuẩn bị trước khi đi."},
+ {n:6,ph:0,tc:"var(--blue)",name:"Mua sắm & Dịch vụ",theme:"Hỏi giá – mặc cả, chất lượng, giảm giá, thanh toán, đổi trả.",v:[50,59],
   gram:[
-   {gp:"多少钱 – hỏi giá","gn":"…多少钱? = …bao nhiêu tiền? Đơn vị: 块/元, 毛.",ex:[["这个多少钱?","Zhège duōshao qián?","Cái này bao nhiêu tiền?"]]},
-   {gp:"比 – so sánh","gn":"A 比 B + tính từ = A hơn B (về…).",ex:[["这个比那个贵。","Zhège bǐ nàge guì.","Cái này đắt hơn cái kia."]]}
+   {gp:"比 + 更/还 (so sánh nâng cao)",gn:"A 比 B 更/还 + adj: A còn… hơn B.",ex:[["这家店比那家更便宜。","Zhè jiā diàn bǐ nà jiā gèng piányi.","Cửa hàng này còn rẻ hơn cửa hàng kia."]]},
+   {gp:"又…又…",gn:"Nêu hai tính chất song song: vừa… vừa…",ex:[["这件衣服又便宜又好看。","Zhè jiàn yīfu yòu piányi yòu hǎokàn.","Cái áo này vừa rẻ vừa đẹp."]]}
   ],
-  tasks:[["✍️ Viết","Viết hội thoại mua hàng 6 câu (hỏi giá, mặc cả, trả tiền)."],["🎧 Nghe","Nghe đoạn mua sắm, ghi lại các con số & giá tiền."],["🗣️ Nói","Đóng vai mua đồ ở chợ, dùng 多少钱 và 比."]]},
- {n:7,tc:"var(--cyan)",name:"Tài chính – Nền tảng",theme:"Kinh tế, thị trường, đầu tư, cổ phiếu, rủi ro, lợi nhuận.",
-  v:[60,69],
+  wr:"Viết hội thoại mua hàng 8 câu: hỏi 价格, đòi 打折, kiểm tra 质量, 付款 (dùng 比, 又…又).",
+  li:"Nghe đoạn mua sắm, ghi lại giá gốc – giá sau giảm.",
+  sp:"Đóng vai 顾客 mặc cả ở chợ (6 câu), dùng 太贵了 và 比.",
+  rd:"Đọc mô tả một sản phẩm + đánh giá, quyết định có nên mua không và nêu lý do."},
+ {n:7,ph:1,tc:"var(--purple)",name:"Công việc & Sự nghiệp",theme:"Nghề nghiệp, phỏng vấn, CV, kinh nghiệm, áp lực, hợp tác.",v:[60,69],
   gram:[
-   {gp:"因为…所以… – nêu lý do","gn":"因为 (bởi vì) … 所以 (nên) …",ex:[["因为风险大,所以我不投资。","Yīnwèi fēngxiǎn dà, suǒyǐ wǒ bù tóuzī.","Vì rủi ro lớn nên tôi không đầu tư."]]},
-   {gp:"会/可能 – phỏng đoán","gn":"会/可能 + V = có khả năng sẽ…",ex:[["市场可能增长。","Shìchǎng kěnéng zēngzhǎng.","Thị trường có thể tăng trưởng."]]}
+   {gp:"不但…而且…",gn:"Không những… mà còn… (tăng tiến).",ex:[["这份工作不但工资高,而且很有意思。","Zhè fèn gōngzuò búdàn gōngzī gāo, érqiě hěn yǒuyìsi.","Công việc này không những lương cao mà còn thú vị."]]},
+   {gp:"虽然…但是…",gn:"Tuy… nhưng… (tương phản).",ex:[["虽然压力很大,但是我很喜欢。","Suīrán yālì hěn dà, dànshì wǒ hěn xǐhuan.","Tuy áp lực lớn nhưng tôi rất thích."]]}
   ],
-  tasks:[["✍️ Viết","Viết 4 câu nêu quan điểm về một khoản đầu tư (dùng 因为…所以)."],["🎧 Nghe","Nghe/đọc 1 bản tin kinh tế ngắn TQ, ghi 5 thuật ngữ."],["🗣️ Nói","Trình bày 3 câu: vì sao thị trường có thể tăng/giảm."]]},
- {n:8,tc:"var(--blue)",name:"Tài chính – Doanh nghiệp",theme:"Thu–chi, lãi suất, trái phiếu, quỹ, báo cáo, phân tích, quyết định.",
-  v:[70,79],
+  wr:"Viết đoạn tự giới thiệu bản thân cho buổi 面试 (8–10 câu): 经验, 能力, vì sao chọn nghề.",
+  li:"Nghe một đoạn 面试 ngắn, ghi lại 3 câu hỏi nhà tuyển dụng đặt ra.",
+  sp:"Trả lời phỏng vấn 1 phút: điểm mạnh của bạn (dùng 不但…而且).",
+  rd:"Đọc một tin tuyển dụng, liệt kê yêu cầu công việc và quyền lợi."},
+ {n:8,ph:1,tc:"var(--purple)",name:"Tính cách & Quan hệ",theme:"Miêu tả tính cách, đánh giá con người, tin cậy – ủng hộ.",v:[70,79],
   gram:[
-   {gp:"把 – câu chữ 把","gn":"把 + tân ngữ + động từ + kết quả: nhấn mạnh xử lý đối tượng.",ex:[["我把钱存到银行。","Wǒ bǎ qián cún dào yínháng.","Tôi gửi tiền vào ngân hàng."]]},
-   {gp:"虽然…但是… – tương phản","gn":"虽然 (tuy) … 但是 (nhưng) …",ex:[["虽然成本高,但是利润也高。","Suīrán chéngběn gāo, dànshì lìrùn yě gāo.","Tuy chi phí cao nhưng lợi nhuận cũng cao."]]}
+   {gp:"既…又…",gn:"Vừa… vừa… (nêu hai đặc điểm cùng chủ thể).",ex:[["他既聪明又努力。","Tā jì cōngmíng yòu nǔlì.","Anh ấy vừa thông minh vừa chăm chỉ."]]},
+   {gp:"无论…都…",gn:"Bất kể… đều… (điều kiện không đổi kết quả).",ex:[["无论遇到什么问题,他都很耐心。","Wúlùn yùdào shénme wèntí, tā dōu hěn nàixīn.","Bất kể gặp vấn đề gì, anh ấy đều rất kiên nhẫn."]]}
   ],
-  tasks:[["✍️ Viết","Viết 5 câu tóm tắt tình hình thu–chi/lợi nhuận (dùng 把, 虽然…但是)."],["🎧 Nghe","Nghe đoạn nói về báo cáo tài chính, ghi thuật ngữ mới."],["🗣️ Nói","Thuyết trình 1 phút: một quyết định tài chính & lý do."],["🚀 Mini-project","Lập sổ tay 30 thuật ngữ tài chính (chữ – pinyin – nghĩa – 1 câu ví dụ) từ tuần 7–8."]]}
+  wr:"Miêu tả một người bạn ngưỡng mộ (8 câu): 性格 ra sao, vì sao bạn 相信 họ (dùng 既…又).",
+  li:"Nghe đoạn hai người nhận xét về đồng nghiệp, ghi lại các từ chỉ tính cách.",
+  sp:"Nói 1 phút: kiểu người bạn thích kết bạn và vì sao (dùng 无论…都).",
+  rd:"Đọc đoạn miêu tả nhân vật, chọn 3 tính từ đúng nhất và dẫn chứng."},
+ {n:9,ph:1,tc:"var(--purple)",name:"Khoa học & Công nghệ",theme:"Internet, phần mềm, dữ liệu, phát minh, nghiên cứu, AI.",v:[80,89],
+  gram:[
+   {gp:"通过…来…",gn:"Thông qua… để…(nêu phương tiện/cách thức).",ex:[["我们通过网络来学习。","Wǒmen tōngguò wǎngluò lái xuéxí.","Chúng tôi học thông qua mạng."]]},
+   {gp:"随着…",gn:"Cùng với / theo đà… (thường mở đầu câu về xu hướng).",ex:[["随着科技的发展,生活越来越方便。","Suízhe kējì de fāzhǎn, shēnghuó yuèláiyuè fāngbiàn.","Cùng với sự phát triển của công nghệ, cuộc sống ngày càng tiện lợi."]]}
+  ],
+  wr:"Viết 8–10 câu về một 应用/软件 bạn dùng hằng ngày: nó giúp gì (dùng 通过…来, 随着).",
+  li:"Nghe/xem một clip ngắn về công nghệ, ghi 5 thuật ngữ mới nghe được.",
+  sp:"Trình bày 1 phút: công nghệ thay đổi việc học thế nào.",
+  rd:"Đọc một đoạn về AI/互联网, tóm tắt lợi ích và một lo ngại tác giả nêu."},
+ {n:10,ph:1,tc:"var(--purple)",name:"Xã hội & Tin tức",theme:"Đọc tin, chính phủ – pháp luật, hiện tượng xã hội, ảnh hưởng.",v:[90,99],
+  gram:[
+   {gp:"一…就…",gn:"Hễ… là (ngay lập tức)…",ex:[["我一看到这条新闻就很担心。","Wǒ yí kàndào zhè tiáo xīnwén jiù hěn dānxīn.","Tôi hễ thấy tin này là rất lo."]]},
+   {gp:"对…来说",gn:"Đối với… mà nói (nêu góc nhìn).",ex:[["对年轻人来说,这是很好的机会。","Duì niánqīngrén lái shuō, zhè shì hěn hǎo de jīhuì.","Đối với người trẻ mà nói, đây là cơ hội tốt."]]}
+  ],
+  wr:"Chọn 1 bản tin, viết 8 câu tóm tắt + nêu 影响 của sự việc (dùng 对…来说).",
+  li:"Nghe một bản tin ngắn, ghi lại: chuyện gì, ở đâu, hệ quả.",
+  sp:"Kể lại một tin bạn đọc gần đây và cảm nghĩ (dùng 一…就).",
+  rd:"Đọc bài về một 现象 xã hội, gạch câu nêu nguyên nhân và câu nêu giải pháp."},
+ {n:11,ph:1,tc:"var(--purple)",name:"Cảm xúc & Quan điểm",theme:"Bày tỏ thái độ, đồng ý – phản đối, so sánh lựa chọn.",v:[100,109],
+  gram:[
+   {gp:"对…有…(看法/意见)",gn:"Có (cách nhìn/ý kiến) về việc gì.",ex:[["我对这件事有不同的看法。","Wǒ duì zhè jiàn shì yǒu bùtóng de kànfǎ.","Tôi có cách nhìn khác về chuyện này."]]},
+   {gp:"与其…不如…",gn:"Thà… còn hơn… (chọn phương án tốt hơn).",ex:[["与其后悔,不如现在努力。","Yǔqí hòuhuǐ, bùrú xiànzài nǔlì.","Thà nỗ lực ngay còn hơn để rồi hối hận."]]}
+  ],
+  wr:"Nêu quan điểm về một chủ đề (đồng ý/phản đối), 8–10 câu, có lý do (dùng 与其…不如).",
+  li:"Nghe đoạn tranh luận, ghi lại quan điểm mỗi bên.",
+  sp:"Bày tỏ 满意 / 失望 về một dịch vụ và giải thích (1 phút).",
+  rd:"Đọc hai ý kiến trái chiều, tóm tắt và nêu bạn đồng ý bên nào."},
+ {n:12,ph:1,tc:"var(--purple)",name:"Môi trường & Thiên nhiên",theme:"Ô nhiễm, bảo vệ môi trường, tài nguyên – năng lượng, tiết kiệm.",v:[110,119],
+  gram:[
+   {gp:"为了…",gn:"Vì / để… (nêu mục đích), thường đứng đầu câu.",ex:[["为了保护环境,我们应该节约用水。","Wèile bǎohù huánjìng, wǒmen yīnggāi jiéyuē yòng shuǐ.","Để bảo vệ môi trường, chúng ta nên tiết kiệm nước."]]},
+   {gp:"只有…才…",gn:"Chỉ có… mới… (điều kiện duy nhất).",ex:[["只有大家一起努力,才能解决污染问题。","Zhǐyǒu dàjiā yìqǐ nǔlì, cáinéng jiějué wūrǎn wèntí.","Chỉ khi mọi người cùng cố gắng mới giải quyết được ô nhiễm."]]}
+  ],
+  wr:"Viết đoạn kêu gọi 保护环境 (10 câu): nêu vấn đề + 3 việc nên làm (dùng 为了, 只有…才).",
+  li:"Nghe đoạn về môi trường, ghi 3 hành động tiết kiệm được nhắc tới.",
+  sp:"Thuyết trình 1 phút: một thói quen nhỏ giúp bảo vệ môi trường.",
+  rd:"Đọc bài về 污染, tìm nguyên nhân chính và giải pháp tác giả đề xuất."},
+ {n:13,ph:2,tc:"var(--gold)",name:"Kinh tế & Tài chính",theme:"Kinh tế – thị trường, đầu tư, chi phí – lợi nhuận, ngân sách.",v:[120,129],
+  gram:[
+   {gp:"不是…而是…",gn:"Không phải… mà là… (đính chính, làm rõ).",ex:[["重要的不是价格,而是质量。","Zhòngyào de búshì jiàgé, érshì zhìliàng.","Điều quan trọng không phải giá mà là chất lượng."]]},
+   {gp:"之所以…是因为…",gn:"Sở dĩ… là bởi vì… (nhấn mạnh nguyên nhân).",ex:[["他之所以成功,是因为很努力。","Tā zhīsuǒyǐ chénggōng, shì yīnwèi hěn nǔlì.","Sở dĩ anh ấy thành công là vì rất nỗ lực."]]}
+  ],
+  wr:"Viết 10 câu phân tích được–mất của một quyết định 投资 (dùng 不是…而是, 之所以…是因为).",
+  li:"Nghe/đọc một bản tin kinh tế ngắn, ghi 5 thuật ngữ tài chính.",
+  sp:"Trình bày 1 phút: bạn quản lý 预算 cá nhân thế nào.",
+  rd:"Đọc đoạn về một xu hướng 消费, tóm tắt nguyên nhân và hệ quả kinh tế."},
+ {n:14,ph:2,tc:"var(--gold)",name:"Văn hóa & Truyền thống",theme:"Phong tục – lễ tết, lịch sử – nghệ thuật, di sản, giá trị.",v:[130,139],
+  gram:[
+   {gp:"连…都/也…",gn:"Ngay cả… cũng… (nhấn mạnh mức độ).",ex:[["连小孩子都知道这个传统。","Lián xiǎo háizi dōu zhīdào zhège chuántǒng.","Ngay cả trẻ con cũng biết truyền thống này."]]},
+   {gp:"一方面…另一方面…",gn:"Một mặt… mặt khác… (trình bày hai khía cạnh).",ex:[["一方面要保护传统,另一方面也要发展。","Yìfāngmiàn yào bǎohù chuántǒng, lìng yìfāngmiàn yě yào fāzhǎn.","Một mặt cần giữ truyền thống, mặt khác cũng phải phát triển."]]}
+  ],
+  wr:"Giới thiệu một 节日/传统 của Việt Nam bằng tiếng Trung (12 câu, dùng 一方面…另一方面).",
+  li:"Nghe đoạn giới thiệu một lễ hội TQ, ghi lại thời gian và hoạt động chính.",
+  sp:"Thuyết trình 1–2 phút về một 传统 bạn thấy có 价值 nhất.",
+  rd:"Đọc đoạn về một di sản văn hóa, tóm tắt ý nghĩa lịch sử của nó."},
+ {n:15,ph:2,tc:"var(--gold)",name:"Giáo dục & Phát triển bản thân",theme:"Kiến thức – tố chất, bồi dưỡng năng lực, mục tiêu, vượt thách thức.",v:[140,149],
+  gram:[
+   {gp:"只要…就…",gn:"Chỉ cần… thì… (điều kiện đủ).",ex:[["只要坚持,就一定会进步。","Zhǐyào jiānchí, jiù yídìng huì jìnbù.","Chỉ cần kiên trì thì nhất định sẽ tiến bộ."]]},
+   {gp:"即使…也…",gn:"Ngay cả khi / cho dù… cũng… (giả định nhượng bộ).",ex:[["即使遇到困难,我也不会放弃。","Jíshǐ yùdào kùnnan, wǒ yě búhuì fàngqì.","Cho dù gặp khó khăn, tôi cũng không bỏ cuộc."]]}
+  ],
+  wr:"Viết bài 12 câu về 目标 học tập/sự nghiệp của bạn và cách 克服 khó khăn (dùng 只要…就, 即使…也).",
+  li:"Nghe đoạn chia sẻ kinh nghiệm học tập, ghi 3 lời khuyên hữu ích.",
+  sp:"Thuyết trình 2 phút: một 挑战 bạn đã vượt qua và bài học rút ra.",
+  rd:"Đọc bài về nuôi dưỡng 素质 bản thân, tóm tắt luận điểm chính."},
+ {n:16,ph:2,tc:"var(--gold)",name:"Nghề nghiệp chuyên sâu & Đàm phán",theme:"Dự án – phương án, phụ trách – sắp xếp, giao tiếp – đàm phán, đề xuất.",v:[150,159],
+  gram:[
+   {gp:"被 (câu bị động)",gn:"Chủ thể bị/được… : A 被 (B) + V. Nhấn đối tượng chịu tác động.",ex:[["方案被经理否定了。","Fāng'àn bèi jīnglǐ fǒudìng le.","Phương án bị trưởng phòng bác bỏ."]]},
+   {gp:"使 / 让 / 令 (câu khiến)",gn:"Khiến ai đó… : A 使/让 B + trạng thái/hành động.",ex:[["这个结果让大家很满意。","Zhège jiéguǒ ràng dàjiā hěn mǎnyì.","Kết quả này khiến mọi người rất hài lòng."]]}
+  ],
+  wr:"Viết email công việc 12 câu: trình bày 方案 và đưa 建议 (dùng 被, 让).",
+  li:"Nghe đoạn họp/đàm phán, ghi lại điểm hai bên đồng ý và điểm còn tranh cãi.",
+  sp:"Đóng vai trình bày một 项目 trong 1–2 phút, nêu bạn 负责 phần nào.",
+  rd:"Đọc một biên bản họp ngắn, tóm tắt quyết định và người phụ trách."},
+ {n:17,ph:2,tc:"var(--gold)",name:"Vấn đề xã hội & Tranh luận",theme:"Cạnh tranh – mâu thuẫn, công bằng – trách nhiệm, đạo đức, cải cách.",v:[160,169],
+  gram:[
+   {gp:"尽管…还是/仍然…",gn:"Mặc dù… vẫn… (nhượng bộ mạnh, văn viết).",ex:[["尽管有很多困难,我们还是要改革。","Jǐnguǎn yǒu hěnduō kùnnan, wǒmen háishì yào gǎigé.","Mặc dù có nhiều khó khăn, chúng ta vẫn phải cải cách."]]},
+   {gp:"究竟 / 到底",gn:"Rốt cuộc / cuối cùng (nhấn mạnh truy vấn).",ex:[["我们究竟应该怎么解决这个矛盾?","Wǒmen jiūjìng yīnggāi zěnme jiějué zhège máodùn?","Rốt cuộc chúng ta nên giải quyết mâu thuẫn này thế nào?"]]}
+  ],
+  wr:"Viết bài nghị luận 12–15 câu về một vấn đề xã hội (nêu 2 mặt, quan điểm, dùng 尽管…还是).",
+  li:"Nghe một đoạn tranh luận, ghi luận điểm và lý lẽ của mỗi bên.",
+  sp:"Tranh luận 2 phút: bảo vệ quan điểm của bạn về 公平/责任.",
+  rd:"Đọc bài xã luận, xác định luận điểm chính và 2 luận cứ hỗ trợ."},
+ {n:18,ph:2,tc:"var(--gold)",name:"Thành ngữ & Viết học thuật",theme:"Thành ngữ HSK5, từ nối văn viết, tổng ôn & viết bài hoàn chỉnh.",v:[170,179],
+  gram:[
+   {gp:"总之 / 综上所述",gn:"Tóm lại / tổng hợp lại (câu kết bài viết).",ex:[["总之,学习需要坚持和方法。","Zǒngzhī, xuéxí xūyào jiānchí hé fāngfǎ.","Tóm lại, học tập cần sự kiên trì và phương pháp."]]},
+   {gp:"换句话说 / 也就是说",gn:"Nói cách khác / tức là (diễn giải lại cho rõ).",ex:[["他很谦虚,换句话说,他从不骄傲。","Tā hěn qiānxū, huànjùhuàshuō, tā cóngbù jiāo'ào.","Anh ấy rất khiêm tốn, nói cách khác, chưa bao giờ kiêu ngạo."]]}
+  ],
+  wr:"Viết bài hoàn chỉnh ~200 chữ về 'Học ngoại ngữ' dùng ≥3 thành ngữ + từ nối (总之, 换句话说).",
+  li:"Nghe một bài nói trung cấp, ghi lại các từ nối/thành ngữ người nói dùng.",
+  sp:"Thuyết trình 2–3 phút tổng kết hành trình học HSK 5 của bạn, dùng ≥2 thành ngữ.",
+  rd:"Đọc một đoạn văn có thành ngữ, đoán nghĩa 3 thành ngữ qua ngữ cảnh rồi tra lại."}
 ];
-</script>
-<script id="engine">
+
 /* ============ ENGINE ============ */
-const KEY="zh_teacher_v1";
+const KEY="zh_hsk5_v1";
 let S = load();
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||seed();}catch(e){return seed();}}
-function seed(){return {done:{}, log:[], vocab:{}};}   // done: sessionKey->true ; log: [yyyy-mm-dd] ; vocab: id->'known'|'review'
+function seed(){return {done:{}, log:[], vocab:{}, notes:{}};}  // done: key->true ; log:[yyyy-mm-dd] ; vocab:id->'known'|'review' ; notes:key->text
 function save(){localStorage.setItem(KEY,JSON.stringify(S));}
 function today(){const d=new Date();return d.toISOString().slice(0,10);}
 
-/* ---- build sessions for a week (5 buổi) ---- */
+/* ---- build 3 sessions for a week ---- */
 function sessionsFor(wi){
   const w=W[wi]; const [a,b]=w.v; const ids=[];for(let i=a;i<=b;i++)ids.push(i);
-  const half=Math.ceil(ids.length/2);
   const g=w.gram;
   return [
-    {t:"Học 5 từ mới (đợt 1)",m:"Đọc mẹo nhớ + viết mỗi từ 3 lần",words:ids.slice(0,half),
-      subs:[["Đọc mẹo nhớ / chiết tự của 5 từ",""],["Viết tay mỗi từ 3 lần",""],["Đọc to 5 từ + đặt 1 câu mỗi từ",""]]},
-    {t:"Học 5 từ mới (đợt 2) + ôn đợt 1",m:"Thêm 5 từ, ôn nhanh 5 từ cũ",words:ids.slice(half),
-      subs:[["Đọc mẹo nhớ 5 từ mới",""],["Ôn nhanh 5 từ đợt 1 (che nghĩa, tự đọc)",""],["Đánh dấu 'Đã thuộc' cho từ đã nhớ ở tab Từ vựng",""]]},
-    {t:"Ngữ pháp điểm 1 + đặt câu",m:g[0].gp,words:ids,
-      subs:[["Học mẫu: "+g[0].gp,g[0].gn],["Chép 2 câu ví dụ mẫu",""],["Tự đặt 5 câu dùng mẫu này + từ tuần này",""]]},
-    {t:"Ngữ pháp điểm 2 + luyện nghe",m:g[1].gp,words:ids,
-      subs:[["Học mẫu: "+g[1].gp,g[1].gn],[w.tasks[1][0]+": "+w.tasks[1][1],""],["Đặt 3 câu dùng mẫu điểm 2",""]]},
-    {t:"Bài viết + ôn cả tuần + tự kiểm tra",m:"Nghiệm thu tuần",words:ids,
-      subs:[[w.tasks[0][0]+": "+w.tasks[0][1],""],["Ôn lại toàn bộ 10 từ (che chữ Hán, nhìn nghĩa viết lại)",""],[(w.tasks[2]?w.tasks[2][0]+": "+w.tasks[2][1]:"Tự kiểm tra: đọc lại 10 từ không vấp"),""]].concat(w.tasks[3]?[[w.tasks[3][0]+": "+w.tasks[3][1],""]]:[])}
+    {t:"Từ vựng mới + Luyện nghe",m:"10 từ + chiết tự + nghe chép",words:ids,
+      subs:[
+        ["Đọc mẹo nhớ / chiết tự của 10 từ mới",""],
+        ["Viết tay mỗi từ 3 lần (chú ý bộ thủ & thanh điệu)",""],
+        ["Đặt 1 câu ngắn với 5 từ bất kỳ",""],
+        ["🎧 Nghe: "+w.li,""]
+      ],note:"✍️ Chỗ đặt câu / ghi chú nghe"},
+    {t:"Ngữ pháp + Đặt câu + Đọc",m:g[0].gp+" · "+g[1].gp,words:ids,
+      subs:[
+        ["Học mẫu 1: "+g[0].gp,g[0].gn],
+        ["Đặt 5 câu dùng mẫu 1 + từ tuần này",""],
+        ["Học mẫu 2: "+g[1].gp,g[1].gn],
+        ["Đặt 3 câu dùng mẫu 2",""],
+        ["📖 Đọc: "+w.rd,""]
+      ],note:"✍️ 8 câu bạn tự đặt (mẫu 1 & 2)"},
+    {t:"Viết + Nói + Nghiệm thu tuần",m:"Bài viết + thu âm + ôn flashcard",words:ids,
+      subs:[
+        ["✍️ Viết: "+w.wr,""],
+        ["🗣️ Nói: "+w.sp,""],
+        ["⚡ Ôn flashcard toàn bộ 10 từ (che chữ Hán, nhìn nghĩa đọc lại)",""],
+        ["Đánh dấu 'Đã thuộc' cho từ đã nhớ (tab Từ vựng / Flashcard)",""]
+      ],note:"✍️ Bài viết của bạn"}
   ];
 }
+const NSESS=3;
 function sKey(wi,si){return "w"+wi+"s"+si;}
 function subKey(wi,si,k){return "w"+wi+"s"+si+"t"+k;}
-
-function sessDone(wi,si){
-  const subs=sessionsFor(wi)[si].subs;
-  return subs.every((_,k)=>S.done[subKey(wi,si,k)]);
-}
-function weekSessDone(wi){let c=0;for(let s=0;s<5;s++)if(S.done[sKey(wi,s)])c++;return c;}
-function weekComplete(wi){return weekSessDone(wi)===5;}
+function noteKey(wi,si){return "n"+wi+"s"+si;}
+function weekSessDone(wi){let c=0;for(let s=0;s<NSESS;s++)if(S.done[sKey(wi,s)])c++;return c;}
+function weekComplete(wi){return weekSessDone(wi)===NSESS;}
 function activeWeek(){for(let i=0;i<W.length;i++)if(!weekComplete(i))return i;return W.length-1;}
 
 /* ---- streak ---- */
@@ -461,7 +757,6 @@ function streak(){
   if(!S.log.length)return 0;
   const set=new Set(S.log);
   let d=new Date(), c=0;
-  // if today not studied, start counting from yesterday
   const t=today();
   if(!set.has(t))d.setDate(d.getDate()-1);
   for(;;){const k=d.toISOString().slice(0,10);if(set.has(k)){c++;d.setDate(d.getDate()-1);}else break;}
@@ -472,37 +767,44 @@ function studiedToday(){return S.log.includes(today());}
 /* ============ RENDER TODAY ============ */
 let curWeek = activeWeek();
 function renderToday(){
-  // week picker
   const wp=document.getElementById("wpick");
-  wp.innerHTML=W.map((w,i)=>`<button class="${i===curWeek?'active':''} ${weekComplete(i)?'done':''}" onclick="pickWeek(${i})">
-     Tuần<b>${w.n}</b>${weekComplete(i)?'✅':weekSessDone(i)+'/5'}</button>`).join("");
+  let html="";let lastPh=-1;
+  W.forEach((w,i)=>{
+    if(w.ph!==lastPh){html+=`<div class="pdiv">GĐ ${w.ph+1}</div>`;lastPh=w.ph;}
+    html+=`<button class="${i===curWeek?'active':''} ${weekComplete(i)?'done':''}" onclick="pickWeek(${i})">
+       Tuần<b>${w.n}</b>${weekComplete(i)?'✅':weekSessDone(i)+'/'+NSESS}</button>`;
+  });
+  wp.innerHTML=html;
   const w=W[curWeek];
   const [a,b]=w.v; const nv=b-a+1;
-  // week head + quota
   const gd=weekSessDone(curWeek);
+  const ph=P[w.ph];
   document.getElementById("weekhead").innerHTML=`
+    <span class="phbadge" style="background:${ph.clr};color:${ph.txt}">${ph.name}</span>
     <h3>Tuần ${w.n}: ${w.name}</h3>
     <div class="cap">${w.theme}</div>
-    <h4 class="sec" style="margin-top:14px">📋 Định mức tuần này</h4>
+    <h4 class="sec" style="margin-top:14px">📋 Định mức tuần này (3 buổi)</h4>
     <div class="quota">
-      <div class="qcell ${gd>=2?'hit':''}"><div class="ic">🀄</div><b>${nv}</b><span>từ mới</span></div>
-      <div class="qcell ${gd>=4?'hit':''}"><div class="ic">📐</div><b>2</b><span>ngữ pháp</span></div>
-      <div class="qcell ${gd>=5?'hit':''}"><div class="ic">✍️</div><b>1</b><span>bài viết</span></div>
-      <div class="qcell ${gd>=5?'hit':''}"><div class="ic">🎯</div><b>${gd}/5</b><span>buổi xong</span></div>
+      <div class="qcell ${gd>=1?'hit':''}"><div class="ic">🀄</div><b>${nv}</b><span>từ mới</span></div>
+      <div class="qcell ${gd>=2?'hit':''}"><div class="ic">📐</div><b>2</b><span>ngữ pháp</span></div>
+      <div class="qcell ${gd>=3?'hit':''}"><div class="ic">✍️</div><b>1</b><span>bài viết</span></div>
+      <div class="qcell ${gd>=3?'hit':''}"><div class="ic">🎯</div><b>${gd}/${NSESS}</b><span>buổi xong</span></div>
     </div>`;
-  // sessions
   const sess=sessionsFor(curWeek);
   const nextIdx=sess.findIndex((_,i)=>!S.done[sKey(curWeek,i)]);
   document.getElementById("sessions").innerHTML=sess.map((se,i)=>{
     const done=S.done[sKey(curWeek,i)];
     const isToday=(i===nextIdx && curWeek===activeWeek());
-    const wchips=se.words&&se.words.length&&i<2 ? `<div class="wchips">${se.words.map(id=>`<span class="wchip" onclick="event.stopPropagation();openWord(${id})"><b>${V[id][0]}</b><span>${V[id][2]}</span></span>`).join("")}</div>`:"";
-    const gramBlk=(i===2||i===3)?gramHTML(curWeek,i===2?0:1):"";
+    const wchips=(i===0)?`<div class="wchips">${se.words.map(id=>`<span class="wchip" onclick="event.stopPropagation();openWord(${id})"><b>${V[id][0]}</b><span>${V[id][2]}</span></span>`).join("")}</div>`:"";
+    const gramBlk=(i===1)?gramHTML(curWeek,0)+gramHTML(curWeek,1):"";
     const subs=se.subs.map((st,k)=>{
       const on=S.done[subKey(curWeek,i,k)];
       return `<div class="subt ${on?'on':''}" onclick="toggleSub(${curWeek},${i},${k})"><div class="cb">✓</div>
         <div class="tx">${st[0]}${st[1]?`<small>${st[1]}</small>`:""}</div></div>`;
     }).join("");
+    const nk=noteKey(curWeek,i);
+    const noteBox=`<div class="notebox"><label>${se.note}</label>
+      <textarea placeholder="Viết trực tiếp vào đây — tự lưu…" oninput="saveNote('${nk}',this.value)">${(S.notes[nk]||"").replace(/</g,"&lt;")}</textarea></div>`;
     const canFinish=se.subs.every((_,k)=>S.done[subKey(curWeek,i,k)]);
     return `<div class="sess ${done?'done':''} ${isToday?'today':''} ${isToday||(!done&&i===nextIdx)?'open':''}" id="sess${i}">
       <div class="shead" onclick="toggleOpen(${i})">
@@ -513,6 +815,7 @@ function renderToday(){
       <div class="sbody">
         ${wchips}${gramBlk}
         ${subs}
+        ${noteBox}
         <button class="finbtn" ${(done||!canFinish)?'disabled':''} onclick="finishSession(${curWeek},${i})">
           ${done?'✓ Đã hoàn thành buổi này':'Hoàn thành buổi học ✅'}</button>
       </div>
@@ -527,17 +830,16 @@ function gramHTML(wi,gi){
 }
 function toggleOpen(i){document.getElementById("sess"+i).classList.toggle("open");}
 function pickWeek(i){curWeek=i;renderToday();}
+function saveNote(k,v){S.notes[k]=v;save();}
 function toggleSub(wi,si,k){
   const key=subKey(wi,si,k);
   S.done[key]=!S.done[key];
-  // sync session-level done flag if all subs
   save();renderToday();
 }
 function finishSession(wi,si){
   S.done[sKey(wi,si)]=true;
   const t=today(); if(!S.log.includes(t))S.log.push(t);
   save();
-  // advance view if week done
   if(weekComplete(wi)&&wi<W.length-1){curWeek=wi+1;}
   renderToday();renderProgress();
 }
@@ -548,16 +850,61 @@ function renderTeacher(){
   const aw=activeWeek();const gd=weekSessDone(aw);
   let msg,sub;
   const allDone=W.every((_,i)=>weekComplete(i));
-  if(allDone){msg="Tuyệt vời! Bạn đã hoàn tất 8 tuần đầu 🎉";sub="Sẵn sàng cho block hướng thẳng HSK 4 – nói mình soạn tiếp nhé.";}
+  if(allDone){msg="Tuyệt vời! Bạn đã hoàn tất toàn bộ 18 tuần 🎉";sub="Giờ hãy luyện đề HSK 5 thật (nghe + đọc + viết) và ôn lại flashcard mỗi ngày để giữ phong độ.";}
   else if(!studiedToday()){
     msg=st>0?`Hôm nay chưa học kìa — giữ chuỗi ${st} ngày nào! 🔥`:"Bắt đầu buổi học hôm nay thôi 💪";
-    sub=`Đang ở Tuần ${W[aw].n} · ${W[aw].name} — bạn đã xong ${gd}/5 buổi.`;
+    sub=`Đang ở Tuần ${W[aw].n} · ${W[aw].name} — bạn đã xong ${gd}/${NSESS} buổi.`;
   } else {
     msg=`Làm tốt lắm! Hôm nay bạn đã học ✅`;
-    sub=gd<5?`Tuần ${W[aw].n}: còn ${5-gd} buổi nữa là đạt định mức.`:`Tuần ${W[aw].n} đã đủ định mức — có thể sang tuần mới.`;
+    sub=gd<NSESS?`Tuần ${W[aw].n}: còn ${NSESS-gd} buổi nữa là đạt định mức.`:`Tuần ${W[aw].n} đã đủ 3 buổi — có thể sang tuần mới.`;
   }
   document.getElementById("tmsg").textContent=msg;
   document.getElementById("tsub").textContent=sub;
+}
+
+/* ============ FLASHCARD ============ */
+let deck=[], dpos=0, flipped=false;
+function initFlashFilters(){
+  const sel=document.getElementById("fcweek");
+  sel.innerHTML=`<option value="all">Tất cả các tuần</option>`+W.map((w,i)=>`<option value="${i}">Tuần ${w.n} · ${w.name}</option>`).join("");
+}
+function buildDeck(){
+  const wv=document.getElementById("fcweek").value;
+  const scope=document.getElementById("fcscope").value;
+  let idx=V.map((_,i)=>i);
+  if(wv!=="all"){const[a,b]=W[+wv].v;idx=idx.filter(i=>i>=a&&i<=b);}
+  if(scope!=="all")idx=idx.filter(i=>((S.vocab[i]||"new")===scope));
+  for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+  deck=idx;dpos=0;flipped=false;renderFlash();
+}
+function renderFlash(){
+  const area=document.getElementById("fcarea");
+  const dir=document.getElementById("fcdir").value;
+  document.getElementById("fcstat").innerHTML=deck.length?`Thẻ <b>${Math.min(dpos+1,deck.length)}</b>/${deck.length}`:"";
+  if(!deck.length){area.innerHTML=`<div class="fcdone">Không có thẻ nào khớp bộ lọc.<br>Hãy đổi tuần hoặc trạng thái.</div>`;return;}
+  if(dpos>=deck.length){
+    area.innerHTML=`<div class="fcdone"><b>Hoàn thành bộ thẻ! 🎉</b><br>Bạn đã lướt qua ${deck.length} thẻ.<br><br>
+      <button class="btn" onclick="buildDeck()">🔁 Học lại từ đầu</button></div>`;return;}
+  const id=deck[dpos];const w=V[id];
+  const front = dir==="zh" ? `<div class="big">${w[0]}</div><div class="hint">Bấm để lật xem nghĩa</div>`
+                           : `<div class="med">${w[2]}</div><div class="hint" style="margin-top:6px">${w[3]} · Bấm để lật xem chữ Hán</div>`;
+  const back = `<div class="big" style="font-size:52px">${w[0]}</div><div class="py">${w[1]}</div><div class="vn">${w[2]} · ${w[3]}</div>
+    <div class="tip">${w[5]}</div>`;
+  area.innerHTML=`<div class="flash"><div class="fcard ${flipped?'flip':''}" onclick="flipCard()">
+      <div class="face front">${front}</div>
+      <div class="face back">${back}</div>
+    </div></div>
+    <div class="fcact">
+      <button class="no" onclick="gradeCard('review')">❌ Chưa nhớ</button>
+      <button class="skip" onclick="gradeCard(null)">⏭️ Bỏ qua</button>
+      <button class="yes" onclick="gradeCard('known')">✅ Đã nhớ</button>
+    </div>`;
+}
+function flipCard(){flipped=!flipped;document.querySelector(".fcard").classList.toggle("flip");}
+function gradeCard(mark){
+  const id=deck[dpos];
+  if(mark){S.vocab[id]=mark;save();}
+  dpos++;flipped=false;renderFlash();renderProgress();
 }
 
 /* ============ VOCAB BANK ============ */
@@ -591,14 +938,20 @@ function mark(i,st){S.vocab[i]=(S.vocab[i]===st)?undefined:st;if(!S.vocab[i])del
 
 /* ============ ROADMAP ============ */
 function renderRoad(){
-  document.getElementById("rmap").innerHTML=W.map(w=>{
+  let html="";let lastPh=-1;
+  W.forEach(w=>{
+    if(w.ph!==lastPh){const ph=P[w.ph];
+      html+=`</div><div class="phase-h"><div class="nm" style="color:${ph.txt}">${ph.name}</div><div class="sb">${ph.sub}</div></div><div class="rmap">`;
+      lastPh=w.ph;}
     const [a,b]=w.v;
-    return `<div class="rm" style="--tc:${w.tc}">
+    html+=`<div class="rm" style="--tc:${w.tc}">
       <div class="wk">TUẦN ${w.n}</div><h5>${w.name}</h5>
       <div class="th">${w.theme}</div>
-      <div class="qs"><span>🀄 ${b-a+1} từ</span><span>📐 2 NP</span><span>✍️ viết</span></div>
+      <div class="qs"><span>🀄 ${b-a+1} từ</span><span>📐 2 NP</span><span>✍️ viết</span><span>🎧 nghe</span></div>
     </div>`;
-  }).join("");
+  });
+  html=html.replace(/^<\/div>/,"")+"</div>";
+  document.getElementById("rmap").innerHTML=html;
 }
 
 /* ============ PROGRESS ============ */
@@ -612,7 +965,7 @@ function renderProgress(){
   document.getElementById("pWords").textContent=known;
   document.getElementById("pWeeks").textContent=weeksDone;
   document.getElementById("weekbars").innerHTML=W.map((w,i)=>{
-    const p=Math.round(weekSessDone(i)/5*100);
+    const p=Math.round(weekSessDone(i)/NSESS*100);
     return `<div class="wkrow"><div class="nm">Tuần ${w.n} · ${w.name}</div>
       <div class="bar"><span style="width:${p}%"></span></div><div class="pc">${p}%</div></div>`;
   }).join("");
@@ -640,11 +993,12 @@ function tab(id,btn){
   if(id==="vocab")renderVocab();
   if(id==="prog")renderProgress();
   if(id==="road")renderRoad();
+  if(id==="flash"&&!deck.length)buildDeck();
 }
-function resetAll(){if(confirm("Đặt lại toàn bộ tiến độ (buổi học, từ vựng, streak)?")){S=seed();save();curWeek=0;renderToday();renderVocab();renderProgress();}}
+function resetAll(){if(confirm("Đặt lại toàn bộ tiến độ (buổi học, từ vựng, ghi chú, streak)?")){S=seed();save();curWeek=0;renderToday();renderVocab();renderProgress();buildDeck();}}
 
 /* init */
-initVocabFilters();renderRoad();renderToday();renderProgress();
+initVocabFilters();initFlashFilters();renderRoad();renderToday();renderProgress();
 </script>
 </body>
 </html>
