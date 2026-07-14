@@ -140,6 +140,7 @@
   .vc .hz{font-size:30px;font-weight:800;line-height:1}
   .vc .meta .py{color:var(--gold);font-size:13px}
   .vc .meta .vn{font-size:13.5px}
+  .hv{color:var(--purple);font-size:11.5px;font-weight:700;letter-spacing:.4px;margin-top:1px}
   .vc .pos{position:absolute;top:12px;right:12px;font-size:10px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:2px 8px}
   .vc .tip{margin-top:10px;font-size:12.8px;color:#cfd8ee;background:var(--panel2);border-radius:9px;padding:9px 11px;line-height:1.5}
   .vc .tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;margin-bottom:6px;letter-spacing:.3px}
@@ -362,6 +363,7 @@
     <span class="x" onclick="closeModal()">✕</span>
     <div class="hz" id="mHz"></div>
     <div class="py" id="mPy"></div>
+    <div class="hv" id="mHv" style="font-size:14px;margin-top:6px"></div>
     <button class="spk big" style="margin-top:10px" onclick="speak(document.getElementById('mHz').textContent,event)">🔊 Nghe phát âm</button>
     <div class="vn" id="mVn" style="margin-top:8px"></div>
     <div class="tip" id="mTip"></div>
@@ -682,6 +684,29 @@ const V = [
 ["举例来说","jǔlìláishuō","ví dụ mà nói","thành ngữ","mo","举例 (nêu ví dụ) 来说 (mà nói). Cụm dẫn vào một ví dụ minh họa."],
 ["各种各样","gèzhǒnggèyàng","đủ mọi loại / muôn hình muôn vẻ","thành ngữ","mo","各种 (mỗi loại) 各样 (mỗi kiểu). Phong phú đa dạng, nhiều kiểu khác nhau."]
 ];
+
+/* ============ ÂM HÁN – VIỆT (theo từng từ) ============ */
+const HV = {
+"高兴":"CAO HƯNG","难过":"NAN QUÁ","担心":"ĐẢM TÂM","希望":"HY VỌNG","感谢":"CẢM TẠ","关心":"QUAN TÂM","表示":"BIỂU THỊ","相信":"TƯƠNG TÍN","需要":"NHU YẾU","觉得":"GIÁC ĐẮC","生气":"SINH KHÍ","害怕":"HẠI PHẠ","感动":"CẢM ĐỘNG","讨厌":"THẢO YẾM","表扬":"BIỂU DƯƠNG","批评":"PHÊ BÌNH",
+"身体":"THÂN THỂ","头":"ĐẦU","眼睛":"NHÃN TINH","耳朵":"NHĨ ĐÓA","鼻子":"TỴ TỬ","医院":"Y VIỆN","医生":"Y SINH","生病":"SINH BỆNH","药":"DƯỢC","健康":"KIỆN KHANG","疼":"ĐÔNG","咳嗽":"KHÁI THẤU","发烧":"PHÁT THIÊU","感冒":"CẢM MẠO","锻炼":"ĐOÀN LUYỆN","舒服":"THƯ PHỤC",
+"考试":"KHẢO THÍ","成绩":"THÀNH TÍCH","努力":"NỖ LỰC","练习":"LUYỆN TẬP","复习":"PHỤC TẬP","预习":"DỰ TẬP","提高":"ĐỀ CAO","成功":"THÀNH CÔNG","习惯":"TẬP QUÁN","教育":"GIÁO DỤC","专业":"CHUYÊN NGHIỆP","毕业":"TẤT NGHIỆP","作业":"TÁC NGHIỆP","语法":"NGỮ PHÁP","词典":"TỪ ĐIỂN","翻译":"PHIÊN DỊCH",
+"爱好":"ÁI HIẾU","音乐":"ÂM NHẠC","电影":"ĐIỆN ẢNH","运动":"VẬN ĐỘNG","旅游":"LỮ DU","唱歌":"XƯỚNG CA","跳舞":"KHIÊU VŨ","照相":"CHIẾU TƯỚNG","参加":"THAM GIA","兴趣":"HƯNG THÚ","表演":"BIỂU DIỄN","观众":"QUAN CHÚNG","演出":"DIỄN XUẤT","小说":"TIỂU THUYẾT","游戏":"DU HÍ","比赛":"TỈ SÁI",
+"出发":"XUẤT PHÁT","到达":"ĐÁO ĐẠT","机场":"CƠ TRƯỜNG","飞机":"PHI CƠ","火车":"HỎA XA","地铁":"ĐỊA THIẾT","护照":"HỘ CHIẾU","行李":"HÀNH LÝ","风景":"PHONG CẢNH","地图":"ĐỊA ĐỒ","签证":"THIÊM CHỨNG","预订":"DỰ ĐÍNH","导游":"ĐẠO DU","迷路":"MÊ LỘ","距离":"CỰ LY","出差":"XUẤT SAI",
+"商场":"THƯƠNG TRƯỜNG","超市":"SIÊU THỊ","顾客":"CỐ KHÁCH","服务":"PHỤC VỤ","质量":"CHẤT LƯỢNG","价格":"GIÁ CÁCH","打折":"ĐẢ CHIẾT","付款":"PHÓ KHOẢN","退":"THOÁI","选择":"TUYỂN TRẠCH","现金":"HIỆN KIM","收据":"THU CỨ","商品":"THƯƠNG PHẨM","优惠":"ƯU HUỆ","排队":"BÀI ĐỘI","包装":"BAO TRANG",
+"职业":"CHỨC NGHIỆP","收入":"THU NHẬP","面试":"DIỆN THÍ","简历":"GIẢN LỊCH","经验":"KINH NGHIỆM","能力":"NĂNG LỰC","机会":"CƠ HỘI","压力":"ÁP LỰC","加班":"GIA BAN","合作":"HỢP TÁC","招聘":"CHIÊU SÍNH","薪水":"TÂN THỦY","升职":"THĂNG CHỨC","辞职":"TỪ CHỨC","团队":"ĐOÀN ĐỘI","任务":"NHIỆM VỤ",
+"性格":"TÍNH CÁCH","诚实":"THÀNH THẬT","热情":"NHIỆT TÌNH","耐心":"NẠI TÂM","骄傲":"KIÊU NGẠO","幽默":"U MẶC","友好":"HỮU HẢO","理解":"LÝ GIẢI","支持":"CHI TRÌ","信任":"TÍN NHIỆM","聪明":"THÔNG MINH","认真":"NHẬN CHÂN","懒":"LÃN","勇敢":"DŨNG CẢM","脾气":"TỲ KHÍ","骗":"PHIẾN",
+"科技":"KHOA KỸ","互联网":"HỖ LIÊN VÕNG","网络":"VÕNG LẠC","软件":"NHUYỄN KIỆN","数据":"SỐ CỨ","发明":"PHÁT MINH","研究":"NGHIÊN CỨU","技术":"KỸ THUẬT","应用":"ỨNG DỤNG","智能":"TRÍ NĂNG","密码":"MẬT MÃ","下载":"HẠ TẢI","屏幕":"BÌNH MẠC","系统":"HỆ THỐNG","设备":"THIẾT BỊ","创新":"SÁNG TÂN",
+"社会":"XÃ HỘI","新闻":"TÂN VĂN","消息":"TIÊU TỨC","政府":"CHÍNH PHỦ","法律":"PHÁP LUẬT","现象":"HIỆN TƯỢNG","影响":"ẢNH HƯỞNG","变化":"BIẾN HÓA","人口":"NHÂN KHẨU","文化":"VĂN HÓA","报道":"BÁO ĐẠO","记者":"KÝ GIẢ","广告":"QUẢNG CÁO","交通":"GIAO THÔNG","城市":"THÀNH THỊ","农村":"NÔNG THÔN",
+"态度":"THÁI ĐỘ","观点":"QUAN ĐIỂM","意见":"Ý KIẾN","同意":"ĐỒNG Ý","反对":"PHẢN ĐỐI","怀疑":"HOÀI NGHI","后悔":"HẬU HỐI","羡慕":"TIỆN MỘ","满意":"MÃN Ý","失望":"THẤT VỌNG","判断":"PHÁN ĐOÁN","估计":"CÔ KẾ","承认":"THỪA NHẬN","拒绝":"CỰ TUYỆT","赞成":"TÁN THÀNH","怀念":"HOÀI NIỆM",
+"环境":"HOÀN CẢNH","污染":"Ô NHIỄM","保护":"BẢO HỘ","资源":"TƯ NGUYÊN","能源":"NĂNG NGUYÊN","气候":"KHÍ HẬU","自然":"TỰ NHIÊN","垃圾":"LẠP TẤP","节约":"TIẾT ƯỚC","破坏":"PHÁ HOẠI","空气":"KHÔNG KHÍ","温度":"ÔN ĐỘ","全球":"TOÀN CẦU","森林":"SÂM LÂM","动物":"ĐỘNG VẬT","植物":"THỰC VẬT",
+"经济":"KINH TẾ","金融":"KIM DUNG","投资":"ĐẦU TƯ","消费":"TIÊU PHÍ","利润":"LỢI NHUẬN","成本":"THÀNH BẢN","贷款":"THẢI KHOẢN","预算":"DỰ TOÁN","效率":"HIỆU SUẤT","财富":"TÀI PHÚ","银行":"NGÂN HÀNG","股票":"CỔ PHIẾU","税":"THUẾ","债务":"TRÁI VỤ","财产":"TÀI SẢN","涨":"TRƯỚNG",
+"传统":"TRUYỀN THỐNG","风俗":"PHONG TỤC","节日":"TIẾT NHẬT","历史":"LỊCH SỬ","艺术":"NGHỆ THUẬT","文明":"VĂN MINH","民族":"DÂN TỘC","遗产":"DI SẢN","宗教":"TÔN GIÁO","价值":"GIÁ TRỊ","表达":"BIỂU ĐẠT","象征":"TƯỢNG TRƯNG","庆祝":"KHÁNH CHÚC","习俗":"TẬP TỤC","祖先":"TỔ TIÊN","尊重":"TÔN TRỌNG",
+"知识":"TRI THỨC","素质":"TỐ CHẤT","培养":"BỒI DƯỠNG","独立":"ĐỘC LẬP","自信":"TỰ TÍN","坚持":"KIÊN TRÌ","目标":"MỤC TIÊU","挑战":"KHIÊU CHIẾN","克服":"KHẮC PHỤC","优秀":"ƯU TÚ","智慧":"TRÍ TUỆ","潜力":"TIỀM LỰC","优点":"ƯU ĐIỂM","缺点":"KHUYẾT ĐIỂM","进步":"TIẾN BỘ","主动":"CHỦ ĐỘNG",
+"项目":"HẠNG MỤC","方案":"PHƯƠNG ÁN","效果":"HIỆU QUẢ","负责":"PHỤ TRÁCH","安排":"AN BÀI","沟通":"CÂU THÔNG","谈判":"ĐÀM PHÁN","建议":"KIẾN NGHỊ","承担":"THỪA ĐẢM","完善":"HOÀN THIỆN","合同":"HỢP ĐỒNG","客户":"KHÁCH HỘ","汇报":"HỐI BÁO","期限":"KỲ HẠN","评估":"BÌNH CÔ","培训":"BỒI HUẤN",
+"现代":"HIỆN ĐẠI","竞争":"CẠNH TRANH","矛盾":"MÂU THUẪN","公平":"CÔNG BÌNH","责任":"TRÁCH NHIỆM","权利":"QUYỀN LỢI","道德":"ĐẠO ĐỨC","制度":"CHẾ ĐỘ","改革":"CẢI CÁCH","解决":"GIẢI QUYẾT","贫富":"BẦN PHÚ","就业":"TỰU NGHIỆP","歧视":"KỲ THỊ","舆论":"DƯ LUẬN","政策":"CHÍNH SÁCH","后果":"HẬU QUẢ",
+"一举两得":"NHẤT CỬ LƯỠNG ĐẮC","入乡随俗":"NHẬP HƯƠNG TÙY TỤC","熟能生巧":"THỤC NĂNG SINH XẢO","半途而废":"BÁN ĐỒ NHI PHẾ","名副其实":"DANH PHÓ KỲ THỰC","理所当然":"LÝ SỞ ĐƯƠNG NHIÊN","不可思议":"BẤT KHẢ TƯ NGHỊ","实事求是":"THỰC SỰ CẦU THỊ","总而言之":"TỔNG NHI NGÔN CHI","换句话说":"HOÁN CÚ THOẠI THUYẾT","一帆风顺":"NHẤT PHÀM PHONG THUẬN","全力以赴":"TOÀN LỰC DĨ PHÓ","与此同时":"DỮ THỬ ĐỒNG THỜI","总的来说":"TỔNG ĐÍCH LAI THUYẾT","举例来说":"CỬ LỆ LAI THUYẾT","各种各样":"CÁC CHỦNG CÁC DẠNG"
+};
+function hv(hz){return HV[hz]||"";}
 
 /* ============ PHASES ============ */
 const P = [
@@ -1021,7 +1046,7 @@ function renderToday(){
   document.getElementById("sessions").innerHTML=sess.map((se,i)=>{
     const done=S.done[sKey(curWeek,i)];
     const isToday=(i===nextIdx && curWeek===activeWeek());
-    const wchips=(i===0)?`<div class="wchips">${se.words.map(id=>`<span class="wchip" onclick="event.stopPropagation();openWord(${id})"><b>${V[id][0]}</b><span>${V[id][2]}</span><button class="spk" onclick="speak('${V[id][0]}',event)">🔊</button></span>`).join("")}</div>`:"";
+    const wchips=(i===0)?`<div class="wchips">${se.words.map(id=>`<span class="wchip" onclick="event.stopPropagation();openWord(${id})"><b>${V[id][0]}</b> <span class="hv" style="display:inline;margin:0 2px">${hv(V[id][0])}</span><span>${V[id][2]}</span><button class="spk" onclick="speak('${V[id][0]}',event)">🔊</button></span>`).join("")}</div>`:"";
     const gramBlk=(i===1)?gramHTML(curWeek,0)+gramHTML(curWeek,1):"";
     const subs=se.subs.map((st,k)=>{
       const on=S.done[subKey(curWeek,i,k)];
@@ -1118,7 +1143,7 @@ function renderFlash(){
   const id=deck[dpos];const w=V[id];
   const front = dir==="zh" ? `<div class="big">${w[0]}</div><button class="spk big" onclick="speak('${w[0]}',event)">🔊 Nghe</button><div class="hint" style="margin-top:10px">Bấm để lật xem nghĩa</div>`
                            : `<div class="med">${w[2]}</div><div class="hint" style="margin-top:6px">${w[3]} · Bấm để lật xem chữ Hán</div>`;
-  const back = `<div class="big" style="font-size:52px">${w[0]}</div><div class="py">${w[1]} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="vn">${w[2]} · ${w[3]}</div>
+  const back = `<div class="big" style="font-size:52px">${w[0]}</div><div class="py">${w[1]} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="hv">${hv(w[0])}</div><div class="vn">${w[2]} · ${w[3]}</div>
     <div class="tip">${w[5]}</div>`;
   area.innerHTML=`<div class="flash"><div class="fcard ${flipped?'flip':''}" onclick="flipCard()">
       <div class="face front">${front}</div>
@@ -1156,7 +1181,7 @@ function renderVocab(){
     const w=V[i];const state=S.vocab[i]||"new";
     return `<div class="vc ${state}" id="vc${i}">
       <div class="pos">${w[3]}</div>
-      <div class="top"><div class="hz">${w[0]}</div><div class="meta"><div class="py">${w[1]} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="vn">${w[2]}</div></div></div>
+      <div class="top"><div class="hz">${w[0]}</div><div class="meta"><div class="py">${w[1]} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="hv">${hv(w[0])}</div><div class="vn">${w[2]}</div></div></div>
       <div class="tip"><span class="tag ${w[4]}">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}</div>
       <div class="act">
         <button class="b-k" onclick="mark(${i},'known')">✓ Đã thuộc</button>
@@ -1208,6 +1233,7 @@ function renderProgress(){
 function openWord(i){const w=V[i];
   document.getElementById("mHz").textContent=w[0];
   document.getElementById("mPy").textContent=w[1];
+  document.getElementById("mHv").textContent=hv(w[0]);
   document.getElementById("mVn").textContent=w[2]+" · "+w[3];
   document.getElementById("mTip").innerHTML=`<span class="tag ${w[4]}" style="display:inline-block;margin-bottom:7px">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}`;
   document.getElementById("modal").classList.add("show");
