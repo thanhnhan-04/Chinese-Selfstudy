@@ -98,6 +98,16 @@
     font-weight:700;font-size:14px;padding:12px;border-radius:11px;cursor:pointer;transition:.15s}
   .finbtn:hover{filter:brightness(1.08)}
   .finbtn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+  .aibtn{width:100%;margin-top:8px;background:var(--panel3);border:1px solid var(--cyan);color:var(--cyan);font-weight:700;font-size:13.5px;padding:11px;border-radius:11px;cursor:pointer;transition:.15s}
+  .aibtn:hover{background:rgba(51,201,220,.12)}
+  .aibtn:disabled{opacity:.55;cursor:not-allowed}
+  .aifb{margin-top:10px;background:#0b1020;border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:13.4px;line-height:1.65;white-space:pre-wrap;display:none}
+  .aifb.show{display:block}
+  .aifb b{color:var(--gold)}
+  .aimodal-field{margin-bottom:11px}
+  .aimodal-field label{display:block;font-size:11.5px;color:var(--gold);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+  .aimodal-field input,.aimodal-field select{width:100%;background:#0b1020;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:9px 11px;font-size:13.5px;font-family:inherit}
+  .aisave{width:100%;margin-top:4px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;color:#fff;font-weight:700;padding:11px;border-radius:10px;cursor:pointer}
 
   /* mini word chips inside session */
   .wchips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
@@ -221,6 +231,8 @@
     <div class="streak"><b id="streak">0</b><span>ngày streak 🔥</span></div>
   </div>
 
+  <div style="text-align:right;margin:2px 0 6px"><button class="spk" onclick="openAISettings()">⚙️ Cài đặt AI chấm bài</button></div>
+
   <div class="nav">
     <button class="active" onclick="tab('today',this)">📅 Hôm nay</button>
     <button onclick="tab('flash',this)">⚡ Flashcard</button>
@@ -315,6 +327,32 @@
   <div class="foot">
     Tiến độ, ghi chú &amp; flashcard lưu tự động trên trình duyệt này (localStorage). Nội dung do giáo viên AI biên soạn theo
     khung HSK. Nguồn cảm hứng chiết tự: "Bí Quyết Chiết Tự Chữ Hán".
+  </div>
+</div>
+
+<!-- AI settings modal -->
+<div class="modal" id="aimodal" onclick="if(event.target.id==='aimodal')closeAI()">
+  <div class="box" style="text-align:left;max-width:470px">
+    <span class="x" onclick="closeAI()">✕</span>
+    <h3 style="margin-bottom:8px">⚙️ Cài đặt AI chấm bài</h3>
+    <p class="cap" style="margin-bottom:14px">Dán API key của bạn để giáo viên AI chấm điểm &amp; sửa lỗi. Key chỉ lưu trên trình duyệt này (localStorage) và chỉ được gửi tới nhà cung cấp bạn chọn — đừng dùng trên máy công cộng.</p>
+    <div class="aimodal-field">
+      <label>Nhà cung cấp</label>
+      <select id="aiProvider" onchange="aiProviderChange()">
+        <option value="anthropic">Anthropic (Claude)</option>
+        <option value="openai">OpenAI (ChatGPT)</option>
+      </select>
+    </div>
+    <div class="aimodal-field">
+      <label>API key</label>
+      <input id="aiKey" type="password" placeholder="sk-...">
+    </div>
+    <div class="aimodal-field">
+      <label>Model (có thể để mặc định)</label>
+      <input id="aiModel" type="text" placeholder="claude-3-5-haiku-latest">
+    </div>
+    <button class="aisave" onclick="saveAI()">💾 Lưu</button>
+    <p class="cap" style="margin-top:10px;font-size:12px">Lấy key: Claude → <span style="color:var(--blue)">console.anthropic.com</span> · OpenAI → <span style="color:var(--blue)">platform.openai.com</span>. Mỗi lần chấm tốn rất ít (thường &lt; vài trăm đồng).</p>
   </div>
 </div>
 
@@ -842,6 +880,66 @@ function speak(t,e){
 }
 if("speechSynthesis" in window){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};}
 
+/* ============ AI CHẤM BÀI ============ */
+const AIKEY="zh_ai_cfg";
+const aiCache={};
+function aiCfg(){try{return JSON.parse(localStorage.getItem(AIKEY))||{};}catch(e){return {};}}
+function defModel(p){return p==="openai"?"gpt-4o-mini":"claude-3-5-haiku-latest";}
+function openAISettings(){const c=aiCfg();const p=c.provider||"anthropic";
+  document.getElementById("aiProvider").value=p;
+  document.getElementById("aiKey").value=c.key||"";
+  document.getElementById("aiModel").value=c.model||defModel(p);
+  document.getElementById("aimodal").classList.add("show");}
+function aiProviderChange(){document.getElementById("aiModel").value=defModel(document.getElementById("aiProvider").value);}
+function closeAI(){document.getElementById("aimodal").classList.remove("show");}
+function saveAI(){const p=document.getElementById("aiProvider").value;
+  const cfg={provider:p,key:document.getElementById("aiKey").value.trim(),model:document.getElementById("aiModel").value.trim()||defModel(p)};
+  localStorage.setItem(AIKEY,JSON.stringify(cfg));closeAI();}
+function fmt(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");}
+
+const AISYS="Bạn là giáo viên tiếng Trung tận tâm, đang kèm một học viên người Việt luyện thi HSK5. Hãy chấm phần học viên vừa viết. Trả lời HOÀN TOÀN bằng tiếng Việt (trừ phần chữ Hán và pinyin), ngắn gọn, thân thiện, theo đúng bố cục sau:\n**Điểm:** x/10\n**Lỗi & cách sửa:** liệt kê từng lỗi (sai chữ Hán, ngữ pháp, dùng từ, thiếu dấu câu, sai lượng từ/thứ tự) kèm cách sửa cụ thể; nếu không có lỗi thì ghi rõ.\n**Viết lại chuẩn:** bản tiếng Trung đúng và tự nhiên, kèm pinyin và nghĩa tiếng Việt.\n**Gợi ý:** 1–2 lời khuyên để tiến bộ hoặc cách diễn đạt hay hơn.\nNếu học viên viết đúng rồi thì khen và vẫn gợi ý nâng cao. Nếu ô trống hoặc không phải tiếng Trung, hãy nhắc nhẹ nhàng.";
+
+function buildAIPrompt(wi,si,text){
+  const w=W[wi];const [a,b]=w.v;const voc=[];for(let i=a;i<=b;i++)voc.push(V[i][0]+" ("+V[i][2]+")");
+  const g=w.gram;let task;
+  if(si===0)task="Đặt câu ngắn với từ vựng của tuần.";
+  else if(si===1)task="Đặt câu áp dụng 2 mẫu ngữ pháp: "+g[0].gp+" và "+g[1].gp+".";
+  else task="Bài viết theo đề: "+w.wr;
+  return "Chủ đề tuần "+w.n+": "+w.name+".\nTừ vựng trọng tâm: "+voc.join(", ")+".\nMẫu ngữ pháp: 1) "+g[0].gp+" — "+g[0].gn+"  2) "+g[1].gp+" — "+g[1].gn+".\nNhiệm vụ học viên: "+task+"\n\nBài học viên viết:\n\"\"\"\n"+text+"\n\"\"\"";
+}
+
+async function callAI(cfg,userText){
+  if(cfg.provider==="openai"){
+    const r=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+cfg.key},
+      body:JSON.stringify({model:cfg.model,messages:[{role:"system",content:AISYS},{role:"user",content:userText}],max_tokens:1024,temperature:0.4})});
+    const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
+    return d.choices[0].message.content;
+  }
+  const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+    headers:{"Content-Type":"application/json","x-api-key":cfg.key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:cfg.model,max_tokens:1024,system:AISYS,messages:[{role:"user",content:userText}]})});
+  const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
+  return (d.content||[]).map(c=>c.text||"").join("");
+}
+
+async function gradeWithAI(wi,si,btn){
+  const cfg=aiCfg();
+  if(!cfg.key){openAISettings();return;}
+  const text=(S.notes[noteKey(wi,si)]||"").trim();
+  const fb=document.getElementById("aifb"+wi+"_"+si);
+  if(!text){alert("Bạn hãy viết câu / đoạn văn vào ô ghi chú phía trên trước đã nhé.");return;}
+  btn.disabled=true;const old=btn.textContent;btn.textContent="⏳ Đang chấm...";
+  fb.classList.add("show");fb.textContent="Đang gửi bài cho giáo viên AI…";
+  try{
+    const out=await callAI(cfg,buildAIPrompt(wi,si,text));
+    aiCache[wi+"_"+si]=out;fb.innerHTML=fmt(out);
+  }catch(e){
+    fb.textContent="⚠️ Lỗi khi gọi AI: "+e.message+"\nKiểm tra lại API key, tên model và kết nối mạng (bấm ⚙️ để sửa).";
+  }
+  btn.disabled=false;btn.textContent=old;
+}
+
 /* ---- build 3 sessions for a week ---- */
 function sessionsFor(wi){
   const w=W[wi]; const [a,b]=w.v; const ids=[];for(let i=a;i<=b;i++)ids.push(i);
@@ -933,6 +1031,9 @@ function renderToday(){
     const nk=noteKey(curWeek,i);
     const noteBox=`<div class="notebox"><label>${se.note}</label>
       <textarea placeholder="Viết trực tiếp vào đây — tự lưu…" oninput="saveNote('${nk}',this.value)">${(S.notes[nk]||"").replace(/</g,"&lt;")}</textarea></div>`;
+    const aik=curWeek+"_"+i;
+    const aiBlk=`<button class="aibtn" onclick="gradeWithAI(${curWeek},${i},this)">🤖 AI chấm bài (sửa lỗi + chấm điểm)</button>
+      <div class="aifb ${aiCache[aik]?'show':''}" id="aifb${aik}">${aiCache[aik]?fmt(aiCache[aik]):""}</div>`;
     const canFinish=se.subs.every((_,k)=>S.done[subKey(curWeek,i,k)]);
     return `<div class="sess ${done?'done':''} ${isToday?'today':''} ${isToday||(!done&&i===nextIdx)?'open':''}" id="sess${i}">
       <div class="shead" onclick="toggleOpen(${i})">
@@ -944,6 +1045,7 @@ function renderToday(){
         ${wchips}${gramBlk}
         ${subs}
         ${noteBox}
+        ${aiBlk}
         <button class="finbtn" ${(done||!canFinish)?'disabled':''} onclick="finishSession(${curWeek},${i})">
           ${done?'✓ Đã hoàn thành buổi này':'Hoàn thành buổi học ✅'}</button>
       </div>
