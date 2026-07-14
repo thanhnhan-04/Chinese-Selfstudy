@@ -1266,6 +1266,27 @@ async function callAI(cfg,userText){
   return (d.content||[]).map(c=>c.text||"").join("");
 }
 
+function quickCheck(wi,si){
+  const text=(S.notes[noteKey(wi,si)]||"").trim();
+  const fb=document.getElementById("aifb"+wi+"_"+si);
+  if(!text){alert("Bạn hãy viết bài vào ô ghi chú phía trên trước đã nhé.");return;}
+  const w=W[wi];const [a,b]=w.v;
+  const hanCount=(text.match(/[一-鿿]/g)||[]).length;
+  const used=[];for(let i=a;i<=b;i++){if(text.includes(V[i][0]))used.push(V[i][0]);}
+  let html='<b>⚡ Kiểm tra nhanh</b> <span style="color:var(--muted)">(tại chỗ, không sửa ngữ pháp):</span><br>';
+  html+='• Độ dài: <b>'+hanCount+'</b> chữ Hán'+(hanCount<20?' — hơi ngắn, nên viết thêm':'')+'<br>';
+  html+='• Từ vựng tuần đã dùng: <b>'+used.length+'/'+(b-a+1)+'</b>'+(used.length?' — '+used.join(' '):'')+'<br>';
+  w.gram.forEach(g=>{
+    const marks=(g.gp.match(/[一-鿿]+/g)||[]);
+    const hit=marks.some(m=>text.includes(m));
+    html+='• Mẫu <b>'+(marks.join(' / ')||g.gp)+'</b>: '+(hit?'✅ có dùng':'⚠️ chưa thấy')+'<br>';
+  });
+  const endOk=/[。!?！?]\s*$/.test(text);
+  if(!endOk)html+='• ⚠️ Câu cuối chưa có dấu kết (。!?).<br>';
+  html+='<span style="color:var(--muted);font-size:12px">Muốn được <b>sửa lỗi &amp; chấm điểm thật</b>: bấm “Gemini (free)” hoặc “Chép đề”.</span>';
+  fb.classList.add("show");fb.innerHTML=html;
+}
+
 function copyGradePrompt(wi,si){
   const text=(S.notes[noteKey(wi,si)]||"").trim();
   const fb=document.getElementById("aifb"+wi+"_"+si);
@@ -1386,8 +1407,9 @@ function renderToday(){
     const noteBox=`<div class="notebox"><label>${se.note}</label>
       <textarea placeholder="Viết trực tiếp vào đây — tự lưu…" oninput="saveNote('${nk}',this.value)">${(S.notes[nk]||"").replace(/</g,"&lt;")}</textarea></div>`;
     const aik=curWeek+"_"+i;
-    const aiBlk=`<button class="aibtn" style="border-color:var(--green);color:var(--green)" onclick="copyGradePrompt(${curWeek},${i})">📋 Chép đề để tự chấm (miễn phí – dán vào ChatGPT/Gemini)</button>
-      <button class="aibtn" onclick="gradeWithAI(${curWeek},${i},this)">🤖 AI chấm tự động trong app (cần API key)</button>
+    const aiBlk=`<button class="aibtn" style="border-color:var(--gold);color:var(--gold)" onclick="quickCheck(${curWeek},${i})">⚡ Kiểm tra nhanh (tại chỗ, không cần mạng)</button>
+      <button class="aibtn" onclick="gradeWithAI(${curWeek},${i},this)">🤖 AI chấm & sửa trong app (dùng key Gemini free)</button>
+      <button class="aibtn" style="border-color:var(--green);color:var(--green)" onclick="copyGradePrompt(${curWeek},${i})">📋 Chép đề để tự chấm (dán vào chat AI free)</button>
       <div class="aifb ${aiCache[aik]?'show':''}" id="aifb${aik}">${aiCache[aik]?fmt(aiCache[aik]):""}</div>`;
     const canFinish=se.subs.every((_,k)=>S.done[subKey(curWeek,i,k)]);
     return `<div class="sess ${done?'done':''} ${isToday?'today':''} ${isToday||(!done&&i===nextIdx)?'open':''}" id="sess${i}">
