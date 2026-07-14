@@ -122,7 +122,10 @@
   /* grammar block */
   .gram{background:var(--panel2);border-left:3px solid var(--cyan);border-radius:10px;padding:12px 14px;margin-bottom:10px}
   .gram .gp{font-weight:700;font-size:14.5px}
-  .gram .gn{color:var(--muted);font-size:13px;margin:4px 0 8px}
+  .gram .gpy{color:var(--gold);font-size:12.5px;margin:3px 0 6px}
+  .gram .gn{color:var(--muted);font-size:13px;margin:4px 0 8px;line-height:1.65}
+  .gram .gn b{color:var(--txt)}
+  .gram .gn u{text-decoration:underline;text-decoration-color:var(--cyan);color:#cfe8ff}
   .gram .ex{background:var(--panel3);border-radius:8px;padding:8px 10px;margin-top:6px;font-size:13.5px}
   .gram .ex .zh{font-size:15px}
   .gram .ex .py{color:var(--gold);font-size:12px}
@@ -1019,6 +1022,47 @@ const EX = {
 };
 function exHTML(hz){const e=EX[hz];if(!e)return "";return '<div class="exs"><div class="exs-lb">VÍ DỤ</div><div class="zh">'+e[0]+' <button class="spk" onclick="speak(\''+e[0]+'\',event)">🔊</button></div><div class="py">'+e[1]+'</div><div class="vi">'+e[2]+'</div></div>';}
 
+/* ============ NGỮ PHÁP: pinyin mẫu + giải thích chi tiết ============ */
+/* key = đúng chuỗi gp trong W. { py: pinyin của mẫu, gn: giải thích HTML } */
+const GRAM = {
+"我觉得 / 我希望 + mệnh đề":{py:"Wǒ juéde / Wǒ xīwàng…",gn:"<b>Cấu trúc:</b> 我觉得 + [một câu] = 'Tôi thấy rằng…' (nêu nhận xét, đánh giá); 我希望 + [một câu] = 'Tôi mong rằng…' (nêu mong muốn).<br><b>Cách dùng:</b> phần sau 觉得/希望 là cả một mệnh đề (chủ ngữ + vị ngữ), không chỉ một từ.<br><b>Ví dụ:</b> 我觉得<u>汉语很有意思</u> = Tôi thấy tiếng Hán rất thú vị.<br><b>Lưu ý:</b> phủ định đặt TRONG mệnh đề: 我觉得这个<b>不</b>好 (không nói 我不觉得…)."},
+"越来越 + tính từ":{py:"yuèláiyuè + adj",gn:"<b>Nghĩa:</b> 'ngày càng… / mỗi lúc một…' — mức độ tăng dần theo thời gian.<br><b>Cấu trúc:</b> chủ ngữ + 越来越 + tính từ / động từ cảm xúc.<br><b>Ví dụ:</b> 天气越来越冷 = Trời ngày càng lạnh; 我越来越喜欢中国菜.<br><b>Lưu ý:</b> KHÔNG thêm 很/非常 (sai: 越来越很冷). Cuối câu hay thêm 了 để nhấn sự thay đổi."},
+"V + 得 + bổ ngữ trạng thái":{py:"V + de + …",gn:"<b>Công dụng:</b> đánh giá hành động làm 'như thế nào' (nhanh/chậm/tốt…).<br><b>Cấu trúc:</b> động từ + 得 + tính từ. VD 跑<b>得</b>很快 = chạy rất nhanh.<br><b>Khi có tân ngữ</b> phải lặp động từ: 他<u>说</u>汉语<u>说</u><b>得</b>很好.<br><b>Lưu ý:</b> 得 (de) là trợ từ, đọc nhẹ, khác 得 (děi = phải). Phủ định: V + 得 + <b>不</b> + adj (说得不好)."},
+"有点儿 / 一点儿":{py:"yǒudiǎnr / yìdiǎnr",gn:"<b>有点儿 + tính từ</b> = 'hơi…' (thường ý chê), đứng TRƯỚC tính từ: 今天有点儿冷.<br><b>tính từ + 一点儿</b> = '… hơn một chút' (so sánh/đề nghị), đứng SAU tính từ: 便宜<b>一点儿</b>.<br><b>Mẹo nhớ:</b> 有点儿 đứng trước + chê; 一点儿 đứng sau + so sánh."},
+"越…越…":{py:"yuè… yuè…",gn:"<b>Nghĩa:</b> 'càng… (thì) càng…' — hai vế tăng cùng nhau.<br><b>Cấu trúc:</b> 越 + V/adj₁ + 越 + V/adj₂: 雨越下越大; 我越学越喜欢.<br><b>Phân biệt:</b> 越来越 (ngày càng, theo thời gian) chỉ 1 vế; còn 越…越… có 2 vế điều kiện–kết quả."},
+"把 (câu chữ 把 cơ bản)":{py:"bǎ",gn:"<b>Công dụng:</b> nhấn 'xử lý một đối tượng cụ thể và tạo ra kết quả'.<br><b>Cấu trúc:</b> chủ ngữ + 把 + <u>tân ngữ</u> + động từ + <b>thành phần kết quả</b> (了/完/到/在…): 我<b>把</b>作业做<b>完了</b>.<br><b>Bắt buộc:</b> sau động từ phải có 'đuôi' (không nói 我把作业做); tân ngữ phải xác định.<br><b>Phủ định:</b> 没/不 đặt TRƯỚC 把: 我<b>没</b>把门关."},
+"一边…一边…":{py:"yìbiān… yìbiān…",gn:"<b>Nghĩa:</b> 'vừa… vừa…' — làm hai việc CÙNG LÚC.<br><b>Cấu trúc:</b> 一边 + động từ₁ + 一边 + động từ₂ (cùng chủ ngữ): 我<b>一边</b>吃饭<b>一边</b>看电视.<br><b>Lưu ý:</b> chỉ dùng cho hai HÀNH ĐỘNG song song; nói TÍNH CHẤT thì dùng 又…又…."},
+"对…感兴趣":{py:"duì… gǎn xìngqù",gn:"<b>Nghĩa:</b> 'có hứng thú với…'.<br><b>Cấu trúc:</b> người + 对 + [đối tượng] + 感兴趣: 我<b>对</b>历史<b>感兴趣</b>.<br><b>Mức độ:</b> thêm 很/非常 vào giữa: 对…<b>很</b>感兴趣.<br><b>Phủ định:</b> 对…<b>不</b>感兴趣."},
+"先…再/然后…":{py:"xiān… zài / ránhòu…",gn:"<b>Nghĩa:</b> nêu TRÌNH TỰ 'trước… rồi (sau đó)…'.<br><b>Cấu trúc:</b> 先 + việc₁ + 再/然后 + việc₂: 我们<b>先</b>吃饭<b>再</b>看电影.<br><b>Phân biệt:</b> 再 dùng cho việc CHƯA xảy ra (kế hoạch); 然后 kể lại chuỗi việc trung tính."},
+"是…的 (nhấn mạnh)":{py:"shì… de",gn:"<b>Công dụng:</b> nhấn THÔNG TIN của việc ĐÃ xảy ra: khi nào / ở đâu / bằng cách nào / với ai.<br><b>Cấu trúc:</b> chủ ngữ + 是 + [thời gian/nơi/cách] + động từ + 的: 我<b>是</b>坐飞机来<b>的</b> (nhấn 'bằng máy bay').<br><b>Lưu ý:</b> chỉ dùng cho việc đã hoàn thành; 是 có thể lược trong câu khẳng định (我坐飞机来的)."},
+"比 + 更/还 (so sánh nâng cao)":{py:"bǐ + gèng / hái",gn:"<b>Cơ bản:</b> A + 比 + B + tính từ = A … hơn B: 我<b>比</b>他高.<br><b>Thêm 更/还</b> = 'còn… hơn nữa': 今天<b>比</b>昨天<b>更</b>热.<br><b>Lưu ý:</b> trong câu 比 KHÔNG dùng 很/非常 (sai: 比他很高). Nói hơn bao nhiêu: 比他高<u>一点儿/两公分</u>."},
+"又…又…":{py:"yòu… yòu…",gn:"<b>Nghĩa:</b> 'vừa… vừa…' — nêu hai TÍNH CHẤT cùng tồn tại.<br><b>Cấu trúc:</b> 又 + adj/V₁ + 又 + adj/V₂: 这件衣服<b>又</b>便宜<b>又</b>好看.<br><b>Phân biệt:</b> 又…又… nói TÍNH CHẤT; 一边…一边… nói hai HÀNH ĐỘNG cùng lúc."},
+"不但…而且…":{py:"búdàn… érqiě…",gn:"<b>Nghĩa:</b> 'không những… mà còn…' — tăng tiến, vế sau mạnh hơn.<br><b>Cấu trúc:</b> 不但 + A, 而且 + B: 他<b>不但</b>会说汉语,<b>而且</b>说得很好.<br><b>Lưu ý:</b> cùng chủ ngữ → 不但 đứng SAU chủ ngữ; khác chủ ngữ → 不但 đứng TRƯỚC chủ ngữ. Vế sau hay thêm 还/也."},
+"虽然…但是…":{py:"suīrán… dànshì…",gn:"<b>Nghĩa:</b> 'tuy… nhưng…' — nêu tương phản.<br><b>Cấu trúc:</b> 虽然 + A, 但是/可是 + B: 虽然很累,但是很开心.<br><b>Lưu ý:</b> tiếng Trung dùng CẢ HAI vế 虽然…但是… (khác tiếng Việt hay bỏ 'tuy'); không thay 但是 bằng dấu phẩy trống."},
+"既…又…":{py:"jì… yòu…",gn:"<b>Nghĩa:</b> 'vừa… vừa…' — hai đặc điểm cùng loại của một chủ thể; trang trọng hơn 又…又….<br><b>Cấu trúc:</b> 既 + adj/V₁ + 又 + adj/V₂: 他<b>既</b>聪明<b>又</b>努力.<br><b>Lưu ý:</b> hai vế cân đối, dùng nhiều trong văn viết."},
+"无论…都…":{py:"wúlùn… dōu…",gn:"<b>Nghĩa:</b> 'bất kể… đều…' — điều kiện đổi nhưng kết quả không đổi.<br><b>Cấu trúc:</b> 无论 + [từ nghi vấn: 什么/谁/怎么…] + 都/也 + kết quả: 无论<u>遇到什么困难</u>,他<b>都</b>不放弃.<br><b>Bắt buộc:</b> sau 无论 phải có ý lựa chọn/nghi vấn (什么、谁、A还是B); vế sau bắt buộc có 都/也."},
+"通过…来…":{py:"tōngguò… lái…",gn:"<b>Nghĩa:</b> 'thông qua/bằng… để…' — nêu phương tiện, cách thức.<br><b>Cấu trúc:</b> 通过 + [cách thức] + 来 + [mục đích]: 我们<b>通过</b>网络<b>来</b>学习.<br><b>Lưu ý:</b> 来 nối 'cách thức → mục đích', không nghĩa 'đến'; có thể lược trong văn nói."},
+"随着…":{py:"suízhe…",gn:"<b>Nghĩa:</b> 'cùng với / theo đà…' — một thay đổi kéo theo thay đổi khác.<br><b>Cấu trúc:</b> 随着 + [sự thay đổi], + [kết quả]: <b>随着</b>科技的发展,生活越来越方便.<br><b>Lưu ý:</b> mở đầu câu, theo sau thường là cụm danh từ (随着…的发展/提高). Hay dùng trong văn viết, bản tin."},
+"一…就…":{py:"yī… jiù…",gn:"<b>Nghĩa:</b> 'hễ… là (ngay)…' hoặc 'cứ… là…'.<br><b>Cấu trúc:</b> 一 + V₁ + 就 + V₂: 我<b>一</b>下课<b>就</b>回家; 他<b>一</b>喝酒<b>就</b>脸红.<br><b>Lưu ý:</b> hai vế thường cùng chủ ngữ; nhấn tính TỨC THÌ hoặc quy luật lặp lại."},
+"对…来说":{py:"duì… lái shuō",gn:"<b>Nghĩa:</b> 'đối với… mà nói' — nêu góc nhìn.<br><b>Cấu trúc:</b> 对 + [người/việc] + 来说, + nhận định: <b>对</b>学生<b>来说</b>,时间很重要.<br><b>Vị trí:</b> thường đứng ĐẦU câu, tách bằng dấu phẩy: 对我来说…"},
+"对…有…(看法/意见)":{py:"duì… yǒu… (kànfǎ / yìjiàn)",gn:"<b>Nghĩa:</b> 'có (cách nhìn/ý kiến/hứng thú…) về việc gì'.<br><b>Cấu trúc:</b> người + 对 + [đối tượng] + 有 + [danh từ: 看法/意见/兴趣/信心…]: 我<b>对</b>这件事<b>有</b>不同的<u>看法</u>.<br><b>Lưu ý:</b> 对 chỉ 'hướng tới đối tượng nào'; danh từ sau 有 là nội dung."},
+"与其…不如…":{py:"yǔqí… bùrú…",gn:"<b>Nghĩa:</b> 'thà… còn hơn…' — so sánh 2 lựa chọn, chọn cái sau (不如).<br><b>Cấu trúc:</b> 与其 + [A bị loại], 不如 + [B nên chọn]: <b>与其</b>后悔,<b>不如</b>现在努力.<br><b>Nhớ:</b> cái đứng sau 不如 mới là cái người nói KHUYÊN chọn."},
+"为了…":{py:"wèile…",gn:"<b>Nghĩa:</b> 'vì / để…' — nêu MỤC ĐÍCH.<br><b>Cấu trúc:</b> 为了 + [mục đích], + [hành động]: <b>为了</b>健康,我每天运动.<br><b>Phân biệt:</b> 为了 nêu MỤC ĐÍCH (để đạt gì); 因为 nêu LÝ DO (bởi vì). Đừng lẫn hai cái."},
+"只有…才…":{py:"zhǐyǒu… cái…",gn:"<b>Nghĩa:</b> 'chỉ có… mới…' — ĐIỀU KIỆN DUY NHẤT (không có nó thì không được).<br><b>Cấu trúc:</b> 只有 + [điều kiện] + 才 + [kết quả]: <b>只有</b>努力,<b>才</b>能成功.<br><b>Phân biệt:</b> 只有…才… = điều kiện DUY NHẤT (bắt buộc) ≠ 只要…就… = điều kiện ĐỦ (chỉ cần là được)."},
+"不是…而是…":{py:"búshì… érshì…",gn:"<b>Nghĩa:</b> 'không phải… mà là…' — phủ định A, khẳng định B (đính chính).<br><b>Cấu trúc:</b> 不是 + A, 而是 + B: 重要的<b>不是</b>钱,<b>而是</b>健康.<br><b>Lưu ý:</b> khác 不是…就是… ('không cái này thì cái kia'); ở đây B mới là sự thật."},
+"之所以…是因为…":{py:"zhīsuǒyǐ… shì yīnwèi…",gn:"<b>Nghĩa:</b> 'sở dĩ… là bởi vì…' — đảo 因为…所以… để NHẤN nguyên nhân.<br><b>Cấu trúc:</b> [chủ ngữ] 之所以 + [kết quả], 是因为 + [nguyên nhân]: 他<b>之所以</b>成功,<b>是因为</b>很努力.<br><b>Cách dùng:</b> nêu kết quả trước, giải thích lý do sau — trang trọng, hợp văn nghị luận."},
+"连…都/也…":{py:"lián… dōu / yě…",gn:"<b>Nghĩa:</b> 'ngay cả… cũng…' — nhấn một trường hợp cực đoan.<br><b>Cấu trúc:</b> 连 + [đối tượng bất ngờ] + 都/也 + (thường phủ định): 他<b>连</b>一句汉语<b>都</b>不会说.<br><b>Lưu ý:</b> vế sau bắt buộc có 都 hoặc 也."},
+"一方面…另一方面…":{py:"yì fāngmiàn… lìng yì fāngmiàn…",gn:"<b>Nghĩa:</b> 'một mặt… mặt khác…' — trình bày hai KHÍA CẠNH.<br><b>Cấu trúc:</b> 一方面 + A, 另一方面 + B: <b>一方面</b>要保护传统,<b>另一方面</b>也要发展.<br><b>Cách dùng:</b> rất hợp bài nghị luận; hai vế bổ sung nhau."},
+"只要…就…":{py:"zhǐyào… jiù…",gn:"<b>Nghĩa:</b> 'chỉ cần… thì…' — ĐIỀU KIỆN ĐỦ (có là có kết quả).<br><b>Cấu trúc:</b> 只要 + [điều kiện] + 就 + [kết quả]: <b>只要</b>坚持,<b>就</b>一定会进步.<br><b>Phân biệt:</b> 只要…就… (điều kiện đủ, dễ đạt) ≠ 只有…才… (điều kiện DUY NHẤT, bắt buộc)."},
+"即使…也…":{py:"jíshǐ… yě…",gn:"<b>Nghĩa:</b> 'cho dù / ngay cả khi… cũng…' — GIẢ ĐỊNH tình huống nhưng kết quả giữ nguyên.<br><b>Cấu trúc:</b> 即使 + [giả định] + 也 + [kết quả]: <b>即使</b>下雨,我<b>也</b>去.<br><b>Phân biệt với 虽然:</b> 虽然 nói việc CÓ THẬT; 即使 nói việc GIẢ ĐỊNH."},
+"被 (câu bị động)":{py:"bèi",gn:"<b>Nghĩa:</b> câu bị động — 'bị/được (ai đó) làm gì'.<br><b>Cấu trúc:</b> [đối tượng] + 被 + (người gây ra) + động từ + kết quả: 方案<b>被</b>经理<u>否定了</u>.<br><b>Lưu ý:</b> người gây ra có thể lược (钱<b>被</b>偷了); sau động từ nên có 'đuôi' (了/kết quả); phủ định 没 đặt trước 被."},
+"使 / 让 / 令 (câu khiến)":{py:"shǐ / ràng / lìng",gn:"<b>Nghĩa:</b> 'khiến/làm cho ai đó (thế nào)'.<br><b>Cấu trúc:</b> A + 使/让/令 + B + [trạng thái/hành động]: 这个结果<b>让</b>大家很满意.<br><b>Sắc thái:</b> 让 thông dụng nhất; 使 trang trọng hơn; 令 rất trang trọng, thường + cảm xúc (令人感动)."},
+"尽管…还是/仍然…":{py:"jǐnguǎn… háishì / réngrán…",gn:"<b>Nghĩa:</b> 'mặc dù… vẫn…' — nhượng bộ mạnh hơn 虽然.<br><b>Cấu trúc:</b> 尽管 + [sự thật], + 还是/仍然 + [kết quả không đổi]: <b>尽管</b>有困难,我们<b>还是</b>要改革.<br><b>Lưu ý:</b> đi cặp với 还是/仍然, dùng nhiều trong văn viết."},
+"究竟 / 到底":{py:"jiūjìng / dàodǐ",gn:"<b>Nghĩa:</b> 'rốt cuộc / cuối cùng là' — nhấn khi TRUY HỎI cho ra lẽ.<br><b>Cấu trúc:</b> đặt trong câu hỏi, trước động từ / từ để hỏi: 你<b>到底</b>想说什么?; 这<b>究竟</b>是怎么回事?<br><b>Sắc thái:</b> 到底 thiên khẩu ngữ; 究竟 trang trọng hơn. KHÔNG dùng với 吗 (sai: 到底…吗?)."},
+"总之 / 综上所述":{py:"zǒngzhī / zōng shàng suǒ shù",gn:"<b>Nghĩa:</b> 'tóm lại / tổng hợp lại' — mở đầu câu KẾT.<br><b>Cách dùng:</b> đặt ĐẦU câu cuối đoạn/bài, sau dấu phẩy là kết luận: <b>总之</b>,学习需要坚持和方法.<br><b>Sắc thái:</b> 总之 dùng cả nói & viết; 综上所述 rất trang trọng, chuyên KẾT bài luận — rất hữu ích cho phần Viết HSK."},
+"换句话说 / 也就是说":{py:"huàn jù huà shuō / yě jiùshì shuō",gn:"<b>Nghĩa:</b> 'nói cách khác / tức là' — DIỄN GIẢI LẠI ý cho rõ hơn.<br><b>Cách dùng:</b> đặt đầu câu, rồi nói lại ý bằng cách khác: 他很谦虚,<b>换句话说</b>,他从不骄傲.<br><b>Sắc thái:</b> 也就是说 thiên 'tức là'; 换句话说 'nói theo cách khác' — từ nối giúp bài viết mạch lạc."}
+};
+
 /* ============ PHASES ============ */
 const P = [
  {name:"Giai đoạn 1 · Nền tảng vững (HSK 3)", sub:"Củng cố đời sống: cảm xúc, sức khỏe, học tập, sở thích, đi lại, mua sắm.", tc:"var(--blue)", clr:"rgba(74,140,255,.16)", txt:"var(--blue)"},
@@ -1432,7 +1476,10 @@ function renderToday(){
 }
 function gramHTML(wi,gi){
   const g=W[wi].gram[gi];
-  return `<div class="gram"><div class="gp">📐 ${g.gp}</div><div class="gn">${g.gn}</div>
+  const o=GRAM[g.gp]||{};
+  const pyLine=o.py?`<div class="gpy">🗣️ ${o.py}</div>`:"";
+  const gn=o.gn||g.gn;
+  return `<div class="gram"><div class="gp">📐 ${g.gp}</div>${pyLine}<div class="gn">${gn}</div>
     ${g.ex.map(e=>`<div class="ex"><div class="zh">${e[0]} <button class="spk" onclick="speak('${e[0]}',event)">🔊</button></div><div class="py">${e[1]}</div><div class="hv"><span class="hvlab">HÁN-VIỆT</span>${hvSentence(e[0])}</div><div class="vi">${e[2]}</div></div>`).join("")}</div>`;
 }
 function toggleOpen(i){document.getElementById("sess"+i).classList.toggle("open");}
