@@ -105,6 +105,9 @@
   .wchip:hover{border-color:var(--gold)}
   .wchip b{font-size:15px}
   .wchip span{color:var(--muted);font-size:11px;margin-left:3px}
+  .spk{cursor:pointer;border:none;background:var(--panel3);color:var(--cyan);border-radius:7px;padding:2px 7px;font-size:12.5px;line-height:1;margin-left:6px;vertical-align:middle}
+  .spk:hover{filter:brightness(1.25)}
+  .spk.big{padding:6px 12px;font-size:14px;margin-left:0}
 
   /* grammar block */
   .gram{background:var(--panel2);border-left:3px solid var(--cyan);border-radius:10px;padding:12px 14px;margin-bottom:10px}
@@ -321,7 +324,8 @@
     <span class="x" onclick="closeModal()">✕</span>
     <div class="hz" id="mHz"></div>
     <div class="py" id="mPy"></div>
-    <div class="vn" id="mVn"></div>
+    <button class="spk big" style="margin-top:10px" onclick="speak(document.getElementById('mHz').textContent,event)">🔊 Nghe phát âm</button>
+    <div class="vn" id="mVn" style="margin-top:8px"></div>
     <div class="tip" id="mTip"></div>
   </div>
 </div>
@@ -823,6 +827,21 @@ function seed(){return {done:{}, log:[], vocab:{}, notes:{}};}  // done: key->tr
 function save(){localStorage.setItem(KEY,JSON.stringify(S));}
 function today(){const d=new Date();return d.toISOString().slice(0,10);}
 
+/* ---- phát âm (Web Speech API, dùng giọng tiếng Trung của thiết bị) ---- */
+function speak(t,e){
+  if(e)e.stopPropagation();
+  try{
+    if(!("speechSynthesis" in window)){alert("Trình duyệt này chưa hỗ trợ đọc tiếng Trung. Thử mở bằng Chrome/Edge/Safari nhé.");return;}
+    const u=new SpeechSynthesisUtterance(t);
+    u.lang="zh-CN"; u.rate=0.85;
+    const zh=(window.speechSynthesis.getVoices()||[]).find(v=>/zh|Chinese|中文|普通话/i.test(v.lang+" "+v.name));
+    if(zh)u.voice=zh;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  }catch(err){}
+}
+if("speechSynthesis" in window){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=function(){window.speechSynthesis.getVoices();};}
+
 /* ---- build 3 sessions for a week ---- */
 function sessionsFor(wi){
   const w=W[wi]; const [a,b]=w.v; const ids=[];for(let i=a;i<=b;i++)ids.push(i);
@@ -904,7 +923,7 @@ function renderToday(){
   document.getElementById("sessions").innerHTML=sess.map((se,i)=>{
     const done=S.done[sKey(curWeek,i)];
     const isToday=(i===nextIdx && curWeek===activeWeek());
-    const wchips=(i===0)?`<div class="wchips">${se.words.map(id=>`<span class="wchip" onclick="event.stopPropagation();openWord(${id})"><b>${V[id][0]}</b><span>${V[id][2]}</span></span>`).join("")}</div>`:"";
+    const wchips=(i===0)?`<div class="wchips">${se.words.map(id=>`<span class="wchip" onclick="event.stopPropagation();openWord(${id})"><b>${V[id][0]}</b><span>${V[id][2]}</span><button class="spk" onclick="speak('${V[id][0]}',event)">🔊</button></span>`).join("")}</div>`:"";
     const gramBlk=(i===1)?gramHTML(curWeek,0)+gramHTML(curWeek,1):"";
     const subs=se.subs.map((st,k)=>{
       const on=S.done[subKey(curWeek,i,k)];
@@ -935,7 +954,7 @@ function renderToday(){
 function gramHTML(wi,gi){
   const g=W[wi].gram[gi];
   return `<div class="gram"><div class="gp">📐 ${g.gp}</div><div class="gn">${g.gn}</div>
-    ${g.ex.map(e=>`<div class="ex"><div class="zh">${e[0]}</div><div class="py">${e[1]}</div><div class="vi">${e[2]}</div></div>`).join("")}</div>`;
+    ${g.ex.map(e=>`<div class="ex"><div class="zh">${e[0]} <button class="spk" onclick="speak('${e[0]}',event)">🔊</button></div><div class="py">${e[1]}</div><div class="vi">${e[2]}</div></div>`).join("")}</div>`;
 }
 function toggleOpen(i){document.getElementById("sess"+i).classList.toggle("open");}
 function pickWeek(i){curWeek=i;renderToday();}
@@ -995,9 +1014,9 @@ function renderFlash(){
     area.innerHTML=`<div class="fcdone"><b>Hoàn thành bộ thẻ! 🎉</b><br>Bạn đã lướt qua ${deck.length} thẻ.<br><br>
       <button class="btn" onclick="buildDeck()">🔁 Học lại từ đầu</button></div>`;return;}
   const id=deck[dpos];const w=V[id];
-  const front = dir==="zh" ? `<div class="big">${w[0]}</div><div class="hint">Bấm để lật xem nghĩa</div>`
+  const front = dir==="zh" ? `<div class="big">${w[0]}</div><button class="spk big" onclick="speak('${w[0]}',event)">🔊 Nghe</button><div class="hint" style="margin-top:10px">Bấm để lật xem nghĩa</div>`
                            : `<div class="med">${w[2]}</div><div class="hint" style="margin-top:6px">${w[3]} · Bấm để lật xem chữ Hán</div>`;
-  const back = `<div class="big" style="font-size:52px">${w[0]}</div><div class="py">${w[1]}</div><div class="vn">${w[2]} · ${w[3]}</div>
+  const back = `<div class="big" style="font-size:52px">${w[0]}</div><div class="py">${w[1]} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="vn">${w[2]} · ${w[3]}</div>
     <div class="tip">${w[5]}</div>`;
   area.innerHTML=`<div class="flash"><div class="fcard ${flipped?'flip':''}" onclick="flipCard()">
       <div class="face front">${front}</div>
@@ -1009,7 +1028,7 @@ function renderFlash(){
       <button class="yes" onclick="gradeCard('known')">✅ Đã nhớ</button>
     </div>`;
 }
-function flipCard(){flipped=!flipped;document.querySelector(".fcard").classList.toggle("flip");}
+function flipCard(){flipped=!flipped;document.querySelector(".fcard").classList.toggle("flip");if(deck.length&&deck[dpos]!=null)speak(V[deck[dpos]][0]);}
 function gradeCard(mark){
   const id=deck[dpos];
   if(mark){S.vocab[id]=mark;save();}
@@ -1035,7 +1054,7 @@ function renderVocab(){
     const w=V[i];const state=S.vocab[i]||"new";
     return `<div class="vc ${state}" id="vc${i}">
       <div class="pos">${w[3]}</div>
-      <div class="top"><div class="hz">${w[0]}</div><div class="meta"><div class="py">${w[1]}</div><div class="vn">${w[2]}</div></div></div>
+      <div class="top"><div class="hz">${w[0]}</div><div class="meta"><div class="py">${w[1]} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="vn">${w[2]}</div></div></div>
       <div class="tip"><span class="tag ${w[4]}">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}</div>
       <div class="act">
         <button class="b-k" onclick="mark(${i},'known')">✓ Đã thuộc</button>
