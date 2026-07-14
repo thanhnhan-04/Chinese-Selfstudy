@@ -141,6 +141,8 @@
   .vc .meta .py{color:var(--gold);font-size:13px}
   .vc .meta .vn{font-size:13.5px}
   .hv{color:var(--purple);font-size:11.5px;font-weight:700;letter-spacing:.4px;margin-top:1px}
+  .hvdim{opacity:.4;font-weight:400}
+  .hvlab{color:var(--muted);font-weight:600;font-size:9.5px;letter-spacing:.6px;margin-right:6px;border:1px solid var(--line);border-radius:5px;padding:1px 5px;vertical-align:middle}
   .vc .pos{position:absolute;top:12px;right:12px;font-size:10px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:2px 8px}
   .vc .tip{margin-top:10px;font-size:12.8px;color:#cfd8ee;background:var(--panel2);border-radius:9px;padding:9px 11px;line-height:1.5}
   .vc .tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;margin-bottom:6px;letter-spacing:.3px}
@@ -712,7 +714,8 @@ function hv(hz){return HV[hz]||"";}
 const CHV = {
 "一":"NHẤT","上":"THƯỢNG","不":"BẤT","与":"DỮ","且":"THẢ","业":"NGHIỆP","个":"CÁ","中":"TRUNG","为":"VI","么":"MA","之":"CHI","乐":"NHẠC","也":"DÃ","习":"TẬP","书":"THƯ","买":"MÃI","了":"LIỄU","事":"SỰ","人":"NHÂN","什":"THẬP","从":"TÙNG","他":"THA","以":"DĨ","们":"MÔN","件":"KIỆN","价":"GIÁ","份":"PHẬN","会":"HỘI","传":"TRUYỀN","但":"ĐÃN","作":"TÁC","你":"NỄ","使":"SỬ","便":"TIỆN","保":"BẢO","做":"TỐ","傲":"NGẠO","儿":"NHI","先":"TIÊN","兴":"HƯNG","其":"KỲ","决":"QUYẾT","冷":"LÃNH","到":"ĐÁO","力":"LỰC","办":"BIỆN","功":"CÔNG","努":"NỖ","即":"TỨC","压":"ÁP","又":"HỰU","发":"PHÁT","句":"CÚ","另":"LÍNH","只":"CHỈ","同":"ĐỒNG","后":"HẬU","否":"PHỦ","听":"THÍNH","和":"HÒA","喜":"HỶ","因":"NHÂN","困":"KHỐN","国":"QUỐC","在":"TẠI","坐":"TỌA","坚":"KIÊN","境":"CẢNH","多":"ĐA","大":"ĐẠI","天":"THIÊN","好":"HẢO","如":"NHƯ","子":"TỬ","学":"HỌC","孩":"HÀI","完":"HOÀN","定":"ĐỊNH","宜":"NGHI","家":"GIA","对":"ĐỐI","小":"TIỂU","就":"TỰU","尽":"TẬN","展":"TRIỂN","工":"CÔNG","希":"HY","年":"NIÊN","应":"ỨNG","店":"ĐIẾM","弃":"KHÍ","影":"ẢNH","很":"HẤN","得":"ĐẮC","心":"TÂM","快":"KHOÁI","怎":"TẨM","思":"TƯ","总":"TỔNG","悔":"HỐI","意":"Ý","感":"CẢM","成":"THÀNH","我":"NGÃ","所":"SỞ","才":"TÀI","技":"KỸ","把":"BÁ","护":"HỘ","担":"ĐẢM","持":"TRÌ","换":"HOÁN","改":"CẢI","放":"PHÓNG","新":"TÂN","方":"PHƯƠNG","无":"VÔ","既":"KÝ","早":"TẢO","明":"MINH","是":"THỊ","更":"CÁNH","有":"HỮU","服":"PHỤC","望":"VỌNG","本":"BẢN","机":"CƠ","条":"ĐIỀU","来":"LAI","果":"QUẢ","染":"NHIỄM","格":"CÁCH","案":"ÁN","欢":"HOAN","步":"BỘ","比":"TỈ","气":"KHÍ","水":"THỦY","污":"Ô","法":"PHÁP","活":"HOẠT","满":"MÃN","点":"ĐIỂM","然":"NHIÊN","环":"HOÀN","现":"HIỆN","理":"LÝ","生":"SINH","用":"DỤNG","电":"ĐIỆN","的":"ĐÍCH","盾":"THUẪN","看":"KHÁN","着":"TRƯỚC","睡":"THỤY","矛":"MÂU","知":"TRI","票":"PHIẾU","科":"KHOA","究":"CỨU","竟":"CÁNH","管":"QUẢN","约":"ƯỚC","经":"KINH","结":"KẾT","络":"LẠC","统":"THỐNG","网":"VÕNG","而":"NHI","耐":"NẠI","聪":"THÔNG","能":"NĂNG","舒":"THƯ","节":"TIẾT","虚":"HƯ","虽":"TUY","衣":"Y","被":"BỊ","要":"YẾU","觉":"GIÁC","解":"GIẢI","让":"NHƯỢNG","论":"LUẬN","话":"THOẠI","该":"CAI","说":"THUYẾT","谦":"KHIÊM","质":"CHẤT","资":"TƯ","起":"KHỞI","越":"VIỆT","趣":"THÚ","跑":"BÀO","车":"XA","轻":"KHINH","边":"BIÊN","过":"QUÁ","还":"HOÀN","这":"GIÁ","进":"TIẾN","连":"LIÊN","通":"THÔNG","遇":"NGỘ","道":"ĐẠO","那":"NA","都":"ĐÔ","重":"TRỌNG","量":"LƯỢNG","问":"VẤN","闻":"VĂN","随":"TÙY","难":"NAN","需":"NHU","面":"DIỆN","革":"CÁCH","音":"ÂM","题":"ĐỀ","飞":"PHI","骄":"KIÊU","高":"CAO"
 };
-function hvSentence(s){const out=[];for(const ch of s){if(/[一-鿿]/.test(ch))out.push(CHV[ch]||ch);}return out.join(" ");}
+const HVDIM=new Set("的了着过吗呢吧啊儿地个这那很就都么");
+function hvSentence(s){const out=[];for(const ch of s){if(/[一-鿿]/.test(ch)){const r=CHV[ch]||ch;out.push(HVDIM.has(ch)?'<span class="hvdim">'+r+'</span>':r);}}return out.join(" ");}
 
 /* ============ PHASES ============ */
 const P = [
@@ -1087,7 +1090,7 @@ function renderToday(){
 function gramHTML(wi,gi){
   const g=W[wi].gram[gi];
   return `<div class="gram"><div class="gp">📐 ${g.gp}</div><div class="gn">${g.gn}</div>
-    ${g.ex.map(e=>`<div class="ex"><div class="zh">${e[0]} <button class="spk" onclick="speak('${e[0]}',event)">🔊</button></div><div class="py">${e[1]}</div><div class="hv">${hvSentence(e[0])}</div><div class="vi">${e[2]}</div></div>`).join("")}</div>`;
+    ${g.ex.map(e=>`<div class="ex"><div class="zh">${e[0]} <button class="spk" onclick="speak('${e[0]}',event)">🔊</button></div><div class="py">${e[1]}</div><div class="hv"><span class="hvlab">HÁN-VIỆT</span>${hvSentence(e[0])}</div><div class="vi">${e[2]}</div></div>`).join("")}</div>`;
 }
 function toggleOpen(i){document.getElementById("sess"+i).classList.toggle("open");}
 function pickWeek(i){curWeek=i;renderToday();}
