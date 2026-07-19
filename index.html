@@ -225,6 +225,33 @@
   .modal .py{color:var(--gold);font-size:18px;margin-top:6px}
   .modal .vn{font-size:16px;margin-top:2px}
   .modal .tip{text-align:left;margin-top:14px;background:var(--panel2);border-radius:11px;padding:13px 15px;font-size:13.6px;line-height:1.6}
+  /* HSK 1-6 overview */
+  .hskwords{display:flex;flex-wrap:wrap;gap:7px}
+  .hw{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:6px 10px;cursor:pointer;font-size:13px;transition:.12s}
+  .hw:hover{border-color:var(--gold)}
+  .hw b{font-size:15px}
+  .hw i{color:var(--gold);font-style:normal;font-size:11.5px;margin:0 3px}
+  .hw span{color:var(--muted);font-size:12px}
+  /* stroke order */
+  #mStroke{margin-top:10px;text-align:center;line-height:0}
+  .hwcell{display:inline-block;background:#0b1020;border:1px solid var(--line);border-radius:10px;margin:5px 5px 0 0;vertical-align:top}
+  /* quiz */
+  .qzpick{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .qzbtn{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600}
+  .qzbtn:hover{border-color:var(--blue)}
+  .qzq{text-align:center;margin:16px 0}
+  .qzhz{font-size:54px;font-weight:800;line-height:1}
+  .qzpy{color:var(--gold);font-size:16px;margin-top:6px}
+  .qzvi{font-size:22px;font-weight:700}
+  .qzopts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .qzopt{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:11px;padding:13px;font-size:15px;cursor:pointer;transition:.12s}
+  .qzopt:hover:not(:disabled){border-color:var(--blue)}
+  .qz-correct{background:rgba(38,194,129,.18);border-color:var(--green);color:var(--green)}
+  .qz-wrong{background:rgba(226,59,59,.15);border-color:var(--accent);color:#ff8f8f}
+  .qzfb{margin-top:12px;font-size:13.5px}
+  .qzfb.ok{color:var(--green)}
+  .qzfb.no{color:#ff9f9f}
+  .qzrev{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin-bottom:6px;font-size:13px}
   .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:20px;line-height:1.7}
 </style>
 </head>
@@ -249,6 +276,8 @@
     <button class="active" onclick="tab('today',this)">📅 Hôm nay</button>
     <button onclick="tab('flash',this)">⚡ Flashcard</button>
     <button onclick="tab('vocab',this)">🀄 Từ vựng</button>
+    <button onclick="tab('hsk',this)">📚 HSK 1–6</button>
+    <button onclick="tab('test',this)">📝 Kiểm tra</button>
     <button onclick="tab('road',this)">🗺️ Lộ trình</button>
     <button onclick="tab('prog',this)">📊 Tiến độ</button>
   </div>
@@ -336,6 +365,26 @@
     </div>
   </div>
 
+  <!-- HSK 1-6 OVERVIEW -->
+  <div class="page" id="hsk">
+    <div class="card">
+      <h3>📚 Tổng quan HSK 1–6 &amp; số từ mỗi cấp</h3>
+      <div class="cap">Bạn <b style="color:var(--txt)">bắt đầu từ HSK 1</b> → mục tiêu <b style="color:var(--gold)">HSK 5</b>. Hãy học chắc từ vựng <b>HSK 1–2</b> (nền tảng) trước, rồi bước vào lộ trình 18 tuần (HSK 3 → 5). Bấm vào từ để nghe phát âm.<br>
+      <span style="font-size:12px">Số từ theo chuẩn HSK cũ (2.0), <b>tích lũy dồn</b> qua từng cấp. Chuẩn mới HSK 3.0 (2021) chia lại thành HSK 1–9 với số từ lớn hơn nhiều.</span></div>
+    </div>
+    <div id="hskbody"></div>
+  </div>
+
+  <!-- TEST -->
+  <div class="page" id="test">
+    <div class="card">
+      <h3>📝 Kiểm tra ôn tập theo level</h3>
+      <div class="cap">Trắc nghiệm 10 câu để review lại từ vựng từng giai đoạn (level). Chọn phần muốn ôn:</div>
+      <div class="qzpick" id="qzpick"></div>
+    </div>
+    <div id="qzarea"></div>
+  </div>
+
   <div class="foot">
     Tiến độ, ghi chú &amp; flashcard lưu tự động trên trình duyệt này (localStorage). Nội dung do giáo viên AI biên soạn theo
     khung HSK. Nguồn cảm hứng chiết tự: "Bí Quyết Chiết Tự Chữ Hán".
@@ -380,8 +429,12 @@
     <div class="vn" id="mVn" style="margin-top:8px"></div>
     <div class="tip" id="mTip"></div>
     <div id="mEx"></div>
+    <button class="spk big" style="margin-top:10px" onclick="showStrokes()">✍️ Xem cách viết chữ (nét bút)</button>
+    <div id="mStroke"></div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3/dist/hanzi-writer.min.js"></script>
 
 <script>
 /* ============ VOCAB DATA ============ */
@@ -1609,6 +1662,94 @@ function renderRoad(){
   document.getElementById("rmap").innerHTML=html;
 }
 
+/* ============ HSK 1–6 OVERVIEW ============ */
+const HSKL=[
+ {name:"HSK 1",total:150,nw:150,tc:"var(--green)",clr:"rgba(38,194,129,.16)",desc:"Sơ cấp. Chào hỏi, đại từ, số đếm, gia đình, ăn uống. Mục tiêu: nhận mặt ~150 từ + pinyin, nói câu đơn giản.",words:[["我","wǒ","tôi"],["你","nǐ","bạn"],["他","tā","anh ấy"],["好","hǎo","tốt / khỏe"],["是","shì","là"],["不","bù","không"],["谢谢","xièxie","cảm ơn"],["爱","ài","yêu"],["人","rén","người"],["大","dà","to / lớn"],["小","xiǎo","nhỏ"],["多","duō","nhiều"],["吃","chī","ăn"],["喝","hē","uống"],["家","jiā","nhà"],["学生","xuésheng","học sinh"]]},
+ {name:"HSK 2",total:300,nw:150,tc:"var(--cyan)",clr:"rgba(51,201,220,.16)",desc:"Sơ–trung cấp. Nối câu (因为…所以), thời gian, cảm xúc cơ bản, mua sắm. Giao tiếp đời thường ngắn gọn.",words:[["因为","yīnwèi","vì / bởi vì"],["所以","suǒyǐ","nên"],["觉得","juéde","thấy rằng"],["希望","xīwàng","hy vọng"],["帮助","bāngzhù","giúp đỡ"],["开始","kāishǐ","bắt đầu"],["已经","yǐjīng","đã"],["但是","dànshì","nhưng"],["可能","kěnéng","có thể"],["一起","yìqǐ","cùng nhau"],["问题","wèntí","vấn đề"],["时间","shíjiān","thời gian"],["生日","shēngrì","sinh nhật"],["手机","shǒujī","điện thoại"],["快乐","kuàilè","vui vẻ"],["或者","huòzhě","hoặc"]]},
+ {name:"HSK 3",total:600,nw:300,tc:"var(--blue)",clr:"rgba(74,140,255,.16)",desc:"Trung cấp. Diễn đạt ý kiến, so sánh, kể chuyện quá khứ; chủ đề học tập – sở thích – sức khỏe – đi lại.",words:[["关心","guānxīn","quan tâm"],["健康","jiànkāng","khỏe mạnh"],["成绩","chéngjì","thành tích"],["努力","nǔlì","nỗ lực"],["爱好","àihào","sở thích"],["参加","cānjiā","tham gia"],["选择","xuǎnzé","lựa chọn"],["习惯","xíguàn","thói quen"],["提高","tígāo","nâng cao"],["重要","zhòngyào","quan trọng"],["简单","jiǎndān","đơn giản"],["认为","rènwéi","cho rằng"],["一定","yídìng","nhất định"],["应该","yīnggāi","nên"],["附近","fùjìn","gần đây"],["环境","huánjìng","môi trường"]]},
+ {name:"HSK 4",total:1200,nw:600,tc:"var(--purple)",clr:"rgba(155,107,255,.16)",desc:"Trung–cao cấp. Trừu tượng hơn: công việc, xã hội, quan điểm, công nghệ. Đọc – nghe được đoạn dài.",words:[["职业","zhíyè","nghề nghiệp"],["经验","jīngyàn","kinh nghiệm"],["机会","jīhuì","cơ hội"],["压力","yālì","áp lực"],["性格","xìnggé","tính cách"],["理解","lǐjiě","thấu hiểu"],["支持","zhīchí","ủng hộ"],["技术","jìshù","kỹ thuật"],["社会","shèhuì","xã hội"],["影响","yǐngxiǎng","ảnh hưởng"],["态度","tàidù","thái độ"],["意见","yìjiàn","ý kiến"],["保护","bǎohù","bảo vệ"],["污染","wūrǎn","ô nhiễm"],["反对","fǎnduì","phản đối"],["表示","biǎoshì","biểu thị"]]},
+ {name:"HSK 5",total:2500,nw:1300,tc:"var(--gold)",clr:"rgba(245,183,49,.16)",desc:"Cao cấp. Kinh tế, văn hóa, nghị luận, thành ngữ; đọc báo, viết đoạn 100–200 chữ, tranh luận quan điểm.",words:[["经济","jīngjì","kinh tế"],["金融","jīnróng","tài chính"],["投资","tóuzī","đầu tư"],["传统","chuántǒng","truyền thống"],["竞争","jìngzhēng","cạnh tranh"],["矛盾","máodùn","mâu thuẫn"],["责任","zérèn","trách nhiệm"],["制度","zhìdù","chế độ"],["改革","gǎigé","cải cách"],["智慧","zhìhuì","trí tuệ"],["坚持","jiānchí","kiên trì"],["挑战","tiǎozhàn","thách thức"],["克服","kèfú","khắc phục"],["培养","péiyǎng","bồi dưỡng"],["尊重","zūnzhòng","tôn trọng"],["现象","xiànxiàng","hiện tượng"]]},
+ {name:"HSK 6",total:5000,nw:2500,tc:"var(--accent)",clr:"rgba(226,59,59,.16)",desc:"Thành thạo. Từ vựng học thuật, thành ngữ (chengyu), văn viết nâng cao; hiểu gần như người bản xứ.",words:[["抽象","chōuxiàng","trừu tượng"],["范畴","fànchóu","phạm trù"],["崇拜","chóngbài","sùng bái"],["巩固","gǒnggù","củng cố"],["渗透","shèntòu","thẩm thấu"],["枢纽","shūniǔ","đầu mối"],["兼容","jiānróng","tương thích"],["遏制","èzhì","kìm hãm"],["一丝不苟","yìsībùgǒu","tỉ mỉ, cẩn thận"],["潜移默化","qiányímòhuà","mưa dầm thấm lâu"],["锲而不舍","qiè'érbùshě","kiên trì bền bỉ"],["循序渐进","xúnxùjiànjìn","tuần tự tiệm tiến"],["举足轻重","jǔzúqīngzhòng","then chốt"],["精益求精","jīngyìqiújīng","cầu toàn hơn nữa"],["名列前茅","mínglièqiánmáo","đứng top đầu"],["力所能及","lìsuǒnéngjí","trong khả năng"]]}
+];
+function renderHSK(){
+  document.getElementById("hskbody").innerHTML=HSKL.map(L=>`
+    <div class="card" style="border-top:3px solid ${L.tc}">
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+        <h3 style="margin:0">${L.name}</h3>
+        <span class="phbadge" style="background:${L.clr};color:${L.tc};margin:0">${L.total} từ tích lũy · +${L.nw} từ mới</span>
+      </div>
+      <div class="cap" style="margin:6px 0 10px">${L.desc}</div>
+      <div class="hskwords">${L.words.map(w=>`<span class="hw" onclick="speak('${w[0]}',event)"><b>${w[0]}</b><i>${w[1]}</i><span>${w[2]}</span></span>`).join("")}</div>
+    </div>`).join("");
+}
+
+/* ============ STROKE ORDER (Hanzi Writer) ============ */
+function showStrokes(){
+  const hz=document.getElementById("mHz").textContent;
+  const box=document.getElementById("mStroke");
+  if(typeof HanziWriter==="undefined"){box.innerHTML='<div class="cap" style="line-height:1.5">✍️ Cần Internet để tải nét chữ. Hãy mở app qua <b>link web (GitHub Pages)</b> rồi thử lại.</div>';return;}
+  box.innerHTML="";
+  const chars=[...hz].filter(c=>/[一-鿿]/.test(c));
+  const writers=chars.map((c,idx)=>{
+    const d=document.createElement("div");d.id="hw"+idx;d.className="hwcell";box.appendChild(d);
+    return HanziWriter.create(d.id,c,{width:96,height:96,padding:5,showOutline:true,strokeAnimationSpeed:1,delayBetweenStrokes:170,strokeColor:"#4a8cff",radicalColor:"#f5b731",outlineColor:"#2c3654"});
+  });
+  let i=0;const run=()=>{if(i>=writers.length)return;writers[i].animateCharacter({onComplete:()=>{i++;setTimeout(run,250);}});};
+  run();
+}
+
+/* ============ KIỂM TRA (QUIZ) ============ */
+let quiz=null;
+function renderTest(){
+  document.getElementById("qzpick").innerHTML=
+    `<button class="qzbtn" onclick="startQuiz(0,95,'GĐ 1 · HSK 3')">GĐ1 · HSK 3 (Tuần 1–6)</button>
+     <button class="qzbtn" onclick="startQuiz(96,191,'GĐ 2 · HSK 4')">GĐ2 · HSK 4 (Tuần 7–12)</button>
+     <button class="qzbtn" onclick="startQuiz(192,287,'GĐ 3 · HSK 5')">GĐ3 · HSK 5 (Tuần 13–18)</button>
+     <button class="qzbtn" onclick="startQuiz(0,287,'Toàn bộ 288 từ')">Toàn bộ</button>`;
+}
+function shuf(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function startQuiz(a,b,label){
+  const pool=[];for(let i=a;i<=b;i++)pool.push(i);shuf(pool);
+  const n=Math.min(10,pool.length);
+  const qs=pool.slice(0,n).map(idx=>{
+    const dir=Math.random()<0.5?"zh2vi":"vi2zh";
+    const used={};used[idx]=1;const others=[];
+    let guard=0;while(others.length<3&&guard++<200){const r=a+Math.floor(Math.random()*(b-a+1));if(!used[r]){used[r]=1;others.push(r);}}
+    return {idx,dir,opts:shuf([idx,...others])};
+  });
+  quiz={label,qs,cur:0,score:0,wrong:[],answered:false};
+  renderQuiz();
+}
+function renderQuiz(){
+  const area=document.getElementById("qzarea");if(!quiz)return;
+  if(quiz.cur>=quiz.qs.length){
+    const pc=Math.round(quiz.score/quiz.qs.length*100);
+    let html=`<div class="card"><h3>Kết quả: ${quiz.score}/${quiz.qs.length} <span style="color:var(--muted);font-size:14px">(${quiz.label})</span></h3>
+      <div class="bar" style="margin-top:8px"><span style="width:${pc}%"></span></div>`;
+    if(quiz.wrong.length){html+='<h4 class="sec" style="margin-top:14px">Cần ôn lại</h4>'+quiz.wrong.map(i=>`<div class="qzrev"><b style="font-size:15px">${V[i][0]}</b> · ${V[i][1]} · <span style="color:var(--purple)">${hv(V[i][0])}</span> · ${V[i][2]}</div>`).join("");}
+    else html+='<div class="cap" style="margin-top:10px;color:var(--green)">Xuất sắc! Đúng hết 🎉</div>';
+    html+=`<button class="finbtn" style="margin-top:14px" onclick="quiz=null;renderTest();document.getElementById('qzarea').innerHTML=''">↺ Chọn bài khác</button></div>`;
+    area.innerHTML=html;return;
+  }
+  const q=quiz.qs[quiz.cur];const w=V[q.idx];
+  const prompt=q.dir==="zh2vi"
+    ?`<div class="qzq"><div class="qzhz">${w[0]}</div><div class="qzpy">${w[1]}</div><div class="cap" style="margin-top:6px">Từ này nghĩa là gì?</div></div>`
+    :`<div class="qzq"><div class="qzvi">${w[2]}</div><div class="cap" style="margin-top:6px">Chọn chữ Hán đúng</div></div>`;
+  const opts=q.opts.map(o=>`<button class="qzopt" onclick="answerQuiz(${o})">${q.dir==="zh2vi"?V[o][2]:V[o][0]}</button>`).join("");
+  area.innerHTML=`<div class="card"><div class="cap">Câu ${quiz.cur+1}/${quiz.qs.length} · ${quiz.label} · Điểm ${quiz.score}</div>${prompt}<div class="qzopts">${opts}</div></div>`;
+}
+function answerQuiz(oi){
+  if(!quiz||quiz.answered)return;quiz.answered=true;
+  const q=quiz.qs[quiz.cur];const w=V[q.idx];const correct=(oi===q.idx);
+  if(correct)quiz.score++;else quiz.wrong.push(q.idx);
+  const prompt=q.dir==="zh2vi"?`<div class="qzq"><div class="qzhz">${w[0]}</div><div class="qzpy">${w[1]}</div></div>`:`<div class="qzq"><div class="qzvi">${w[2]}</div></div>`;
+  const opts=q.opts.map(o=>{let c="qzopt";if(o===q.idx)c+=" qz-correct";else if(o===oi)c+=" qz-wrong";return `<button class="${c}" disabled>${q.dir==="zh2vi"?V[o][2]:V[o][0]}</button>`;}).join("");
+  const fb=correct?'<div class="qzfb ok">✅ Chính xác!</div>':`<div class="qzfb no">❌ Đáp án đúng: <b>${w[0]}</b> (${w[1]}) — ${w[2]}</div>`;
+  const last=(quiz.cur+1>=quiz.qs.length);
+  document.getElementById("qzarea").innerHTML=`<div class="card"><div class="cap">Câu ${quiz.cur+1}/${quiz.qs.length} · ${quiz.label} · Điểm ${quiz.score}</div>${prompt}<div class="qzopts">${opts}</div>${fb}<button class="finbtn" style="margin-top:12px" onclick="nextQuiz()">${last?"Xem kết quả →":"Câu tiếp →"}</button></div>`;
+}
+function nextQuiz(){if(!quiz)return;quiz.cur++;quiz.answered=false;renderQuiz();}
+
 /* ============ PROGRESS ============ */
 function renderProgress(){
   const days=new Set(S.log).size;
@@ -1637,6 +1778,7 @@ function openWord(i){const w=V[i];
   document.getElementById("mVn").textContent=w[2]+" · "+w[3];
   document.getElementById("mTip").innerHTML=`<span class="tag ${w[4]}" style="display:inline-block;margin-bottom:7px">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}`;
   document.getElementById("mEx").innerHTML=exHTML(w[0]);
+  document.getElementById("mStroke").innerHTML="";
   document.getElementById("modal").classList.add("show");
 }
 function closeModal(){document.getElementById("modal").classList.remove("show");}
@@ -1650,6 +1792,8 @@ function tab(id,btn){
   if(id==="vocab")renderVocab();
   if(id==="prog")renderProgress();
   if(id==="road")renderRoad();
+  if(id==="hsk")renderHSK();
+  if(id==="test"&&!quiz)renderTest();
   if(id==="flash"&&!deck.length)buildDeck();
 }
 function resetAll(){if(confirm("Đặt lại toàn bộ tiến độ (buổi học, từ vựng, ghi chú, streak)?")){S=seed();save();curWeek=0;renderToday();renderVocab();renderProgress();buildDeck();}}
