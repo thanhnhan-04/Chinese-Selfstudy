@@ -6,24 +6,25 @@
 <title>Lộ trình HSK 5 – Giáo viên Tiếng Trung kèm cặp</title>
 <style>
   :root{
-    --bg:#0e1320; --panel:#161d2e; --panel2:#1d2539; --panel3:#232c44; --line:#2c3654;
-    --txt:#e9eef8; --muted:#8f9dbb; --accent:#e23b3b; --gold:#f5b731;
-    --green:#26c281; --blue:#4a8cff; --purple:#9b6bff; --cyan:#33c9dc;
+    --bg:#0f141c; --panel:#171d28; --panel2:#1e2532; --panel3:#28303f; --line:#2b3444;
+    --txt:#e7ecf3; --muted:#8c98ac; --accent:#e0a3a0; --gold:#e8c47a;
+    --green:#6fcf9f; --blue:#82a9f0; --purple:#b6a3e8; --cyan:#79c9d3;
+    --t1:#e78f8a; --t2:#7fc088; --t3:#77abe0; --t4:#b8a0e6; --t5:#9aa4b4;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:radial-gradient(1200px 600px at 50% -10%,#182136,#0e1320);color:var(--txt);line-height:1.55;padding-bottom:70px}
+    background:radial-gradient(1100px 620px at 50% -12%,#1b2534,#0f141c 60%);color:var(--txt);line-height:1.6;padding-bottom:74px;letter-spacing:.1px}
   .wrap{max-width:1000px;margin:0 auto;padding:0 18px}
   a{color:var(--blue)}
 
-  header{padding:26px 0 8px;text-align:center}
-  header .cn{font-size:13px;color:var(--gold);letter-spacing:6px}
-  header h1{font-size:25px;font-weight:800;margin-top:5px}
-  header p{color:var(--muted);font-size:14px;margin-top:5px}
+  header{padding:30px 0 8px;text-align:center}
+  header .cn{font-size:12px;color:var(--gold);letter-spacing:5px;opacity:.85}
+  header h1{font-size:26px;font-weight:750;margin-top:7px;letter-spacing:.2px}
+  header p{color:var(--muted);font-size:13.5px;margin-top:7px}
 
   /* teacher banner */
-  .teacher{display:flex;gap:14px;align-items:center;background:linear-gradient(120deg,rgba(74,140,255,.14),rgba(155,107,255,.10));
-    border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:16px 0}
+  .teacher{display:flex;gap:14px;align-items:center;background:linear-gradient(125deg,rgba(111,207,159,.10),rgba(182,163,232,.10));
+    border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:18px 0;box-shadow:0 6px 24px -18px rgba(0,0,0,.7)}
   .teacher .ava{flex:none;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));
     display:flex;align-items:center;justify-content:center;font-size:26px}
   .teacher .msg{flex:1}
@@ -34,10 +35,13 @@
   .teacher .streak span{font-size:10.5px;color:var(--muted)}
 
   /* nav tabs */
-  .nav{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:5px;margin:6px 0 18px;position:sticky;top:8px;z-index:20;flex-wrap:wrap}
-  .nav button{flex:1;background:none;border:none;color:var(--muted);padding:10px 6px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:600;transition:.15s;min-width:90px}
-  .nav button.active{background:var(--panel3);color:var(--txt)}
+  .nav{display:flex;gap:5px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:6px;margin:6px 0 20px;position:sticky;top:8px;z-index:20;flex-wrap:wrap;box-shadow:0 8px 30px -22px rgba(0,0,0,.9)}
+  .nav button{flex:1;background:none;border:none;color:var(--muted);padding:10px 6px;border-radius:11px;cursor:pointer;font-size:13px;font-weight:600;transition:.18s;min-width:84px}
+  .nav button.active{background:linear-gradient(135deg,rgba(130,169,240,.22),rgba(182,163,232,.20));color:var(--txt)}
   .nav button:hover{color:var(--txt)}
+
+  .card{box-shadow:0 8px 30px -24px rgba(0,0,0,.8)}
+  h4.sec{color:var(--cyan)}
 
   .page{display:none;animation:fade .25s ease}
   .page.show{display:block}
@@ -252,6 +256,23 @@
   .qzfb.ok{color:var(--green)}
   .qzfb.no{color:#ff9f9f}
   .qzrev{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin-bottom:6px;font-size:13px}
+  /* word ordering */
+  .ochip{background:var(--panel3);border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:9px 13px;margin:4px;font-size:16px;cursor:pointer;display:inline-block;transition:.12s}
+  .ochip:hover{border-color:var(--blue)}
+  .ochip.placed{background:rgba(130,169,240,.16);border-color:var(--blue)}
+  .obox{min-height:50px;background:#0b1020;border:1px dashed var(--line);border-radius:11px;padding:8px;margin:10px 0;display:flex;flex-wrap:wrap;align-items:center}
+  /* dictation diff */
+  .dchar{font-size:22px;font-weight:700;letter-spacing:2px}
+  .dchar .ok{color:var(--green)}
+  .dchar .no{color:var(--accent);text-decoration:underline}
+  /* SRS */
+  .srscard{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .srscard .n{font-size:26px;font-weight:800;color:var(--purple)}
+  .srsbtns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;max-width:440px;margin:14px auto 0}
+  .srsbtns button{border:none;border-radius:11px;padding:13px;font-weight:700;cursor:pointer;font-size:14px}
+  .srs-again{background:rgba(224,163,160,.16);color:var(--accent);border:1px solid rgba(224,163,160,.4)}
+  .srs-hard{background:rgba(232,196,122,.14);color:var(--gold);border:1px solid rgba(232,196,122,.4)}
+  .srs-good{background:rgba(111,207,159,.15);color:var(--green);border:1px solid rgba(111,207,159,.4)}
   .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:20px;line-height:1.7}
 </style>
 </head>
@@ -291,6 +312,7 @@
 
   <!-- FLASHCARD -->
   <div class="page" id="flash">
+    <div class="card" id="srsbar" style="margin-bottom:14px"></div>
     <div class="fcbar">
       <select id="fcweek" onchange="buildDeck()"></select>
       <select id="fcdir" onchange="buildDeck()">
@@ -382,7 +404,9 @@
       <div class="cap">Chọn hình thức luyện tập:</div>
       <div class="qzpick">
         <button class="qzbtn" id="mode-quiz" onclick="showTestMode('quiz')">🔤 Trắc nghiệm từ vựng</button>
-        <button class="qzbtn" id="mode-trans" onclick="showTestMode('trans')">✍️ Dịch câu (Trung ↔ Việt)</button>
+        <button class="qzbtn" id="mode-trans" onclick="showTestMode('trans')">✍️ Dịch câu</button>
+        <button class="qzbtn" id="mode-dict" onclick="showTestMode('dict')">🎧 Nghe chép</button>
+        <button class="qzbtn" id="mode-order" onclick="showTestMode('order')">🧩 Xếp câu</button>
       </div>
     </div>
 
@@ -407,9 +431,26 @@
       </div>
       <div id="tarea"></div>
     </div>
+
+    <div id="dictWrap" style="display:none">
+      <div class="card">
+        <div class="cap">🎧 Nghe câu tiếng Trung rồi gõ lại chữ Hán (luyện kỹ năng Nghe). Chọn phần:</div>
+        <div class="qzpick" id="dpick" style="margin-top:8px"></div>
+      </div>
+      <div id="darea"></div>
+    </div>
+
+    <div id="orderWrap" style="display:none">
+      <div class="card">
+        <div class="cap">🧩 Bấm các từ theo đúng thứ tự để ghép thành câu (luyện ngữ pháp). Chọn phần:</div>
+        <div class="qzpick" id="opick" style="margin-top:8px"></div>
+      </div>
+      <div id="oarea"></div>
+    </div>
   </div>
 
   <div class="foot">
+    <div style="margin-bottom:9px">🎨 Pinyin tô màu theo thanh điệu: <span style="color:var(--t1);font-weight:700">thanh 1 (ā)</span> · <span style="color:var(--t2);font-weight:700">thanh 2 (á)</span> · <span style="color:var(--t3);font-weight:700">thanh 3 (ǎ)</span> · <span style="color:var(--t4);font-weight:700">thanh 4 (à)</span> · <span style="color:var(--t5);font-weight:700">thanh nhẹ</span></div>
     Tiến độ, ghi chú &amp; flashcard lưu tự động trên trình duyệt này (localStorage). Nội dung do giáo viên AI biên soạn theo
     khung HSK. Nguồn cảm hứng chiết tự: "Bí Quyết Chiết Tự Chữ Hán".
   </div>
@@ -805,6 +846,13 @@ const CHV = {
 const HVDIM=new Set("的了着过吗呢吧啊儿地个这那很就都么");
 function hvSentence(s){const out=[];for(const ch of s){if(/[一-鿿]/.test(ch)){const r=CHV[ch]||ch;out.push(HVDIM.has(ch)?'<span class="hvdim">'+r+'</span>':r);}}return out.join(" ");}
 
+/* ---- pinyin tô màu theo thanh điệu ---- */
+const TONECOLOR={1:"var(--t1)",2:"var(--t2)",3:"var(--t3)",4:"var(--t4)",5:"var(--t5)"};
+const TONEMAP={"ā":1,"á":2,"ǎ":3,"à":4,"ē":1,"é":2,"ě":3,"è":4,"ī":1,"í":2,"ǐ":3,"ì":4,"ō":1,"ó":2,"ǒ":3,"ò":4,"ū":1,"ú":2,"ǔ":3,"ù":4,"ǖ":1,"ǘ":2,"ǚ":3,"ǜ":4};
+const SYLRE=/[a-zü]*[aeiouüāáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]+(?:ng|n|r)?/gi;
+function toneOf(s){for(const c of s){if(TONEMAP[c])return TONEMAP[c];}return 5;}
+function py(str){if(!str)return "";return String(str).replace(SYLRE,m=>'<span style="color:'+TONECOLOR[toneOf(m)]+'">'+m+'</span>');}
+
 /* ============ CÂU VÍ DỤ CHO TỪNG TỪ (kiểu từ điển) ============ */
 /* hz : [câu Hán, pinyin, nghĩa tiếng Việt] */
 const EX = {
@@ -1097,7 +1145,7 @@ const EX = {
 "举例来说":["举例来说,他很守时。","Jǔlìláishuō, tā hěn shǒushí.","Ví dụ như, anh ấy rất đúng giờ."],
 "各种各样":["商店里有各种各样的东西。","Shāngdiàn lǐ yǒu gèzhǒnggèyàng de dōngxi.","Trong cửa hàng có đủ mọi thứ."]
 };
-function exHTML(hz){const e=EX[hz];if(!e)return "";return '<div class="exs"><div class="exs-lb">VÍ DỤ</div><div class="zh">'+e[0]+' <button class="spk" onclick="speak(\''+e[0]+'\',event)">🔊</button></div><div class="py">'+e[1]+'</div><div class="vi">'+e[2]+'</div></div>';}
+function exHTML(hz){const e=EX[hz];if(!e)return "";return '<div class="exs"><div class="exs-lb">VÍ DỤ</div><div class="zh">'+e[0]+' <button class="spk" onclick="speak(\''+e[0]+'\',event)">🔊</button></div><div class="py">'+py(e[1])+'</div><div class="vi">'+e[2]+'</div></div>';}
 
 /* ============ NGỮ PHÁP: pinyin mẫu + giải thích chi tiết ============ */
 /* key = đúng chuỗi gp trong W. { py: pinyin của mẫu, gn: giải thích HTML } */
@@ -1317,8 +1365,9 @@ const W = [
 /* ============ ENGINE ============ */
 const KEY="zh_hsk5_v1";
 let S = load();
+if(!S.srs)S.srs={};
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||seed();}catch(e){return seed();}}
-function seed(){return {done:{}, log:[], vocab:{}, notes:{}};}  // done: key->true ; log:[yyyy-mm-dd] ; vocab:id->'known'|'review' ; notes:key->text
+function seed(){return {done:{}, log:[], vocab:{}, notes:{}, srs:{}};}  // done: key->true ; log:[yyyy-mm-dd] ; vocab:id->'known'|'review' ; notes:key->text ; srs:id->{due,ivl,ease,reps}
 function save(){localStorage.setItem(KEY,JSON.stringify(S));}
 function today(){const d=new Date();return d.toISOString().slice(0,10);}
 
@@ -1555,7 +1604,7 @@ function renderToday(){
 function gramHTML(wi,gi){
   const g=W[wi].gram[gi];
   const o=GRAM[g.gp]||{};
-  const pyLine=o.py?`<div class="gpy">🗣️ ${o.py}</div>`:"";
+  const pyLine=o.py?`<div class="gpy">🗣️ ${py(o.py)}</div>`:"";
   const gn=o.gn||g.gn;
   return `<div class="gram"><div class="gp">📐 ${g.gp}</div>${pyLine}<div class="gn">${gn}</div>
     ${g.ex.map(e=>`<div class="ex"><div class="zh">${e[0]} <button class="spk" onclick="speak('${e[0]}',event)">🔊</button></div><div class="py">${e[1]}</div><div class="hv"><span class="hvlab">HÁN-VIỆT</span>${hvSentence(e[0])}</div><div class="vi">${e[2]}</div></div>`).join("")}</div>`;
@@ -1607,7 +1656,7 @@ function buildDeck(){
   if(wv!=="all"){const[a,b]=W[+wv].v;idx=idx.filter(i=>i>=a&&i<=b);}
   if(scope!=="all")idx=idx.filter(i=>((S.vocab[i]||"new")===scope));
   for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
-  deck=idx;dpos=0;flipped=false;renderFlash();
+  deck=idx;dpos=0;flipped=false;srsMode=false;renderFlash();
 }
 function renderFlash(){
   const area=document.getElementById("fcarea");
@@ -1615,22 +1664,22 @@ function renderFlash(){
   document.getElementById("fcstat").innerHTML=deck.length?`Thẻ <b>${Math.min(dpos+1,deck.length)}</b>/${deck.length}`:"";
   if(!deck.length){area.innerHTML=`<div class="fcdone">Không có thẻ nào khớp bộ lọc.<br>Hãy đổi tuần hoặc trạng thái.</div>`;return;}
   if(dpos>=deck.length){
+    if(srsMode){srsMode=false;updateSRSbar();document.getElementById("fcstat").innerHTML="";
+      area.innerHTML=`<div class="fcdone"><b>Xong buổi ôn SRS! 🎉</b><br>Đã ôn ${deck.length} thẻ. Các từ đã được xếp lịch ôn lại tự động.<br><br><button class="btn" onclick="startSRS()">🔁 Ôn tiếp</button></div>`;return;}
     area.innerHTML=`<div class="fcdone"><b>Hoàn thành bộ thẻ! 🎉</b><br>Bạn đã lướt qua ${deck.length} thẻ.<br><br>
       <button class="btn" onclick="buildDeck()">🔁 Học lại từ đầu</button></div>`;return;}
   const id=deck[dpos];const w=V[id];
   const front = dir==="zh" ? `<div class="big">${w[0]}</div><button class="spk big" onclick="speak('${w[0]}',event)">🔊 Nghe</button><div class="hint" style="margin-top:10px">Bấm để lật xem nghĩa</div>`
                            : `<div class="med">${w[2]}</div><div class="hint" style="margin-top:6px">${w[3]} · Bấm để lật xem chữ Hán</div>`;
-  const back = `<div class="big" style="font-size:52px">${w[0]}</div><div class="py">${w[1]} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="hv">${hv(w[0])}</div><div class="vn">${w[2]} · ${w[3]}</div>
+  const back = `<div class="big" style="font-size:52px">${w[0]}</div><div class="py">${py(w[1])} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="hv">${hv(w[0])}</div><div class="vn">${w[2]} · ${w[3]}</div>
     <div class="tip">${w[5]}</div>${exHTML(w[0])}`;
   area.innerHTML=`<div class="flash"><div class="fcard ${flipped?'flip':''}" onclick="flipCard()">
       <div class="face front">${front}</div>
       <div class="face back">${back}</div>
     </div></div>
-    <div class="fcact">
-      <button class="no" onclick="gradeCard('review')">❌ Chưa nhớ</button>
-      <button class="skip" onclick="gradeCard(null)">⏭️ Bỏ qua</button>
-      <button class="yes" onclick="gradeCard('known')">✅ Đã nhớ</button>
-    </div>`;
+    ${srsMode
+      ? `<div class="srsbtns"><button class="srs-again" onclick="srsAnswer('again')">❌ Quên</button><button class="srs-hard" onclick="srsAnswer('hard')">🙂 Khó</button><button class="srs-good" onclick="srsAnswer('good')">😎 Dễ</button></div><div class="hint" style="text-align:center;margin-top:8px">Quên = ôn lại ngay · Khó = ôn sớm · Dễ = giãn lịch ra</div>`
+      : `<div class="fcact"><button class="no" onclick="gradeCard('review')">❌ Chưa nhớ</button><button class="skip" onclick="gradeCard(null)">⏭️ Bỏ qua</button><button class="yes" onclick="gradeCard('known')">✅ Đã nhớ</button></div>`}`;
 }
 function flipCard(){flipped=!flipped;document.querySelector(".fcard").classList.toggle("flip");if(deck.length&&deck[dpos]!=null)speak(V[deck[dpos]][0]);}
 function gradeCard(mark){
@@ -1658,7 +1707,7 @@ function renderVocab(){
     const w=V[i];const state=S.vocab[i]||"new";
     return `<div class="vc ${state}" id="vc${i}">
       <div class="pos">${w[3]}</div>
-      <div class="top"><div class="hz">${w[0]}</div><div class="meta"><div class="py">${w[1]} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="hv">${hv(w[0])}</div><div class="vn">${w[2]}</div></div></div>
+      <div class="top"><div class="hz">${w[0]}</div><div class="meta"><div class="py">${py(w[1])} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="hv">${hv(w[0])}</div><div class="vn">${w[2]}</div></div></div>
       <div class="tip"><span class="tag ${w[4]}">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}</div>
       ${exHTML(w[0])}
       <div class="act">
@@ -1704,7 +1753,7 @@ function renderHSK(){
         <span class="phbadge" style="background:${L.clr};color:${L.tc};margin:0">${L.total} từ tích lũy · +${L.nw} từ mới</span>
       </div>
       <div class="cap" style="margin:6px 0 10px">${L.desc}</div>
-      <div class="hskwords">${L.words.map(w=>`<span class="hw" onclick="speak('${w[0]}',event)"><b>${w[0]}</b><i>${w[1]}</i><span>${w[2]}</span></span>`).join("")}</div>
+      <div class="hskwords">${L.words.map(w=>`<span class="hw" onclick="speak('${w[0]}',event)"><b>${w[0]}</b><i>${py(w[1])}</i><span>${w[2]}</span></span>`).join("")}</div>
     </div>`).join("");
 }
 
@@ -1731,7 +1780,7 @@ function renderTest(){
      <button class="qzbtn" onclick="startQuiz(96,191,'GĐ 2 · HSK 4')">GĐ2 · HSK 4 (Tuần 7–12)</button>
      <button class="qzbtn" onclick="startQuiz(192,287,'GĐ 3 · HSK 5')">GĐ3 · HSK 5 (Tuần 13–18)</button>
      <button class="qzbtn" onclick="startQuiz(0,287,'Toàn bộ 288 từ')">Toàn bộ</button>`;
-  renderTransPick();
+  renderTransPick();renderDictPick();renderOrderPick();
   showTestMode("quiz");
 }
 function shuf(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
@@ -1760,7 +1809,7 @@ function renderQuiz(){
   }
   const q=quiz.qs[quiz.cur];const w=V[q.idx];
   const prompt=q.dir==="zh2vi"
-    ?`<div class="qzq"><div class="qzhz">${w[0]}</div><div class="qzpy">${w[1]}</div><div class="cap" style="margin-top:6px">Từ này nghĩa là gì?</div></div>`
+    ?`<div class="qzq"><div class="qzhz">${w[0]}</div><div class="qzpy">${py(w[1])}</div><div class="cap" style="margin-top:6px">Từ này nghĩa là gì?</div></div>`
     :`<div class="qzq"><div class="qzvi">${w[2]}</div><div class="cap" style="margin-top:6px">Chọn chữ Hán đúng</div></div>`;
   const opts=q.opts.map(o=>`<button class="qzopt" onclick="answerQuiz(${o})">${q.dir==="zh2vi"?V[o][2]:V[o][0]}</button>`).join("");
   area.innerHTML=`<div class="card"><div class="cap">Câu ${quiz.cur+1}/${quiz.qs.length} · ${quiz.label} · Điểm ${quiz.score}</div>${prompt}<div class="qzopts">${opts}</div></div>`;
@@ -1769,7 +1818,7 @@ function answerQuiz(oi){
   if(!quiz||quiz.answered)return;quiz.answered=true;
   const q=quiz.qs[quiz.cur];const w=V[q.idx];const correct=(oi===q.idx);
   if(correct)quiz.score++;else quiz.wrong.push(q.idx);
-  const prompt=q.dir==="zh2vi"?`<div class="qzq"><div class="qzhz">${w[0]}</div><div class="qzpy">${w[1]}</div></div>`:`<div class="qzq"><div class="qzvi">${w[2]}</div></div>`;
+  const prompt=q.dir==="zh2vi"?`<div class="qzq"><div class="qzhz">${w[0]}</div><div class="qzpy">${py(w[1])}</div></div>`:`<div class="qzq"><div class="qzvi">${w[2]}</div></div>`;
   const opts=q.opts.map(o=>{let c="qzopt";if(o===q.idx)c+=" qz-correct";else if(o===oi)c+=" qz-wrong";return `<button class="${c}" disabled>${q.dir==="zh2vi"?V[o][2]:V[o][0]}</button>`;}).join("");
   const fb=correct?'<div class="qzfb ok">✅ Chính xác!</div>':`<div class="qzfb no">❌ Đáp án đúng: <b>${w[0]}</b> (${w[1]}) — ${w[2]}</div>`;
   const last=(quiz.cur+1>=quiz.qs.length);
@@ -1779,11 +1828,10 @@ function nextQuiz(){if(!quiz)return;quiz.cur++;quiz.answered=false;renderQuiz();
 
 /* ---- chuyển chế độ Kiểm tra ---- */
 function showTestMode(m){
-  document.getElementById("quizWrap").style.display=m==="quiz"?"block":"none";
-  document.getElementById("transWrap").style.display=m==="trans"?"block":"none";
-  document.getElementById("mode-quiz").style.opacity=m==="quiz"?"1":".5";
-  document.getElementById("mode-trans").style.opacity=m==="trans"?"1":".5";
-  if(m==="trans"&&!document.getElementById("tpick").innerHTML)renderTransPick();
+  ["quiz","trans","dict","order"].forEach(x=>{
+    document.getElementById(x+"Wrap").style.display=(x===m)?"block":"none";
+    document.getElementById("mode-"+x).style.opacity=(x===m)?"1":".5";
+  });
 }
 
 /* ============ BÀI TẬP DỊCH CÂU ============ */
@@ -1812,7 +1860,7 @@ function renderTrans(){
   const e=trans.deck[trans.pos];const dir=trans.dir;
   const head=`<div class="cap">Câu ${trans.pos+1}/${trans.deck.length} · ${trans.label} · ${dir==="zh2vi"?"Trung → Việt":"Việt → Trung"}</div>`;
   const prompt = dir==="zh2vi"
-    ? `<div class="qzq" style="margin:12px 0"><div style="font-size:24px;font-weight:700;line-height:1.4">${e[0]} <button class="spk" onclick="speak('${e[0]}',event)">🔊</button></div><div class="qzpy">${e[1]}</div></div><div class="cap">✍️ Dịch câu trên sang <b style="color:var(--txt)">tiếng Việt</b>:</div>`
+    ? `<div class="qzq" style="margin:12px 0"><div style="font-size:24px;font-weight:700;line-height:1.4">${e[0]} <button class="spk" onclick="speak('${e[0]}',event)">🔊</button></div><div class="qzpy">${py(e[1])}</div></div><div class="cap">✍️ Dịch câu trên sang <b style="color:var(--txt)">tiếng Việt</b>:</div>`
     : `<div class="qzq" style="margin:12px 0"><div style="font-size:20px;font-weight:700;line-height:1.5">${e[2]}</div></div><div class="cap">✍️ Viết câu trên bằng <b style="color:var(--txt)">chữ Hán</b>:</div>`;
   area.innerHTML=`<div class="card">${head}${prompt}
     <textarea id="tans" style="width:100%;margin-top:8px;background:#0b1020;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;min-height:62px;line-height:1.6" placeholder="Nhập bản dịch của bạn…"></textarea>
@@ -1827,7 +1875,7 @@ function revealTrans(){
   if(!trans)return;const e=trans.deck[trans.pos];const dir=trans.dir;const ref=document.getElementById("tref");
   ref.classList.add("show");
   if(dir==="zh2vi") ref.innerHTML=`<b>Đáp án tham khảo:</b><br>${e[2]}<br><span style="color:var(--muted)">${e[0]} · ${e[1]}</span>`;
-  else ref.innerHTML=`<b>Đáp án tham khảo:</b><br><span style="font-size:16px">${e[0]}</span> <button class="spk" onclick="speak('${e[0]}',event)">🔊</button><br><span style="color:var(--gold)">${e[1]}</span><br><span style="color:var(--purple)">${hvSentence(e[0])}</span><br><span style="color:var(--muted)">${e[2]}</span>`;
+  else ref.innerHTML=`<b>Đáp án tham khảo:</b><br><span style="font-size:16px">${e[0]}</span> <button class="spk" onclick="speak('${e[0]}',event)">🔊</button><br>${py(e[1])}<br><span style="color:var(--purple)">${hvSentence(e[0])}</span><br><span style="color:var(--muted)">${e[2]}</span>`;
 }
 function nextTrans(){if(!trans)return;trans.pos++;renderTrans();}
 async function checkTransAI(btn){
@@ -1855,6 +1903,114 @@ async function checkTransAI(btn){
   btn.disabled=false;btn.textContent=old;
 }
 
+/* ---- helper dùng chung cho các bài tập ---- */
+function phaseBtns(fn){return `<button class="qzbtn" onclick="${fn}(0,95)">GĐ1 · HSK 3</button>
+  <button class="qzbtn" onclick="${fn}(96,191)">GĐ2 · HSK 4</button>
+  <button class="qzbtn" onclick="${fn}(192,287)">GĐ3 · HSK 5</button>
+  <button class="qzbtn" onclick="${fn}(0,287)">Toàn bộ</button>`;}
+function normHan(s){return [...String(s)].filter(c=>/[一-鿿]/.test(c)).join("");}
+
+/* ============ 🎧 NGHE CHÉP CHÍNH TẢ ============ */
+let dict=null;
+function renderDictPick(){document.getElementById("dpick").innerHTML=phaseBtns("startDict");}
+function startDict(a,b){const deck=[];for(let i=a;i<=b;i++){if(EX[V[i][0]])deck.push(EX[V[i][0]]);}shuf(deck);dict={deck,pos:0};renderDict();}
+function renderDict(){
+  const area=document.getElementById("darea");if(!dict)return;
+  if(dict.pos>=dict.deck.length){area.innerHTML=`<div class="card"><h3>Hết câu! 🎉</h3><div class="cap" style="margin-top:6px">Đã nghe chép ${dict.deck.length} câu.</div><button class="finbtn" style="margin-top:12px" onclick="dict=null;renderDictPick();document.getElementById('darea').innerHTML=''">↺ Chọn phần khác</button></div>`;return;}
+  const e=dict.deck[dict.pos];
+  area.innerHTML=`<div class="card"><div class="cap">Câu ${dict.pos+1}/${dict.deck.length} · Nghe chép chính tả</div>
+    <div style="text-align:center;margin:16px 0">
+      <button class="finbtn" style="max-width:230px;margin:0 auto" onclick="speak('${e[0]}')">🔊 Nghe câu (bấm lại để nghe)</button>
+      <div class="cap" style="margin-top:8px">Gõ lại chữ Hán bạn nghe được (không cần dấu câu):</div>
+    </div>
+    <textarea id="dans" style="width:100%;background:#0b1020;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px 12px;font-size:17px;font-family:inherit;min-height:56px" placeholder="Gõ chữ Hán…"></textarea>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:9px">
+      <button class="aibtn" style="flex:1;min-width:120px" onclick="checkDict()">✅ Kiểm tra</button>
+      <button class="aibtn" style="flex:1;min-width:120px;border-color:var(--gold);color:var(--gold)" onclick="revealDict()">👁️ Đáp án</button>
+    </div>
+    <div id="dref" class="aifb"></div>
+    <button class="finbtn" style="margin-top:10px" onclick="dict.pos++;renderDict()">Câu tiếp →</button></div>`;
+  setTimeout(()=>{try{speak(e[0]);}catch(x){}},350);
+}
+function checkDict(){
+  if(!dict)return;const e=dict.deck[dict.pos];const ref=document.getElementById("dref");
+  const user=normHan(document.getElementById("dans").value||"");const tgt=normHan(e[0]);
+  if(!user){alert("Hãy gõ những gì bạn nghe được trước nhé.");return;}
+  let correct=0,out="";
+  for(let i=0;i<tgt.length;i++){const uc=user[i]||"";if(uc===tgt[i]){correct++;out+='<span class="ok">'+tgt[i]+'</span>';}else out+='<span class="no">'+tgt[i]+'</span>';}
+  const pct=Math.round(correct/tgt.length*100);
+  ref.classList.add("show");
+  ref.innerHTML=`<b>Đúng ${correct}/${tgt.length} chữ (${pct}%)</b> <span class="cap">(xanh = đúng, đỏ gạch = sai/thiếu)</span><div class="dchar" style="margin-top:6px">${out}</div><div style="margin-top:6px">${py(e[1])}</div><div style="color:var(--muted)">${e[2]}</div>`;
+}
+function revealDict(){if(!dict)return;const e=dict.deck[dict.pos];const ref=document.getElementById("dref");ref.classList.add("show");ref.innerHTML=`<b>Đáp án:</b> <span style="font-size:18px">${e[0]}</span><br>${py(e[1])}<br><span style="color:var(--muted)">${e[2]}</span>`;}
+
+/* ============ 🧩 XẾP TỪ THÀNH CÂU ============ */
+let order=null;
+function renderOrderPick(){document.getElementById("opick").innerHTML=phaseBtns("startOrder");}
+function segWords(hz,pyStr){
+  const chars=[...hz].filter(c=>/[一-鿿]/.test(c));
+  const counts=pyStr.trim().split(/\s+/).map(t=>(t.match(SYLRE)||[]).length).filter(n=>n>0);
+  let idx=0;const out=[];
+  for(const n of counts){const seg=chars.slice(idx,idx+n).join("");if(!seg)return null;out.push(seg);idx+=n;}
+  if(idx!==chars.length||out.length<2)return null;return out;
+}
+function startOrder(a,b){
+  const deck=[];
+  for(let i=a;i<=b;i++){const e=EX[V[i][0]];if(!e)continue;const w=segWords(e[0],e[1]);if(w&&w.length>=3&&w.length<=9)deck.push({words:w,vi:e[2],zh:e[0],py:e[1]});}
+  shuf(deck);order={deck,pos:0};loadOrderQ();
+}
+function loadOrderQ(){
+  const area=document.getElementById("oarea");if(!order)return;
+  if(order.pos>=order.deck.length){area.innerHTML=`<div class="card"><h3>Hết câu! 🎉</h3><div class="cap" style="margin-top:6px">Đã xếp ${order.deck.length} câu.</div><button class="finbtn" style="margin-top:12px" onclick="order=null;renderOrderPick();document.getElementById('oarea').innerHTML=''">↺ Chọn phần khác</button></div>`;return;}
+  const pool=order.deck[order.pos].words.map((_,i)=>i);shuf(pool);
+  order.q={pool,placed:[]};renderOrder();
+}
+function renderOrder(){
+  const area=document.getElementById("oarea");if(!order||!order.q)return;
+  const d=order.deck[order.pos];const q=order.q;
+  const placed=q.placed.length?q.placed.map(i=>`<button class="ochip placed" onclick="orderUnplace(${i})">${d.words[i]}</button>`).join(""):'<span class="cap">Bấm từ bên dưới để xếp câu…</span>';
+  const pool=q.pool.filter(i=>q.placed.indexOf(i)<0).map(i=>`<button class="ochip" onclick="orderPlace(${i})">${d.words[i]}</button>`).join("");
+  area.innerHTML=`<div class="card"><div class="cap">Câu ${order.pos+1}/${order.deck.length} · Xếp câu</div>
+    <div style="margin:10px 0"><b>Nghĩa:</b> ${d.vi}</div>
+    <div class="obox">${placed}</div>
+    <div>${pool||'<span class="cap">(đã dùng hết từ)</span>'}</div>
+    <div id="oref" class="aifb"></div>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="aibtn" style="flex:1" onclick="checkOrder()">✅ Kiểm tra</button><button class="finbtn" style="flex:1" onclick="order.pos++;loadOrderQ()">Câu tiếp →</button></div></div>`;
+}
+function orderPlace(i){if(!order||!order.q)return;order.q.placed.push(i);renderOrder();if(order.q.placed.length===order.deck[order.pos].words.length)checkOrder();}
+function orderUnplace(i){if(!order||!order.q)return;order.q.placed=order.q.placed.filter(x=>x!==i);renderOrder();}
+function checkOrder(){
+  if(!order||!order.q)return;const d=order.deck[order.pos];const ref=document.getElementById("oref");ref.classList.add("show");
+  if(order.q.placed.length<d.words.length){ref.textContent="Bạn chưa xếp hết các từ.";return;}
+  const ok=order.q.placed.every((v,i)=>v===i);
+  if(ok)ref.innerHTML=`<span style="color:var(--green)">✅ Chính xác!</span> ${d.zh} · ${py(d.py)}`;
+  else ref.innerHTML=`<span style="color:var(--accent)">❌ Chưa đúng.</span> Thứ tự đúng: <b>${d.words.join(" / ")}</b><br>${d.zh} · ${py(d.py)}`;
+}
+
+/* ============ 🧠 SPACED REPETITION (SRS) ============ */
+let srsMode=false;
+function srsDue(){const now=Date.now();let c=0;for(const k in S.srs){if(S.srs[k].due<=now)c++;}return c;}
+function updateSRSbar(){
+  const el=document.getElementById("srsbar");if(!el)return;const due=srsDue();
+  el.innerHTML=`<div class="srscard"><div class="n">🧠 ${due}</div><div style="flex:1;min-width:150px"><b>Ôn theo lịch (SRS)</b><div class="cap">${due>0?due+" từ đã đến hạn ôn hôm nay.":"Chưa có từ tới hạn — bắt đầu để đưa từ mới vào lịch ôn."}</div></div><button class="qzbtn" style="border-color:var(--purple);color:var(--purple)" onclick="startSRS()">Bắt đầu ôn</button></div>`;
+}
+function startSRS(){
+  const now=Date.now();const due=[],fresh=[];
+  for(let i=0;i<V.length;i++){const r=S.srs[i];if(r){if(r.due<=now)due.push(i);}else fresh.push(i);}
+  shuf(due);shuf(fresh);
+  deck=due.concat(fresh.slice(0,10)).slice(0,25);
+  if(!deck.length){document.getElementById("fcarea").innerHTML='<div class="fcdone">Chưa có thẻ để ôn. Hãy học thêm ở tab Từ vựng trước nhé.</div>';return;}
+  dpos=0;flipped=false;srsMode=true;renderFlash();
+  document.getElementById("fcstat").innerHTML=`SRS · ${deck.length} thẻ`;
+}
+function srsAnswer(q){
+  const id=deck[dpos];const now=Date.now();let r=S.srs[id]||{ivl:0,ease:2.4,reps:0};
+  if(q==="again"){r.reps=0;r.ivl=0;r.due=now;}
+  else if(q==="hard"){r.ivl=r.ivl?Math.max(1,Math.round(r.ivl*1.2)):1;r.ease=Math.max(1.3,r.ease-0.15);r.due=now+r.ivl*86400000;}
+  else{r.reps++;r.ivl=r.reps<=1?1:(r.reps===2?3:Math.max(1,Math.round((r.ivl||1)*r.ease)));r.due=now+r.ivl*86400000;if(r.ivl>=7)S.vocab[id]="known";}
+  S.srs[id]=r;save();dpos++;flipped=false;renderFlash();renderProgress();
+}
+
 /* ============ PROGRESS ============ */
 function renderProgress(){
   const days=new Set(S.log).size;
@@ -1878,7 +2034,7 @@ function renderProgress(){
 /* ============ WORD MODAL ============ */
 function openWord(i){const w=V[i];
   document.getElementById("mHz").textContent=w[0];
-  document.getElementById("mPy").textContent=w[1];
+  document.getElementById("mPy").innerHTML=py(w[1]);
   document.getElementById("mHv").textContent=hv(w[0]);
   document.getElementById("mVn").textContent=w[2]+" · "+w[3];
   document.getElementById("mTip").innerHTML=`<span class="tag ${w[4]}" style="display:inline-block;margin-bottom:7px">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}`;
@@ -1899,7 +2055,7 @@ function tab(id,btn){
   if(id==="road")renderRoad();
   if(id==="hsk")renderHSK();
   if(id==="test"&&!quiz)renderTest();
-  if(id==="flash"&&!deck.length)buildDeck();
+  if(id==="flash"){updateSRSbar();if(!deck.length)buildDeck();}
 }
 function resetAll(){if(confirm("Đặt lại toàn bộ tiến độ (buổi học, từ vựng, ghi chú, streak)?")){S=seed();save();curWeek=0;renderToday();renderVocab();renderProgress();buildDeck();}}
 
