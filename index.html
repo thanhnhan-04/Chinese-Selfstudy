@@ -378,11 +378,35 @@
   <!-- TEST -->
   <div class="page" id="test">
     <div class="card">
-      <h3>📝 Kiểm tra ôn tập theo level</h3>
-      <div class="cap">Trắc nghiệm 10 câu để review lại từ vựng từng giai đoạn (level). Chọn phần muốn ôn:</div>
-      <div class="qzpick" id="qzpick"></div>
+      <h3>📝 Ôn tập &amp; Kiểm tra</h3>
+      <div class="cap">Chọn hình thức luyện tập:</div>
+      <div class="qzpick">
+        <button class="qzbtn" id="mode-quiz" onclick="showTestMode('quiz')">🔤 Trắc nghiệm từ vựng</button>
+        <button class="qzbtn" id="mode-trans" onclick="showTestMode('trans')">✍️ Dịch câu (Trung ↔ Việt)</button>
+      </div>
     </div>
-    <div id="qzarea"></div>
+
+    <div id="quizWrap">
+      <div class="card">
+        <div class="cap">Trắc nghiệm 10 câu để review từ vựng từng giai đoạn (level):</div>
+        <div class="qzpick" id="qzpick"></div>
+      </div>
+      <div id="qzarea"></div>
+    </div>
+
+    <div id="transWrap" style="display:none">
+      <div class="card">
+        <div class="cap">Dịch câu để luyện phản xạ. Chọn chiều dịch &amp; phần:</div>
+        <div style="margin-top:10px">
+          <select id="tdir" class="qzbtn" style="padding:9px 10px">
+            <option value="zh2vi">Trung → Việt (đọc hiểu)</option>
+            <option value="vi2zh">Việt → Trung (viết chữ)</option>
+          </select>
+        </div>
+        <div class="qzpick" id="tpick" style="margin-top:8px"></div>
+      </div>
+      <div id="tarea"></div>
+    </div>
   </div>
 
   <div class="foot">
@@ -1341,24 +1365,25 @@ function buildAIPrompt(wi,si,text){
   return "Chủ đề tuần "+w.n+": "+w.name+".\nTừ vựng trọng tâm: "+voc.join(", ")+".\nMẫu ngữ pháp: 1) "+g[0].gp+" — "+g[0].gn+"  2) "+g[1].gp+" — "+g[1].gn+".\nNhiệm vụ học viên: "+task+"\n\nBài học viên viết:\n\"\"\"\n"+text+"\n\"\"\"";
 }
 
-async function callAI(cfg,userText){
+async function callAI(cfg,userText,sysOverride){
+  const sys=sysOverride||AISYS;
   if(cfg.provider==="gemini"){
     const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+cfg.model+":generateContent?key="+encodeURIComponent(cfg.key),{
       method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({system_instruction:{parts:[{text:AISYS}]},contents:[{role:"user",parts:[{text:userText}]}]})});
+      body:JSON.stringify({system_instruction:{parts:[{text:sys}]},contents:[{role:"user",parts:[{text:userText}]}]})});
     const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
     return (d.candidates&&d.candidates[0]&&d.candidates[0].content.parts.map(p=>p.text||"").join(""))||"(không có phản hồi)";
   }
   if(cfg.provider==="openai"){
     const r=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+cfg.key},
-      body:JSON.stringify({model:cfg.model,messages:[{role:"system",content:AISYS},{role:"user",content:userText}],max_tokens:1024,temperature:0.4})});
+      body:JSON.stringify({model:cfg.model,messages:[{role:"system",content:sys},{role:"user",content:userText}],max_tokens:1024,temperature:0.4})});
     const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
     return d.choices[0].message.content;
   }
   const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
     headers:{"Content-Type":"application/json","x-api-key":cfg.key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-    body:JSON.stringify({model:cfg.model,max_tokens:1024,system:AISYS,messages:[{role:"user",content:userText}]})});
+    body:JSON.stringify({model:cfg.model,max_tokens:1024,system:sys,messages:[{role:"user",content:userText}]})});
   const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
   return (d.content||[]).map(c=>c.text||"").join("");
 }
@@ -1706,6 +1731,8 @@ function renderTest(){
      <button class="qzbtn" onclick="startQuiz(96,191,'GĐ 2 · HSK 4')">GĐ2 · HSK 4 (Tuần 7–12)</button>
      <button class="qzbtn" onclick="startQuiz(192,287,'GĐ 3 · HSK 5')">GĐ3 · HSK 5 (Tuần 13–18)</button>
      <button class="qzbtn" onclick="startQuiz(0,287,'Toàn bộ 288 từ')">Toàn bộ</button>`;
+  renderTransPick();
+  showTestMode("quiz");
 }
 function shuf(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
 function startQuiz(a,b,label){
@@ -1749,6 +1776,84 @@ function answerQuiz(oi){
   document.getElementById("qzarea").innerHTML=`<div class="card"><div class="cap">Câu ${quiz.cur+1}/${quiz.qs.length} · ${quiz.label} · Điểm ${quiz.score}</div>${prompt}<div class="qzopts">${opts}</div>${fb}<button class="finbtn" style="margin-top:12px" onclick="nextQuiz()">${last?"Xem kết quả →":"Câu tiếp →"}</button></div>`;
 }
 function nextQuiz(){if(!quiz)return;quiz.cur++;quiz.answered=false;renderQuiz();}
+
+/* ---- chuyển chế độ Kiểm tra ---- */
+function showTestMode(m){
+  document.getElementById("quizWrap").style.display=m==="quiz"?"block":"none";
+  document.getElementById("transWrap").style.display=m==="trans"?"block":"none";
+  document.getElementById("mode-quiz").style.opacity=m==="quiz"?"1":".5";
+  document.getElementById("mode-trans").style.opacity=m==="trans"?"1":".5";
+  if(m==="trans"&&!document.getElementById("tpick").innerHTML)renderTransPick();
+}
+
+/* ============ BÀI TẬP DỊCH CÂU ============ */
+let trans=null;
+function renderTransPick(){
+  document.getElementById("tpick").innerHTML=
+    `<button class="qzbtn" onclick="startTrans(0,95,'GĐ1·HSK3')">GĐ1 · HSK 3</button>
+     <button class="qzbtn" onclick="startTrans(96,191,'GĐ2·HSK4')">GĐ2 · HSK 4</button>
+     <button class="qzbtn" onclick="startTrans(192,287,'GĐ3·HSK5')">GĐ3 · HSK 5</button>
+     <button class="qzbtn" onclick="startTrans(0,287,'Toàn bộ')">Toàn bộ</button>`;
+}
+function startTrans(a,b){
+  const dir=document.getElementById("tdir").value;
+  const label=document.querySelector("#tpick") && event&&event.target?event.target.textContent.trim():"";
+  const deck=[];for(let i=a;i<=b;i++){if(EX[V[i][0]])deck.push(EX[V[i][0]]);}
+  shuf(deck);
+  trans={dir,label,deck,pos:0};
+  renderTrans();
+}
+function renderTrans(){
+  const area=document.getElementById("tarea");if(!trans)return;
+  if(trans.pos>=trans.deck.length){
+    area.innerHTML=`<div class="card"><h3>Hết câu rồi! 🎉</h3><div class="cap" style="margin-top:6px">Bạn đã luyện dịch ${trans.deck.length} câu.</div>
+      <button class="finbtn" style="margin-top:12px" onclick="trans=null;renderTransPick();document.getElementById('tarea').innerHTML=''">↺ Chọn phần khác</button></div>`;return;
+  }
+  const e=trans.deck[trans.pos];const dir=trans.dir;
+  const head=`<div class="cap">Câu ${trans.pos+1}/${trans.deck.length} · ${trans.label} · ${dir==="zh2vi"?"Trung → Việt":"Việt → Trung"}</div>`;
+  const prompt = dir==="zh2vi"
+    ? `<div class="qzq" style="margin:12px 0"><div style="font-size:24px;font-weight:700;line-height:1.4">${e[0]} <button class="spk" onclick="speak('${e[0]}',event)">🔊</button></div><div class="qzpy">${e[1]}</div></div><div class="cap">✍️ Dịch câu trên sang <b style="color:var(--txt)">tiếng Việt</b>:</div>`
+    : `<div class="qzq" style="margin:12px 0"><div style="font-size:20px;font-weight:700;line-height:1.5">${e[2]}</div></div><div class="cap">✍️ Viết câu trên bằng <b style="color:var(--txt)">chữ Hán</b>:</div>`;
+  area.innerHTML=`<div class="card">${head}${prompt}
+    <textarea id="tans" style="width:100%;margin-top:8px;background:#0b1020;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;min-height:62px;line-height:1.6" placeholder="Nhập bản dịch của bạn…"></textarea>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:9px">
+      <button class="aibtn" style="border-color:var(--gold);color:var(--gold);width:auto;flex:1;min-width:130px" onclick="revealTrans()">👁️ Hiện đáp án</button>
+      <button class="aibtn" style="width:auto;flex:1;min-width:130px" onclick="checkTransAI(this)">🤖 Nhờ AI chấm</button>
+    </div>
+    <div id="tref" class="aifb"></div>
+    <button class="finbtn" style="margin-top:10px" onclick="nextTrans()">Câu tiếp →</button></div>`;
+}
+function revealTrans(){
+  if(!trans)return;const e=trans.deck[trans.pos];const dir=trans.dir;const ref=document.getElementById("tref");
+  ref.classList.add("show");
+  if(dir==="zh2vi") ref.innerHTML=`<b>Đáp án tham khảo:</b><br>${e[2]}<br><span style="color:var(--muted)">${e[0]} · ${e[1]}</span>`;
+  else ref.innerHTML=`<b>Đáp án tham khảo:</b><br><span style="font-size:16px">${e[0]}</span> <button class="spk" onclick="speak('${e[0]}',event)">🔊</button><br><span style="color:var(--gold)">${e[1]}</span><br><span style="color:var(--purple)">${hvSentence(e[0])}</span><br><span style="color:var(--muted)">${e[2]}</span>`;
+}
+function nextTrans(){if(!trans)return;trans.pos++;renderTrans();}
+async function checkTransAI(btn){
+  if(!trans)return;const e=trans.deck[trans.pos];const dir=trans.dir;
+  const userText=(document.getElementById("tans").value||"").trim();
+  const ref=document.getElementById("tref");
+  if(!userText){alert("Hãy nhập bản dịch của bạn trước đã nhé.");return;}
+  const src=dir==="zh2vi"?e[0]:e[2];
+  const target=dir==="zh2vi"?"tiếng Việt":"tiếng Trung (chữ Hán)";
+  const refans=dir==="zh2vi"?e[2]:(e[0]+" ("+e[1]+")");
+  const sys="Bạn là giáo viên tiếng Trung đang chấm bài DỊCH của học viên người Việt. Trả lời bằng tiếng Việt, ngắn gọn, theo bố cục:\n**Đánh giá:** đúng / gần đúng / sai.\n**Nhận xét:** lỗi về nghĩa, ngữ pháp, dùng từ (nếu là dịch sang tiếng Trung: cả chữ Hán & lượng từ) và cách sửa.\n**Bản dịch chuẩn:** một bản tự nhiên (nếu là tiếng Trung thì kèm pinyin).";
+  const prompt="Câu gốc: "+src+"\nHọc viên dịch sang "+target+': "'+userText+'"\nBản dịch tham khảo (để đối chiếu): '+refans;
+  const cfg=aiCfg();
+  ref.classList.add("show");
+  if(!cfg.key){
+    const full=sys+"\n\n"+prompt;
+    const ok=()=>{ref.innerHTML='📋 <b>Chưa có API key.</b> Đã chép “đề chấm” — dán vào ChatGPT/Gemini/DeepSeek (bản web free) để được chấm. Hoặc bấm ⚙️ nhập key Gemini free để chấm ngay trong app.';};
+    const fail=()=>{ref.textContent="Hãy vào ⚙️ nhập key Gemini free, hoặc dùng nút 👁️ Hiện đáp án để tự đối chiếu.";};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(full).then(ok).catch(fail);else fail();
+    return;
+  }
+  btn.disabled=true;const old=btn.textContent;btn.textContent="⏳ Đang chấm...";ref.textContent="Đang gửi cho AI…";
+  try{const out=await callAI(cfg,prompt,sys);ref.innerHTML=fmt(out);}
+  catch(e2){ref.textContent="⚠️ Lỗi AI: "+e2.message+" (bấm ⚙️ để kiểm tra key/model).";}
+  btn.disabled=false;btn.textContent=old;
+}
 
 /* ============ PROGRESS ============ */
 function renderProgress(){
