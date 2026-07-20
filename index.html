@@ -163,9 +163,18 @@
   .tag.mo{background:rgba(245,183,49,.16);color:var(--gold)}
   .vc .act{display:flex;gap:7px;margin-top:11px}
   .vc .act button{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:7px;cursor:pointer;font-size:12px;transition:.12s}
-  .vc.known{border-color:rgba(38,194,129,.45)}
+  .vc.known{border-color:rgba(111,207,159,.5);background:linear-gradient(180deg,rgba(111,207,159,.05),transparent)}
   .vc.known .b-k{background:var(--green);color:#04140c;border-color:var(--green)}
   .vc.review .b-r{background:var(--gold);color:#160e00;border-color:var(--gold)}
+  .vc.known .hz,.vc.known .vn{text-decoration:line-through;text-decoration-color:var(--green);opacity:.6}
+  .donebadge{display:none}
+  .vc.known .donebadge{display:inline-block;position:absolute;top:11px;left:12px;background:var(--green);color:#04140c;font-size:9px;font-weight:800;letter-spacing:.5px;padding:2px 8px;border-radius:20px}
+  /* AI mẹo nhớ */
+  .aitip{background:linear-gradient(120deg,rgba(245,183,49,.10),rgba(182,163,232,.10));border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-top:10px;font-size:13.4px;line-height:1.6;text-align:left}
+  .aitip .lb{font-size:9.5px;font-weight:800;letter-spacing:.5px;color:var(--gold);display:block;margin-bottom:5px}
+  .gentip{width:100%;margin-top:10px;background:var(--panel3);border:1px solid var(--gold);color:var(--gold);font-weight:700;font-size:13.5px;padding:11px;border-radius:11px;cursor:pointer}
+  .gentip:hover{background:rgba(232,196,122,.12)}
+  .gentip:disabled{opacity:.55;cursor:not-allowed}
 
   /* flashcard */
   .fcbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
@@ -493,6 +502,8 @@
     <button class="spk big" style="margin-top:10px" onclick="speak(document.getElementById('mHz').textContent,event)">🔊 Nghe phát âm</button>
     <div class="vn" id="mVn" style="margin-top:8px"></div>
     <div class="tip" id="mTip"></div>
+    <div id="mAiTip"></div>
+    <button class="gentip" id="mGenBtn" onclick="genTip(this)">✨ Tạo mẹo nhớ vui (AI)</button>
     <div id="mEx"></div>
     <button class="spk big" style="margin-top:10px" onclick="showStrokes()">✍️ Xem cách viết chữ (nét bút)</button>
     <div id="mStroke"></div>
@@ -507,22 +518,22 @@
 const V = [
 /* ===== GIAI ĐOẠN 1 · NỀN TẢNG (HSK3) ===== */
 /* -- Tuần 1: Giao tiếp & Cảm xúc (0-15) -- */
-["高兴","gāoxìng","vui / vui mừng","tính từ","mo","高 (cao) + 兴 (hứng khởi). Tâm trạng 'dâng cao hứng khởi' = vui. Nhớ: hứng lên cao thì vui."],
-["难过","nánguò","buồn / khó chịu","tính từ","mo","难 (khó) + 过 (vượt qua). Trong lòng 'khó mà vượt qua' = buồn bã."],
-["担心","dānxīn","lo lắng","động từ","ct","担 (gánh) + 心 (trái tim). 'Gánh nặng đè lên tim' = lo lắng, bận tâm."],
-["希望","xīwàng","hy vọng / mong","động từ","mo","希 (mong) + 望 (ngóng nhìn). Ngóng trông điều mình mong = hy vọng."],
-["感谢","gǎnxiè","cảm ơn / cảm tạ","động từ","mo","感 (cảm) + 谢 (tạ ơn). Trang trọng hơn 谢谢, dùng khi biết ơn sâu sắc."],
-["关心","guānxīn","quan tâm","động từ","ct","关 (liên hệ, đóng lại) + 心 (tim). 'Để tim mình vào' chuyện của ai = quan tâm."],
-["表示","biǎoshì","biểu thị / bày tỏ","động từ","mo","表 (bày ra ngoài) + 示 (chỉ cho thấy). Đưa thái độ/ý ra ngoài cho thấy = bày tỏ."],
-["相信","xiāngxìn","tin tưởng","động từ","mo","相 (lẫn nhau) + 信 (tin, chữ tín). Đặt niềm tin vào = tin tưởng."],
-["需要","xūyào","cần / cần đến","động từ","mo","需 (cần dùng) + 要 (muốn có). Vừa cần vừa muốn = cần đến."],
-["觉得","juéde","cảm thấy / thấy rằng","động từ","mo","觉 (cảm giác) + 得. Mở đầu khi nêu ý kiến: 我觉得… = 'tôi thấy rằng…'."],
-["生气","shēngqì","tức giận / nổi giận","động từ","mo","生 (sinh ra) + 气 (khí, hơi). 'Sinh ra một luồng khí' bốc lên = nổi giận."],
-["害怕","hàipà","sợ hãi","động từ","mo","害 (hại) + 怕 (sợ, bộ 忄tim + 白 trắng). Sợ tới 'mặt tái trắng', tim đập = sợ hãi."],
-["感动","gǎndòng","cảm động","động từ","ct","感 (cảm) + 动 (lay động). Trong lòng bị 'lay động' = cảm động."],
-["讨厌","tǎoyàn","ghét / chán ghét","động từ","mo","讨 (chuốc lấy, bộ 讠lời) + 厌 (chán). 'Chuốc lấy sự chán' = ghét."],
-["表扬","biǎoyáng","khen ngợi","động từ","mo","表 (bày ra) + 扬 (nêu cao). Nêu ai lên cao trước mọi người = khen ngợi. Đối với 批评."],
-["批评","pīpíng","phê bình","động từ","mo","批 (vạch ra, bộ 扌tay) + 评 (bình, bộ 讠lời). Dùng lời vạch cái sai = phê bình."],
+["高兴","gāoxìng","vui / vui mừng","tính từ","mo","高 (cao) + 兴 (hứng). Vui là khi 'cơn hứng dâng lên CAO' — như lúc nhận lương, hứng bốc lên tận nóc nhà = 高兴!"],
+["难过","nánguò","buồn / khó chịu","tính từ","mo","难 (khó) + 过 (đi qua). Chuyện buồn là chuyện 'KHÓ mà đi QUA được', cứ mắc kẹt mãi trong lòng."],
+["担心","dānxīn","lo lắng","động từ","ct","担 (gánh, bộ 扌tay) + 心 (trái tim). Lo lắng = 'VÁC cả trái tim lên vai mà gánh' — nặng trĩu, đi đâu cũng đeo theo."],
+["希望","xīwàng","hy vọng / mong","động từ","mo","希 (mong) + 望 (ngóng ra xa). Hy vọng = 'nhón chân NGÓNG' về phía trước, chờ điều tốt đẹp tới."],
+["感谢","gǎnxiè","cảm ơn / cảm tạ","động từ","mo","感 (cảm động) + 谢 (bộ 讠lời + tạ). Cảm động tới mức phải MỞ MIỆNG nói lời tạ ơn — lịch sự hơn 谢谢 nhiều."],
+["关心","guānxīn","quan tâm","động từ","ct","关 (đóng lại, nhốt vào) + 心 (tim). Quan tâm ai = 'NHỐT người đó vào trong tim', lúc nào cũng nghĩ tới."],
+["表示","biǎoshì","biểu thị / bày tỏ","động từ","mo","表 (mặt ngoài, phơi ra) + 示 (chỉ cho thấy). Đưa thái độ RA NGOÀI cho người ta thấy = bày tỏ. (表 cũng là cái 'đồng hồ' đeo lộ ra tay đó!)"],
+["相信","xiāngxìn","tin tưởng","động từ","mo","相 (lẫn nhau) + 信 = 亻(người) + 言 (lời) = 'người giữ lời'. Tin nhau vì đôi bên đều GIỮ LỜI hứa."],
+["需要","xūyào","cần / cần đến","động từ","mo","需 (cần dùng) + 要 (muốn). Vừa 'cần' lại vừa 'muốn' — thế thì đúng là cần thật rồi!"],
+["觉得","juéde","cảm thấy / thấy rằng","động từ","mo","觉 (cảm giác) + 得 (được). Câu cửa miệng 我觉得… = 'mình THẤY rằng…' — mở đầu cho mọi ý kiến, dùng cực nhiều."],
+["生气","shēngqì","tức giận / nổi giận","động từ","mo","生 (sinh ra) + 气 (khí, hơi). Giận = 'trong người TỰ SINH một luồng khí' bốc ngùn ngụt — nhớ cảnh ai tức đến 'bốc khói đầu'!"],
+["害怕","hàipà","sợ hãi","động từ","mo","害 (hại) + 怕 = 忄(tim) + 白 (trắng). Sợ = tim đập thình thịch, 'mặt cắt không còn giọt máu' TRẮNG BỆCH = 白."],
+["感动","gǎndòng","cảm động","động từ","ct","感 (cảm) + 动 (rung động). Trái tim bị điều tử tế 'LÀM RUNG LÊN' = cảm động (khác 感谢 là mở miệng cảm ơn)."],
+["讨厌","tǎoyàn","ghét / chán ghét","động từ","mo","讨 (chuốc lấy) + 厌 (chán ngán). Kẻ khiến bạn 'tự CHUỐC lấy cục tức chán ngán' = đáng ghét."],
+["表扬","biǎoyáng","khen ngợi","động từ","mo","表 (phơi ra) + 扬 (giơ cao, bay lên). Khen = 'NÂNG ai bay bổng lên' trước đám đông. Ngược hẳn với 批评 (chê)."],
+["批评","pīpíng","phê bình","động từ","mo","批 (bộ 扌tay vạch) + 评 (bộ 讠lời bình). 'Ra TAY dùng LỜI vạch cái sai' = phê bình — món sếp hay tặng ta 😅"],
 /* -- Tuần 2: Sức khỏe & Cơ thể (16-31) -- */
 ["身体","shēntǐ","cơ thể / sức khỏe","danh từ","ct","身 (thân mình) + 体 (thể xác). Cả hai đều chỉ tấm thân → cơ thể, sức khỏe."],
 ["头","tóu","đầu","danh từ","mo","Bộ 页 (trang/đầu mặt) gợi phần đầu người. Nhớ: 头 nằm trên cùng cơ thể = cái đầu."],
@@ -1366,8 +1377,9 @@ const W = [
 const KEY="zh_hsk5_v1";
 let S = load();
 if(!S.srs)S.srs={};
+if(!S.tips)S.tips={};
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||seed();}catch(e){return seed();}}
-function seed(){return {done:{}, log:[], vocab:{}, notes:{}, srs:{}};}  // done: key->true ; log:[yyyy-mm-dd] ; vocab:id->'known'|'review' ; notes:key->text ; srs:id->{due,ivl,ease,reps}
+function seed(){return {done:{}, log:[], vocab:{}, notes:{}, srs:{}, tips:{}};}  // done ; log ; vocab:'known'|'review' ; notes ; srs ; tips:hz->mẹo nhớ AI
 function save(){localStorage.setItem(KEY,JSON.stringify(S));}
 function today(){const d=new Date();return d.toISOString().slice(0,10);}
 
@@ -1706,12 +1718,13 @@ function renderVocab(){
   document.getElementById("vgrid").innerHTML=idx.map(i=>{
     const w=V[i];const state=S.vocab[i]||"new";
     return `<div class="vc ${state}" id="vc${i}">
+      <div class="donebadge">✓ ĐÃ HỌC</div>
       <div class="pos">${w[3]}</div>
       <div class="top"><div class="hz">${w[0]}</div><div class="meta"><div class="py">${py(w[1])} <button class="spk" onclick="speak('${w[0]}',event)">🔊</button></div><div class="hv">${hv(w[0])}</div><div class="vn">${w[2]}</div></div></div>
-      <div class="tip"><span class="tag ${w[4]}">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}</div>
+      <div class="tip"><span class="tag ${w[4]}">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${S.tips[w[0]]?w[5]+'<br><span style="color:var(--gold)">✨ '+S.tips[w[0]]+'</span>':w[5]}</div>
       ${exHTML(w[0])}
       <div class="act">
-        <button class="b-k" onclick="mark(${i},'known')">✓ Đã thuộc</button>
+        <button class="b-k" onclick="mark(${i},'known')">${state==='known'?'✓ Học xong rồi':'✓ Học xong'}</button>
         <button class="b-r" onclick="mark(${i},'review')">↻ Cần ôn</button>
       </div></div>`;
   }).join("");
@@ -2038,9 +2051,35 @@ function openWord(i){const w=V[i];
   document.getElementById("mHv").textContent=hv(w[0]);
   document.getElementById("mVn").textContent=w[2]+" · "+w[3];
   document.getElementById("mTip").innerHTML=`<span class="tag ${w[4]}" style="display:inline-block;margin-bottom:7px">${w[4]==='ct'?'CHIẾT TỰ · gốc chữ':'MẸO NHỚ'}</span><br>${w[5]}`;
+  renderAiTip(w[0]);
+  document.getElementById("mGenBtn").textContent=S.tips[w[0]]?"🔄 Tạo mẹo nhớ khác (AI)":"✨ Tạo mẹo nhớ vui (AI)";
   document.getElementById("mEx").innerHTML=exHTML(w[0]);
   document.getElementById("mStroke").innerHTML="";
   document.getElementById("modal").classList.add("show");
+}
+function renderAiTip(hz){
+  const el=document.getElementById("mAiTip");
+  el.innerHTML=S.tips[hz]?`<div class="aitip"><span class="lb">✨ MẸO NHỚ VUI (do AI tạo cho bạn)</span>${fmt(S.tips[hz])}</div>`:"";
+}
+async function genTip(btn){
+  const hz=document.getElementById("mHz").textContent;const i=V.findIndex(x=>x[0]===hz);if(i<0)return;const w=V[i];
+  const sys="Bạn là giáo viên tiếng Trung hài hước, chuyên nghĩ MẸO NHỚ chữ Hán cho người Việt. Hãy tạo MỘT mẹo nhớ ngắn (2-3 câu, tiếng Việt), THẬT dễ hiểu, đời sống và hài hước, bằng cách chiết tự (tách bộ thủ / thành phần chữ rồi ghép nghĩa lại) — kiểu: 本 = dấu gạch dưới gốc cây 木 = CĂN BẢN, gốc rễ. Chỉ trả về nội dung mẹo, không mở đầu dài dòng.";
+  const prompt="Chữ: "+w[0]+" ("+w[1]+") nghĩa: "+w[2]+". Hãy cho một mẹo nhớ vui, dễ nhớ.";
+  const cfg=aiCfg();
+  const el=document.getElementById("mAiTip");
+  if(!cfg.key){
+    const full=sys+"\n\n"+prompt;
+    const ok=()=>{el.innerHTML='<div class="aitip"><span class="lb">✨ CHƯA CÓ API KEY</span>Đã chép đề — dán vào ChatGPT/Gemini/DeepSeek (web free) để lấy mẹo, rồi dán lại vào ô ghi chú. Hoặc bấm ⚙️ nhập key Gemini free để tạo ngay trong app.</div>';};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(full).then(ok).catch(ok);else ok();
+    return;
+  }
+  btn.disabled=true;const old=btn.textContent;btn.textContent="⏳ Đang nghĩ mẹo…";
+  el.innerHTML='<div class="aitip">Đang nhờ AI nghĩ mẹo nhớ vui…</div>';
+  try{
+    const out=(await callAI(cfg,prompt,sys)).trim();
+    S.tips[hz]=out;save();renderAiTip(hz);btn.textContent="🔄 Tạo mẹo nhớ khác (AI)";
+  }catch(e){el.innerHTML='<div class="aitip">⚠️ Lỗi AI: '+e.message+' (bấm ⚙️ kiểm tra key/model).</div>';btn.textContent=old;}
+  btn.disabled=false;
 }
 function closeModal(){document.getElementById("modal").classList.remove("show");}
 
